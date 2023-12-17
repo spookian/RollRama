@@ -1,0 +1,35 @@
+MATRICES IN RTDL
+game primarily seems to use 3x4 matrices because that's what the gamecube/wii uses for any matrix that isn't the perspective matrix
+(the GX doesn't store seperate matrices for the world and view matrices, you just have to combine them into one or use a simplified version of the process (move the view matrix around)
+
+basic matrix in Dolphin SDK = typedef f32 Mtx[3][4];
+
+class hel::math::Matrix34 seems to be a wrapper for the Mtx type supplied by the Dolphin/Revolution SDK
+	static Matrix34 CreateScale(const Vector3& scale) <-- returns a Matrix34 object to be used as a scale matrix
+	static Matrix34 CreateTrans(const Vector3& translation) <-- returns a translation matrix
+
+	//rotation matrix functions
+	static Matrix34 CreateRotXYZRad(const Vector3& rotation) <-- returns a rotation matrix using euler angles. all three radian euler angles are stored inside of a vector3
+	static Matrix34 CreateRotXYZDeg(const Vector3& rotation) <-- returns a rotation matrix using degree euler angles.
+	static Matrix34 CreateRotAxisRad(const Vector3& axis, float rotation) <-- first argument is a defined axis, second argument is the rotation around said axis
+	static Matrix34 CreateRotAxisDeg(const Vector3& axis, float rotation) <-- same as better except degrees instead of radians
+
+	static Matrix34 CreateLookAt(const Vector3& cam_pos, const Vector3& up, const Vector3& target) <-- wrapper for C_MTXLookAt, so i took the arguments from there
+	(note: for all functions the matrix34 is supplied by the assembler in stack, and the pointer is stored in r3)
+	(it works a lot like a class method being called in assembly)
+	(you could also do a minor assembly optimization by allocating a new matrix34 object in heap and passing the pointer in r3 instead of a stack pointer)
+	(skips having to use the = operator function)
+
+ways to store view mtx
+void gfx::EasyRender3D::SetViewMtx(const hel::math::Matrix34&) <--- directly sets the view mtx, if you use g3d::Root then this function is most likely worthless
+g3d::Root might have a camera object if g3d::Root::currentCamera() is to be believed
+	g3d::CameraAccessor& g3d::Root::currentCamera() const <-- 
+		then call
+	void g3d::CameraAccessor::setViewMtx(const hel::math::Matrix34&) const <----
+
+ways to store model mtx
+void g3d::Model::setModelRTMtx(const hel::math::Matrix34& matrix)
+	call void g3d::Model::updateWorldMtx() after? probably a good idea
+void g3d::Model::setModelScale(const hel::math::Vector3& scale)
+
+

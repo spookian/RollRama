@@ -1,0 +1,3 @@
+gobj::Model(const gobj::ModelDesc&, mem::IAllocator&, const g3d::ResFileAccessor&, const gobj::Location&)
+- g3d::Model& gobj::Model::g3dModel()
+registerToRoot() every frame to display models on screen. use anywhere?

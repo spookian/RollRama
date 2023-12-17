@@ -1,0 +1,45 @@
+enterSceneSequence(seq::ISequence&) <----
+
+ISequence appears to be an interface that other sequences inherit
+0x1C (0x0 (ISequence object)) is most likely a virtual function
+	actually, i'm being silly. 0x0 of ISequence is a vtable
+	vtable is 0x24 bytes long
+	(default values)
+	0x8 - 806f5a7c - runtimetypeinfo
+	0xc - ~seq::ISequence()
+	0x10 - seq::ISequence::nextAction()
+	0x14 - seq::ISequence::createChildSequence()
+	0x18 - seq::ISequence::onChildSequenceEnd()
+	0x1c - seq::ISequence::createScene() <-- registers are kinda strange. r3 points to some unknown structure (unless this function is actually returning the scene) and r4 points to the sequence object
+						it may or may not be breaking eabi conventions; r3 might be returning a pointer or single-word object pointing to the newly created IScene object
+	0x20 - seq::ISequence::onSceneEnd(scn::IScene&)
+
+(no idea how the game knows which sequence or scene to switch to after a scene ends)
+(the sequence object can probably generate multiple scenes)
+
+scn::IScene
+	vtable is 0x24 bytes long
+	0x8 - hel::common::RuntimeTypeInfo::RuntimeTypeInfoImpl<scn::IScene>()
+	0xc - ~scn::IScene()
+	0x10 - scn::IScene::updateMain()
+	0x14 - scn::IScene::updateUseGPU()
+	0x18 - scn::IScene::updateDebug()
+	0x1c - scn::IScene::draw(const scn::DrawReqInfo&) <-- problem child function; only one argument (r3) but this is a vtable method
+							static vtable methods shouldn't even exist because it's a paradox
+	0x20 - scn::IScene::isSceneEnd() const
+
+scn::wmap::Component doesn't seem to contain a g3d::Root object, which is essential
+scn::wmap::SceneWMap DOES seem to have one, and so does scn::wmap::G3DRootSet
+^ Root sets are commmon in rtdl
+
+constructing a g3d::Root requires a g3d::RootContext object
+
+g3d::Root(const g3d::RootContext&);
+g3d::RootContext(mem::IAllocator&, unsigned long, unsigned long, unsigned long, unsigned long);
+
+obtaining the DefaultAllocator seems to be heavily abstracted by assembly, but there appears to be a pointer to a mem::Memory object in 0x2F90 of (r13)
+and calling mem::Memory::sceneHeap() will get you the default allocator object you need.
+
+8088a784 - const Vector3 up;
+
+g3d::Root::sceneDrawOpa() <-- method of g3d::Root object, draws all g3d objects registered to root (see: g3d::Model::registerToRoot(g3d::Root&) )assuming gpu was properly set up beforehand.
