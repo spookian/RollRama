@@ -30,6 +30,8 @@ WE NEED ATLEAST ONE OR TWO LEVELS FOR APRIL FOOLS
 
 */
 
+#include "math/Vector3.h"
+
 namespace rcoll
 {
 	class Interval {
@@ -48,7 +50,7 @@ namespace rcoll
 		struct CollPointList {
 			// it's not really my problem if you're idiotic enough to modify the members of a CollPointList object
 			int num_points;
-			hel::Math::Vector3 points[15]; //magic number ftw
+			hel::math::Vector3 points[15]; //magic number ftw
 		};
 		
 		struct CollisionInfo {
