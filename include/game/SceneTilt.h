@@ -1,12 +1,5 @@
 #define MAX_CLONES 20
-
-namespace hel::math
-{
-	struct Vector3
-	{
-		float x, y, z;
-	}; // include functions later
-}
+#include "math/Vector3.h"
 
 namespace mem
 {
