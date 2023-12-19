@@ -44,7 +44,7 @@ namespace rcoll
 	{
 		public:
 		// members
-		hel::math::Vector3& position; // here's the deal, you supply the vector, 
+		hel::math::Vector3* position; // here's the deal, you supply the vector, 
 
 		// structs & classes
 		struct CollPointList {
@@ -79,6 +79,7 @@ namespace rscn { // roll scn
 	class Entity {
 		public:
 		virtual void update();
+		virtual void preDraw(); // get ready to draw, update matrices and whatnot
 		virtual void draw();	
 		virtual void endScene(); // tells all entities present to kill themselves right before the list is cleared.
 	};
