@@ -3,7 +3,7 @@ namespace hel::math
 	struct Vector3
 	{
 		Vector3();
-		Vector3(float _x, float _y, float _z); //0x800bdad0 - nw4r::math::VEC3 constructor
+		Vector3(float _x, float _y, float _z); //0x800bdad0 - nw4r::math::VEC3 constructorp
 
 		float x, y, z;
 

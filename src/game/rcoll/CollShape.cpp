@@ -1,3 +1,6 @@
+#include "math/Vector3.h"
+#include "game/rcoll.h"
+
 namespace rcoll
 {
 	static bool Interval::intersects(float aa, float ab, float ba, float bb)
@@ -41,10 +44,10 @@ namespace rcoll
 		CollisionInfo result;
 
 		CollPointList this_points = this->getPoints(other);
-		CollPointList other_points = other.getPoints(this);
+		CollPointList other_points = other.getPoints(*this);
 		CollPointList this_normals = this->getNormals(other);
-		CollPointList other_normals = other.getNormals(this);
-		// i calculated that there is a total of 720 bytes being used here and i don't like that, not one bit.
+		CollPointList other_normals = other.getNormals(*this);
+		// i calculated that there is a total of 720 bytes being used in this stack and i don't like that, not one bit.
 		result.collided = testAxes(this_points, other_points, this_normals) && testAxes(this_points, other_points, other_normals);
 		if (result.collided)
 		{

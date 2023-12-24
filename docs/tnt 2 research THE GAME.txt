@@ -22,7 +22,7 @@ scn::IScene
 	0x8 - hel::common::RuntimeTypeInfo::RuntimeTypeInfoImpl<scn::IScene>()
 	0xc - ~scn::IScene()
 	0x10 - scn::IScene::updateMain()
-	0x14 - scn::IScene::updateUseGPU()
+	0x14 - scn::IScene::updateUseGPU() <-- is called after draw
 	0x18 - scn::IScene::updateDebug()
 	0x1c - scn::IScene::draw(const scn::DrawReqInfo&) <-- problem child function; only one argument (r3) but this is a vtable method
 							static vtable methods shouldn't even exist because it's a paradox

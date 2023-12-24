@@ -1,6 +1,7 @@
 #define MAX_CLONES 20
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
+#include "defines.h"
 
 namespace mem
 {
@@ -72,7 +73,7 @@ namespace rscn
 		unsigned long num;
 		IEntity *list[MAX_CLONES];
 
-		void clear(); 
+		void clear();
 	}; // entitylist should act a lot like a queue, except if anything in the middle is taken out, the last item will fill in the vacant space
 	// prevent shit from getting wonky
 

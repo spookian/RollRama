@@ -1,0 +1,1 @@
+#define class_size(A) char bytes[A]
