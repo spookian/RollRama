@@ -44,26 +44,6 @@ namespace g3d
 		void setModelScale(const hel::math::Vector3& scale);
 	};
 }
-
-namespace scn
-{
-	// haven't decomped yet
-	class DrawReqInfo
-	{
-	};
-
-	// interface
-	class IScene
-	{
-		public:
-		~IScene();
-		virtual void updateMain();
-		virtual void updateUseGPU();
-		virtual void updateDebug();
-		virtual void draw(const scn::DrawReqInfo& info);
-		virtual void isSceneEnd() const;
-	};
-}
 // move these eyesores to a different header file, please
 
 namespace rscn
