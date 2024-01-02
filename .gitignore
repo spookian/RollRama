@@ -1,10 +1,12 @@
 CMakeCache.txt
 Makefile
 *.o
+*.out
 *.elf
 *.exe
 *.dol
 *.bin
+*.dll
 cmake_install.cmake
 
 build/

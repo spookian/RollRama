@@ -22,7 +22,7 @@ This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to 
 #### DevkitPro
 * https://devkitpro.org/wiki/Getting_Started
 
-#### Python 
+#### Python 3
 * https://www.python.org/
 
 ## Roadmap
