@@ -1,3 +1,5 @@
+#pragma once
+
 namespace scn
 {
 	class DrawReqInfo
@@ -6,12 +8,13 @@ namespace scn
 
 	class IScene
 	{
-		public:
-		~IScene();
-		virtual void updateMain();
-		virtual void updateUseGPU();
-		virtual void updateDebug();
-		virtual void draw(const scn::DrawReqInfo& info);
-		virtual void isSceneEnd() const;
+	public:	
+		virtual void rtti() 								= 0;
+		virtual ~IScene() {}
+		virtual void updateMain() 							= 0;
+		virtual void updateUseGPU() 						= 0;
+		virtual void updateDebug() 							= 0;
+		virtual void draw(const scn::DrawReqInfo& info)		= 0;
+		virtual void isSceneEnd() const						= 0;
 	};
 }

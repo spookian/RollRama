@@ -1,0 +1,7 @@
+hero::ShakeCharge::update()
+hero::Hid::accel() const
+
+hid::SimpleWRHID::accel() const
+
+size of SimpleWRHID = 352 + sizeof(button)
+pay close attention to SimpleWRHID, seems essential

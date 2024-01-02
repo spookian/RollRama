@@ -1,0 +1,12 @@
+app::AppImpl is 0xFDA8 bytes large
+
+SequenceStack to handle sequences in order
+auto_ptr objects are used to store pointers to sequences
+
+long seq::ISequence::nextAction() const; it's the first function of a sequence that gets executed.
+	if it returns 0 then the sequence loop restarts?
+	if it returns 1 then a child sequence is created and gets pushed to the top of the sequence stack
+	if it returns 2 then void app::AppImpl::enterSceneSequence(seq::ISequence&) is called, and then auto_ptr<IScene> ISequence::createScene() const is called
+	if it returns 3 then
+
+std::auto_ptr<ISequence> ISequence::createChildSequence() const;

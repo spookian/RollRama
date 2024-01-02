@@ -1,0 +1,10 @@
+CMakeCache.txt
+Makefile
+*.o
+*.elf
+*.exe
+*.dol
+cmake_install.cmake
+
+build/
+CMakeFiles/
