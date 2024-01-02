@@ -3,6 +3,7 @@
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
 #include "std/auto_ptr.h"
+#include "allocate.h"
 
 namespace seq
 {

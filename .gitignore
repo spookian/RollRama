@@ -4,6 +4,7 @@ Makefile
 *.elf
 *.exe
 *.dol
+*.bin
 cmake_install.cmake
 
 build/
