@@ -20,6 +20,8 @@ set(DKP_AS_TOOL ${DEVKITPATH}/devkitPPC/bin/powerpc-eabi-as)
 set(DKP_DOL_TOOL ${DEVKITPATH}/tools/bin/elf2dol)
 set(DKP_OBJCOPY ${DEVKITPATH}/devkitPPC/bin/powerpc-eabi-objcopy)
 
+set(C_FILES src/seq/SequenceTiltStart.cpp src/scn/SceneStart.cpp)
+
 set(C_FLAGS -I- -i ./src -Cpp_exceptions off -enum int -Os -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0)
 set(LD_FLAGS -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld/execute.ld -I ./)
 

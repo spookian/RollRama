@@ -22,8 +22,5 @@ This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to 
 #### DevkitPro
 * https://devkitpro.org/wiki/Getting_Started
 
-#### Python 3
-* https://www.python.org/
-
 ## Roadmap
 No work done on implementation just yet, I'm still doing research on the base game's code, but realistically implementation should start around mid-late January.
