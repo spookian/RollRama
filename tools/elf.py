@@ -19,6 +19,7 @@ class ELFFile:
 
         stream.seek(self.e_shoff + (self.e_shstrndx * self.e_shentsize) + SECTIONHEADER_OFFSET)
         strtb_offset = int.from_bytes(stream.read(4))
+        print("string table offset: %x" % strtb_offset)
         for x in range(self.e_shnum):
             offset = self.e_shoff + (self.e_shentsize * x)
             stream.seek(offset)
@@ -29,7 +30,9 @@ class ELFFile:
 class ELFSection:
     def __init__(self, stream, stroff: int):
         start = stream.tell()
-        stream.seek(stroff + int.from_bytes(stream.read(4)))
+        strndx = int.from_bytes(stream.read(4))
+        print("string offset: %x" % strndx)
+        stream.seek(stroff + strndx)
         self.name = get_string_with_bytestream(stream)
         self.header_offset = start
 
@@ -44,8 +47,9 @@ class ELFSection:
 
 def get_string_with_bytestream(stream):
     x = bytearray()
-    while(int.from_bytes(x[-1:]) != 0):
+    while(len(x) == 0 or x[-1] != 0):
         x.extend(stream.read(1))
 
+    print("string length: %d\n" % len(x))
     result = x.decode(encoding='ascii')
     return result

@@ -43,6 +43,9 @@ SECTIONS
 		KEEP(*(.data .data.*)) 
 		KEEP(*(.sdata .sdata.* ))
 	}
+	
+	. = 0x806f9e2c;
+	__006F5C6C :	{ KEEP(*(__006F5C6C)) }
 }
 
 "TXT2_SIZE" = SIZEOF(.text);

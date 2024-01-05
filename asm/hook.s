@@ -18,3 +18,12 @@
 
 .section dol_taddr2, "awx", @progbits
 .long TXT2_ADDRESS
+
+.section __006F5C6C, "awx", @progbits
+hook_sequenceroot:
+	li %r3, 0x4
+	#let us hope to GOD this fucking class never changes otherwise i'm dragging all of you into hell with me
+	bl __nw__Q23seq9ISequenceFUl
+	cmpwi %r3, 0
+	beq 0x8
+	bl __ct__Q23seq17SequenceTiltStartFv
