@@ -9,8 +9,8 @@ namespace scn
 	class IScene
 	{
 	public:	
-		virtual void rtti() 								= 0;
-		virtual ~IScene() {}
+		virtual void rtti() = 0;
+		virtual ~IScene() {};
 		virtual void updateMain() 							= 0;
 		virtual void updateUseGPU() 						= 0;
 		virtual void updateDebug() 							= 0;

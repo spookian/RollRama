@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ISequence.h"
+#include "seq/ISequence.h"
 #include "std/auto_ptr.h"
 
 namespace seq
 {
-	class SequenceTiltStart : ISequence
+	class SequenceTiltStart : public ISequence
 	{
 	public:
 		~SequenceTiltStart();

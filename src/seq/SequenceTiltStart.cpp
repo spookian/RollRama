@@ -1,5 +1,5 @@
-#include "ISequence.h"
-#include "SequenceTiltStart.h"
+#include "seq/ISequence.h"
+#include "seq/SequenceTiltStart.h"
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
 #include "std/auto_ptr.h"
@@ -7,7 +7,7 @@
 
 namespace seq
 {
-	~SequenceTiltStart()
+	SequenceTiltStart::~SequenceTiltStart()
 	{
 	}
 	
@@ -16,24 +16,25 @@ namespace seq
 		return 2;
 	}
 
-	std::auto_ptr<ISequence> createChildSequence() const
+	std::auto_ptr<ISequence> SequenceTiltStart::createChildSequence() const
 	{
-		auto_ptr<ISequence> result(new SequenceTiltStart());
+		std::auto_ptr<ISequence> result(new SequenceTiltStart());
 		return result;
 	}
 	
-	void onChildSequenceEnd() 
+	void SequenceTiltStart::onChildSequenceEnd() 
 	{
 		return;
 	}
 	
-	std::auto_ptr<scn::IScene> createScene() const
+	std::auto_ptr<scn::IScene> SequenceTiltStart::createScene() const
 	{
-		auto_ptr<scn::IScene> result(new SceneStart());
+		scn::SceneStart *scene = new scn::SceneStart();
+		std::auto_ptr<scn::IScene> result(scene);
 		return result;
 	}
 	
-	void onSceneEnd(scn::IScene& scene)
+	void SequenceTiltStart::onSceneEnd(scn::IScene& scene)
 	{
 		return;
 	}

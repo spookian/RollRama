@@ -8,7 +8,7 @@ namespace seq
 	class ISequence
 	{
 	public:	
-		virtual void rtti() 											= 0;
+		virtual void rtti() {}
 		virtual ~ISequence() {}
 		virtual long nextAction() const 								= 0;
 		virtual std::auto_ptr<ISequence> createChildSequence() const 	= 0;

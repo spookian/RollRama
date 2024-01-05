@@ -1,11 +1,14 @@
 #pragma once
 
-#include "IScene.h"
+#include "scn/IScene.h"
 
 namespace scn
 {
-	class SceneStart : IScene
+	class SceneStart : public IScene
 	{
+	public:
+		void rtti();
+		SceneStart();
 		~SceneStart();
 		void updateMain();
 		void updateUseGPU();

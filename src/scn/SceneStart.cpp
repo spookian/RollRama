@@ -1,8 +1,23 @@
-#include "IScene.h"
-#include "SceneStart.h"
+#include "scn/IScene.h"
+#include "scn/SceneStart.h"
 
 namespace scn
 {
+	void SceneStart::rtti()
+	{
+		return;
+	}
+	
+	SceneStart::SceneStart()
+	{
+		return;
+	}
+	
+	SceneStart::~SceneStart()
+	{
+		return;
+	}
+	
 	void SceneStart::updateMain()
 	{
 		return;
@@ -18,7 +33,7 @@ namespace scn
 		return;
 	}
 	
-	void draw(const DrawReqInfo& info)
+	void SceneStart::draw(const DrawReqInfo& info)
 	{
 		return;
 	}
