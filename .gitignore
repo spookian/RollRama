@@ -8,6 +8,7 @@ Makefile
 *.bin
 *.dll
 *.dat
+*.pyc
 cmake_install.cmake
 
 build/
