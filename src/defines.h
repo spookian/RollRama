@@ -1,1 +1,3 @@
-#define class_size(A) char bytes[A]
+#pragma once
+
+#define SET_OBJECT_SIZE(A) char bytes[A]
