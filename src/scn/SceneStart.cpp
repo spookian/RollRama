@@ -1,3 +1,4 @@
+#include "allocate.h"
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
 
@@ -20,10 +21,11 @@ namespace scn
 		g3d::ModelBufferOption cubeOptions = g3d::ModelContext::DefaultModelBufferOption();
 		
 		mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
-		hel::common::FixedString<16> string("???");
+		hel::common::FixedString<32> string("MdlAnm");
 		// note: i have no idea what this does yet
+		// default string must be MdlAnm
 		
-		g3d::CharaModelContext cubeContext(cubeResCtx, cubeOptions, 0, 0, 0, *defAllocator, false, 0, 0, string);
+		g3d::CharaModelContext cubeContext(cubeResCtx, cubeOptions, 4, 2, 2, *defAllocator, true, 0x2000, string);
 		
 		cube = new g3d::CharaModel(cubeContext);
 		
@@ -46,6 +48,7 @@ namespace scn
 	
 	void SceneStart::updateUseGPU()
 	{
+		cube.registerToRoot(root);
 		return;
 	}
 	
@@ -56,7 +59,7 @@ namespace scn
 	
 	void SceneStart::draw(const DrawReqInfo& info)
 	{
-		// 
+		
 		return;
 	}
 	

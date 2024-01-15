@@ -2,6 +2,8 @@
 
 #include "g3d/ResFileRepository.h"
 #include "math/Matrix34.h"
+#include "math/Vector3.h"
+
 #include "mem/Memory.h"
 #include "common/FixedString.h"
 #include "defines.h"
@@ -16,14 +18,14 @@ namespace g3d
 	class RootContext
 	{
 		// get size of rootcontext
-		SET_OBJECT_SIZE(20); // as seen in __ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl
+		SET_OBJECT_SIZE(0x14); // as seen in __ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl
 		
 	public:
-		RootContext(mem::IAllocator& heap, unsigned long unk0, unsigned long unk1, unsigned long num_lights, unsigned long unk3);
+		RootContext(mem::IAllocator& heap, unsigned long unk0, unsigned long unk1, unsigned long numLights, unsigned long unk3);
 		/*
 		* unk0 is normally 32
 		* unk1 is normally 32
-		* num_lights is normally 8
+		* numLights is normally 8
 		* unk3 is normally 1
 		*/
 	};
@@ -31,7 +33,7 @@ namespace g3d
 	class Root
 	{
 		// get size of root
-		SET_OBJECT_SIZE(0x50); // 520 - 400; seen in __ct__Q33scn5arena9RenderSetFRQ33scn5arena9Component
+		SET_OBJECT_SIZE(0x54); // 520 - 400; seen in __ct__Q33scn5arena9RenderSetFRQ33scn5arena9Component
 		
 	public:
 		Root(const RootContext& context);
@@ -42,18 +44,10 @@ namespace g3d
 	
 	class ResModelContext
 	{
-		SET_OBJECT_SIZE(48);
+		SET_OBJECT_SIZE(52);
 		
 	public:
 		ResModelContext(ResFileAccessor& mdl_file, const char* modelname);
-	};
-
-	class Model
-	{
-	public:
-		void RegisterToRoot(const Root& root);
-		void setModelRTMtx(const hel::math::Matrix34& mtx);
-		void setModelScale(const hel::math::Vector3& scale);
 	};
 	
 	struct ModelBufferOption
@@ -76,17 +70,30 @@ namespace g3d
 	
 	class CharaModelContext : public ModelContext
 	{
-		SET_OBJECT_SIZE(0x70);
+		SET_OBJECT_SIZE(0x74);
 		
 	public:
-		CharaModelContext(const ResModelContext& context, const ModelBufferOption& options, unsigned long unk, unsigned long unk1, unsigned long unk2, mem::IAllocator&, bool unk_b0, unsigned long unk3, const hel::common::FixedString<32>& string);
-	}
+		CharaModelContext(const ResModelContext& context, const ModelBufferOption& options, unsigned long maxNumChildren, unsigned long numView, unsigned long animSlotNum, mem::IAllocator& allocator, bool isCreateNodeLocalMtx, unsigned long animSlotWorkMemSize, const hel::common::FixedString<32>& heapNamePrefix);
+		/*
+		* maxNumChildren is usually 4
+		* numView is usually 2
+		* animSlotNum is usually 2
+		* isCreateNodeLocalMtx is usually true from what i can tell
+		* animSlotWorkMemSize is usually 0x2000
+		* heapNamePrefix is usually "MdlAnm"
+		*/
+	};
 	
-	class CharaModel : public Model
+	class CharaModel
 	{
 		SET_OBJECT_SIZE(356); //
 		
 	public:
 		CharaModel(const CharaModelContext& context);
+		
+		void setModelRTMtx(const hel::math::Matrix34& mtx);
+		void setModelScale(const hel::math::Vector3& scale);
+		void registerToRoot(Root& root);
+		void updateWorldMtx();
 	};
 }
