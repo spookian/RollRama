@@ -32,7 +32,7 @@ namespace scn
 		cube = new g3d::CharaModel(cubeContext);
 		// setup cube
 		hel::math::Vector3 cubeScale(1.0f, 1.0f, 1.0f);
-		hel::math::Vector3 cubePos(0.0f, 0.0f, 1.0f);
+		hel::math::Vector3 cubePos(0.0f, 0.0f, 0.0f);
 		hel::math::Matrix34 cubeTransMtx = hel::math::Matrix34::CreateTrans(cubePos);
 		
 		cube->setModelScale(cubeScale);
@@ -52,6 +52,11 @@ namespace scn
 	
 	void SceneStart::updateMain()
 	{
+		hel::math::Vector3 dx(0.05f, 0.0f, 0.0f);
+		cubePosition += dx;
+		
+		cube->setModelRTMtx( hel::math::Matrix34::CreateTrans(cubePosition) );
+		cube->updateWorldMtx();
 		modelRoot->sceneClear();
 		cube->registerToRoot(*modelRoot);
 		return;
