@@ -1,15 +1,21 @@
 #pragma once
 
 #include "defines.h"
+#include "nw4r/ResFile.h"
 
 namespace g3d
 {
 	class ResFileAccessor
 	{
 	private:
-		SET_OBJECT_SIZE(32);
+		nw4r::g3d::ResFile* data;
 		
 	public:
+		ResFileAccessor(nw4r::g3d::ResFile* file)
+		{
+			data = file;
+		}
+		
 		void bind(const ResFileAccessor& other, bool unk) const;
 	};
 	
@@ -20,6 +26,6 @@ namespace g3d
 		
 	public:
 		ResFileRepository();
-		ResFileAccessor get(const char *path, bool unk);
+		nw4r::g3d::ResFile* get(const char *path, bool unk);
 	};
 }

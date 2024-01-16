@@ -1,26 +1,30 @@
-namespace hel::math
+#pragma once
+
+namespace hel
 {
-	struct Vector3
+	namespace math
 	{
-		Vector3();
-		Vector3(float _x, float _y, float _z); //0x800bdad0 - nw4r::math::VEC3 constructorp
+		struct Vector3
+		{
+			Vector3();
+			Vector3(float _x, float _y, float _z); //0x800bdad0 - nw4r::math::VEC3 constructorp
 
-		float x, y, z;
+			float x, y, z;
 
-		float dot(const Vector3& other) const;
-		float cos(const Vector3& other) const;
-		float length() const;
-		Vector3 cross(const Vector3& other) const;
-		void normalize();
+			float dot(const Vector3& other) const;
+			float cos(const Vector3& other) const;
+			float length() const;
+			Vector3 cross(const Vector3& other) const;
+			void normalize();
 
-		void operator=(const Vector3& other);
-		void operator+=(const Vector3& other);
-		Vector3 operator+(const Vector3& other) const;
-		Vector3 operator-(const Vector3& other) const;
-		Vector3 operator-() const;
-		Vector3 operator*(const Vector3& other) const;
-		Vector3 operator*(float scalar) const;
-		Vector3 operator/(float scalar) const;
+			void operator=(const Vector3& other);
+			void operator+=(const Vector3& other);
+			Vector3 operator+(const Vector3& other) const;
+			Vector3 operator-(const Vector3& other) const;
+			Vector3 operator-() const;
+			Vector3 operator*(float scalar) const;
+			Vector3 operator/(float scalar) const;
 
-	}; // include functions later
+		}; // include functions later
+	}
 }

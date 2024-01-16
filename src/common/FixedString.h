@@ -1,12 +1,15 @@
 #pragma once
 
-namespace hel::common
+namespace hel
 {
-	template <int T>
-	struct FixedString
+	namespace common
 	{
-		char[T] string; 
-		
-		FixedString(const char *_str);
-	};
+		template <int T>
+		struct FixedString
+		{
+			char strData[T]; 
+			
+			FixedString(const char *_str);
+		};
+	}
 }

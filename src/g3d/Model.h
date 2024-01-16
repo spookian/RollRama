@@ -21,12 +21,12 @@ namespace g3d
 		SET_OBJECT_SIZE(0x14); // as seen in __ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl
 		
 	public:
-		RootContext(mem::IAllocator& heap, unsigned long unk0, unsigned long unk1, unsigned long numLights, unsigned long unk3);
+		RootContext(mem::IAllocator& heap, unsigned long unk0, unsigned long maxNumChildren, unsigned long maxScnObj, unsigned long numLightSet);
 		/*
 		* unk0 is normally 32
-		* unk1 is normally 32
-		* numLights is normally 8
-		* unk3 is normally 1
+		* maxNumChildren is normally 32
+		* maxScnObj is normally 8
+		* numLightSet is normally 1
 		*/
 	};
 
@@ -38,6 +38,8 @@ namespace g3d
 	public:
 		Root(const RootContext& context);
 		CameraAccessor& currentCamera() const;
+		void sceneClear(); // i believe you either clear and refill the root object or you call a Root::sceneCalc* function
+		void sceneDrawOpa() const;
 		// note: 0x1c of root object is pointer to nw4r::g3d::scnroot object
 		// scnroot contains a lightset object with various lights, that's your ticket in
 	};
@@ -47,7 +49,7 @@ namespace g3d
 		SET_OBJECT_SIZE(52);
 		
 	public:
-		ResModelContext(ResFileAccessor& mdl_file, const char* modelname);
+		ResModelContext(const ResFileAccessor& mdl_file, const char* modelname);
 	};
 	
 	struct ModelBufferOption

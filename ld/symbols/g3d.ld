@@ -1,4 +1,6 @@
 "__ct__Q23g3d4RootFRCQ23g3d11RootContext" 					= 0x8019b9c8;
+"sceneClear__Q23g3d4RootFv" 								= 0x8019bc14;
+"sceneDrawOpa__Q23g3d4RootCFv"								= 0x8019bda0;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 
@@ -12,3 +14,10 @@
 "updateWorldMtx__Q23g3d10CharaModelFv" 						= 0x801949c0;
 "setModelRTMtx__Q23g3d10CharaModelFRCQ33hel4math8Matrix34" 	= 0x801949ec;
 "setModelScale__Q23g3d10CharaModelFRCQ33hel4math7Vector3"	= 0x80194a24;
+
+"__ct__Q23g3d17ResFileRepositoryFv"							= 0x8019b178;
+"get__Q23g3d17ResFileRepositoryFPCcb"						= 0x8019b2f0;
+
+"__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
+
+"__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
