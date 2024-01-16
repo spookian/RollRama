@@ -69,6 +69,7 @@ namespace scn
 	
 	void SceneStart::draw(const DrawReqInfo& info)
 	{
+		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
 		return;
 	}

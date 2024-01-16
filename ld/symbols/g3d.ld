@@ -1,6 +1,7 @@
 "__ct__Q23g3d4RootFRCQ23g3d11RootContext" 					= 0x8019b9c8;
 "sceneClear__Q23g3d4RootFv" 								= 0x8019bc14;
 "sceneDrawOpa__Q23g3d4RootCFv"								= 0x8019bda0;
+"sceneCalcOnDraw__Q23g3d4RootCFv"							= 0x8019bd48;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 

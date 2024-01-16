@@ -33,13 +33,14 @@ namespace g3d
 	class Root
 	{
 		// get size of root
-		SET_OBJECT_SIZE(0x54); // 520 - 400; seen in __ct__Q33scn5arena9RenderSetFRQ33scn5arena9Component
+		SET_OBJECT_SIZE(0x50); // 520 - 400; seen in __ct__Q33scn5arena9RenderSetFRQ33scn5arena9Component
 		
 	public:
 		Root(const RootContext& context);
 		CameraAccessor& currentCamera() const;
 		void sceneClear(); // i believe you either clear and refill the root object or you call a Root::sceneCalc* function
 		void sceneDrawOpa() const;
+		void sceneCalcOnDraw() const;
 		// note: 0x1c of root object is pointer to nw4r::g3d::scnroot object
 		// scnroot contains a lightset object with various lights, that's your ticket in
 	};
