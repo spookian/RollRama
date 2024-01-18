@@ -14,6 +14,8 @@ namespace scn
 		hel::math::Vector3		sphereVelocity;
 		hel::math::Vector3		sphereAngles; // euler
 		
+		float turnAround;
+		
 	public:
 		AMIGADemo(g3d::CharaModel* _sphere, g3d::CameraAccessor* _cam);
 		void updateMain();
