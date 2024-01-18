@@ -2,7 +2,7 @@
 
 #include "scn/IScene.h"
 #include "g3d/Model.h"
-#include "math/Vector3.h"
+#include "scn/AmigaDemo.h"
 
 namespace scn
 {
@@ -13,7 +13,7 @@ namespace scn
 		g3d::Root *modelRoot;
 		g3d::CharaModel *cube;
 		
-		hel::math::Vector3 cubePosition;
+		AMIGADemo *demo;
 		
 	public:
 		void rtti();

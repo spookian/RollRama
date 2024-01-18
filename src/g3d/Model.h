@@ -10,8 +10,10 @@
 
 namespace g3d
 {
-	class CameraAccessor
+	struct CameraAccessor
 	{
+		unsigned long unk;
+		
 		void setViewMtx(const hel::math::Matrix34& mtx) const;
 	};
 
@@ -37,7 +39,7 @@ namespace g3d
 		
 	public:
 		Root(const RootContext& context);
-		CameraAccessor& currentCamera() const;
+		CameraAccessor currentCamera() const;
 		void sceneClear(); // i believe you either clear and refill the root object or you call a Root::sceneCalc* function
 		void sceneDrawOpa() const;
 		void sceneCalcOnDraw() const;

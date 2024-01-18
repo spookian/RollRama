@@ -11,10 +11,11 @@ namespace g3d
 		nw4r::g3d::ResFile* data;
 		
 	public:
-		ResFileAccessor(nw4r::g3d::ResFile* file)
+		inline ResFileAccessor(nw4r::g3d::ResFile* file)
 		{
 			data = file;
 		}
+		// i actually suspect this constructor to exist except it's an inline
 		
 		void bind(const ResFileAccessor& other, bool unk) const;
 	};

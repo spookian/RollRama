@@ -2,6 +2,9 @@
 "sceneClear__Q23g3d4RootFv" 								= 0x8019bc14;
 "sceneDrawOpa__Q23g3d4RootCFv"								= 0x8019bda0;
 "sceneCalcOnDraw__Q23g3d4RootCFv"							= 0x8019bd48;
+"currentCamera__Q23g3d4RootCFv"								= 0x8019bde4;
+
+"setViewMtx__Q23g3d14CameraAccessorCFRCQ33hel4math8Matrix34"= 0x801935b8;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 
