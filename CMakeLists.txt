@@ -20,8 +20,8 @@ set(DKP_AS_TOOL ${DEVKITPATH}/devkitPPC/bin/powerpc-eabi-as)
 set(DKP_DOL_TOOL ${DEVKITPATH}/tools/bin/elf2dol)
 set(DKP_OBJCOPY ${DEVKITPATH}/devkitPPC/bin/powerpc-eabi-objcopy)
 
-set(CXX_FILES src/seq/SequenceTiltStart.cpp src/scn/SceneStart.cpp src/scn/AmigaDemo.cpp)
-set(OBJ_FILES SequenceTiltStart.o SceneStart.o AmigaDemo.o)
+set(CXX_FILES src/seq/SequenceTiltStart.cpp src/scn/SceneStart.cpp src/scn/Chowder.cpp)
+set(OBJ_FILES SequenceTiltStart.o SceneStart.o Chowder.o)
 
 set(CXX_FLAGS -i ./src -RTTI off -Cpp_exceptions off -enum int -Os -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -c)
 set(LD_FLAGS -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld/main.ld -I ./)

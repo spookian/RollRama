@@ -1,0 +1,7 @@
+"DrawQuadFill__Q23gfx12EasyRender3DFRCQ33hel4math8Matrix34RCQ33hel4math7Vector3RCQ33hel4math7Vector3RCQ33hel4math7Vector3RCQ33hel4math7Vector3" = 0x8019cfc0;
+"DrawLine__Q23gfx12EasyRender3DFRCQ33hel4math8Matrix34RCQ33hel4math7Vector3RCQ33hel4math7Vector3f" = 0x8019d488;
+"SetViewMtx__Q23gfx12EasyRender3DFRCQ33hel4math8Matrix34" = 0x8019cd70;
+"SetColor__Q23gfx12EasyRender3DFRC8_GXColor" = 0x8019cd40;
+"SetupGX__Q23gfx12EasyRender3DFRCQ33hel4math8Matrix44b" = 0x8019cab0;
+
+"GXSetZMode" = 0x80038940;

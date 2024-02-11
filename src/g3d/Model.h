@@ -14,7 +14,12 @@ namespace g3d
 	{
 		unsigned long unk;
 		
+		hel::math::Matrix34 viewMtx() const;
 		void setViewMtx(const hel::math::Matrix34& mtx) const;
+		float getProjFar() const;
+		float getProjNear() const;
+		float getProjAspect() const;
+		float getProjFovy() const;
 	};
 
 	class RootContext

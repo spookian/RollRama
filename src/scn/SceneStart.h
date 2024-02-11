@@ -2,7 +2,7 @@
 
 #include "scn/IScene.h"
 #include "g3d/Model.h"
-#include "scn/AmigaDemo.h"
+#include "scn/Chowder.h"
 
 namespace scn
 {
@@ -13,7 +13,7 @@ namespace scn
 		g3d::Root *modelRoot;
 		g3d::CharaModel *cube;
 		
-		AMIGADemo *demo;
+		Chowder *demo;
 		
 	public:
 		void rtti();

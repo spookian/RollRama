@@ -5,6 +5,11 @@
 "currentCamera__Q23g3d4RootCFv"								= 0x8019bde4;
 
 "setViewMtx__Q23g3d14CameraAccessorCFRCQ33hel4math8Matrix34"= 0x801935b8;
+"getProjFar__Q23g3d14CameraAccessorCFv" = 0x80193790;
+"getProjNear__Q23g3d14CameraAccessorCFv" = 0x8019376c;
+"getProjAspect__Q23g3d14CameraAccessorCFv" = 0x80193748;
+"getProjFovy__Q23g3d14CameraAccessorCFv" = 0x801936d0;
+"viewMtx__Q23g3d14CameraAccessorCFv" = 0x80193574;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 
@@ -25,3 +30,6 @@
 "__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
+
+"_restfpr_28" = 0x800072f4;
+"_savefpr_28" = 0x800072a8;

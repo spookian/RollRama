@@ -5,6 +5,7 @@ INCLUDE ./ld/symbols/new.ld
 INCLUDE ./ld/symbols/fixedstring.ld
 INCLUDE ./ld/symbols/g3d.ld
 INCLUDE ./ld/symbols/math.ld
+INCLUDE ./ld/symbols/gx.ld
 
 "__start" = 0x80006310;
 ENTRY(__start)

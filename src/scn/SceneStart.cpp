@@ -6,7 +6,7 @@
 #include "nw4r/ResFile.h"
 #include "g3d/Model.h"
 #include "mem/Memory.h"
-#include "scn/AmigaDemo.h"
+#include "scn/Chowder.h"
 
 namespace scn
 {
@@ -35,7 +35,7 @@ namespace scn
 		modelRoot = new g3d::Root(rootContext);
 		
 		g3d::CameraAccessor cam = modelRoot->currentCamera();
-		demo = new AMIGADemo(cube, &cam);
+		demo = new Chowder(&cam, cube);
 		return;
 	}
 	
@@ -46,9 +46,9 @@ namespace scn
 	
 	void SceneStart::updateMain()
 	{
-		demo->updateMain();
 		modelRoot->sceneClear();
-		demo->registerToRoot(*modelRoot);
+		demo->updateMain();
+		//cube->registerToRoot(root);
 		return;
 	}
 	
@@ -66,6 +66,7 @@ namespace scn
 	{
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
+		demo->drawDebug();
 		return;
 	}
 	
