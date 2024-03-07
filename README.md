@@ -6,7 +6,7 @@ This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to 
 #### How do I help out with this project?
 * Contact me on discord to start out, my tag is @shinton.
 * I recommend being somewhat skilled in C++, C, or assembly. You can pick up the other two as long as you have one of the three down.
-* Even if you don't have any experience with programming, I'd still like someone to help with getting the linker set up so I don't have to go on a massive detour every time I add extern code to the repository.
+* Even if you don't have any experience with low-level programming, I'd still like someone to help with getting the linker set up so I don't have to go on a massive detour every time I add extern code to the repository.
 
 #### How are you decompiling class names?
 * Check out this guide by Ninji, the lead developer of Newer Super Mario Bros. Wii. (https://wuffs.org/blog/reversing-games-with-hashcat)
@@ -24,6 +24,3 @@ This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to 
 
 #### Python
 * https://www.python.org/
-
-## Roadmap
-No work done on implementation just yet, I'm still doing research on the base game's code, but realistically implementation should start around mid-late January.

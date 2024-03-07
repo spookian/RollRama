@@ -17,7 +17,7 @@ namespace scn
 
 		void PlayerController::IntegrateForces()
 		{
-			this->position += this->velocity;
+			this->position += this->velocity * DELTATIME;
 			this->net_force = Vector3::ZERO;
 		}
 
@@ -47,12 +47,8 @@ namespace scn
 			Vector3 closestPoint = plane.ClosestPointOnPlane(position);
 			Vector3 edgeVector = closestPoint - position;
 			
-			if (edgeVector.length() > DISTANCE_TO_PLANE) return Vector3::ZERO; // first check
-			if (!plane.CheckPointInTriangle(closestPoint)) return Vector3::ZERO; // second check
-			
-			Vector3 normalizedEdge = edgeVector;
-			normalizedEdge.normalize();
-			if ( normalizedEdge.dot( *plane.normal ) > 0.0f) return Vector3::ZERO; // third check
+			if (edgeVector.length() <= PLAYER_RADIUS) return Vector3::ZERO; 
+			if (!plane.CheckPointInTriangle(closestPoint)) return Vector3::ZERO; 
 			
 			return edgeVector;
 		} // this is completely untested and wont be tested until like 3/10/24 or something
