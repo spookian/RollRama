@@ -7,6 +7,9 @@
 "__mi__Q33hel4math7Vector3CFRCQ33hel4math7Vector3"	= 0x80182dd0;
 "__ml__Q33hel4math7Vector3CFf"						= 0x80182aec;
 "__dv__Q33hel4math7Vector3CFf"						= 0x801cfde8;
+"dot__Q33hel4math7Vector3CFRCQ33hel4math7Vector3"	= 0x80183f90;
+"normalize__Q33hel4math7Vector3Fv"					= 0x801a6f9c;
+"length__Q33hel4math7Vector3CFv"					= 0x80183ee8;
 
 "__ct__Q33hel4math8Matrix34Fv"																			= 0x8019ca80;
 "__as__Q33hel4math8Matrix34FRCQ33hel4math8Matrix34"														= 0x80182a8c;
@@ -21,3 +24,10 @@
 
 "__ct__Q33hel4math8Matrix44Fv" = 0x801a64bc;
 "CreatePerspective__Q33hel4math8Matrix44Fffff" = 0x801a6444;
+
+"ZERO__Q33hel4math7Vector3" = 0x8088a760;
+"BASIS_X__Q33hel4math7Vector3" = 0x8088a778;
+"BASIS_Y__Q33hel4math7Vector3" = 0x8088a784;
+"BASIS_Z__Q33hel4math7Vector3" = 0x8088a790;
+
+"AbsF32__Q33hel4math4MathFf" = 0x80387a58;

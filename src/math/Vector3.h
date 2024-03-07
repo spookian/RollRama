@@ -24,7 +24,11 @@ namespace hel
 			Vector3 operator-() const;
 			Vector3 operator*(float scalar) const;
 			Vector3 operator/(float scalar) const;
-
+			
+			static const Vector3 ZERO;
+			static const Vector3 BASIS_X;
+			static const Vector3 BASIS_Y;
+			static const Vector3 BASIS_Z;
 		}; // include functions later
 	}
 }

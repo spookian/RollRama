@@ -48,7 +48,7 @@ namespace scn
 	{
 		modelRoot->sceneClear();
 		demo->updateMain();
-		//cube->registerToRoot(root);
+		demo->preDraw(*modelRoot);
 		return;
 	}
 	
@@ -66,7 +66,7 @@ namespace scn
 	{
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
-		demo->drawDebug();
+		//demo->drawDebug();
 		return;
 	}
 	

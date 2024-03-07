@@ -5,35 +5,21 @@
 #include "math/Matrix34.h"
 #include "scn/Chowder.h"
 
-Triangle::Triangle(const hel::math::Vector3& v0, const hel::math::Vector3& v1, const hel::math::Vector3& v2, const hel::math::Vector3& normal)
-{
-	this->v0 = v0;
-	this->v1 = v1;
-	this->v2 = v2;
-	this->normal = normal;
-	
-	hel::math::Vector3 dvec((v0.x + v1.x + v2.x)/3.0f * normal.x, (v0.y + v1.y + v2.y)/3.0f * normal.y, (v0.z + v1.z + v2.z)/3.0f * normal.z); // ax + by + cz = d
-	this->d = dvec.x + dvec.y + dvec.z;
-	this->flags = 0;
-	
-	return;
-}
-
 Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 {
 	camera.unk = cam->unk;
-	playerModel = player;
+	this->player = new scn::roll::PlayerController(player);
 
-	hel::math::Vector3 cameraPos(0.0f, 0.0f, -50.0f);
-	hel::math::Vector3 up(0.0f, 1.0f, 0.0f);
-	hel::math::Vector3 zero;
+	hel::math::Vector3 cameraPos(0.0f, 10.0f, -75.0f);
+	hel::math::Vector3 viewPoint(0.0f, 10.0f, 0.0f);
 		
-	hel::math::Matrix34 viewMat = hel::math::Matrix34::CreateLookAt(cameraPos, up, zero);
+	hel::math::Matrix34 viewMat = hel::math::Matrix34::CreateLookAt(cameraPos, hel::math::Vector3::BASIS_Y, viewPoint);
 	camera.setViewMtx(viewMat);
 }
 
-void Chowder::updateMain()
+void Chowder::updateMain() // update physics and setup drawing
 {
+	player->PhysicsUpdate();
 	return;
 }
 
@@ -86,4 +72,9 @@ void Chowder::drawDebug()
 	hel::math::Vector3 v2(30.0f, -10.0f, 0.0f);
 	
 	DrawTriangleWireframe(v0, v1, v2);
+}
+
+void Chowder::preDraw(g3d::Root& root)
+{
+	player->UpdateModel(root);
 }
