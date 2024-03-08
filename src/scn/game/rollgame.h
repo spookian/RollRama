@@ -60,6 +60,10 @@ namespace scn
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			hel::math::Vector3 rotation; // euler
+			hel::math::Vector3 angVelocity;
+			
+			bool justGrounded;
+			bool grounded;
 			
 			g3d::CharaModel *playerModel;
 			StageController *stage;
@@ -86,7 +90,7 @@ namespace scn
 				The player is treated as a sphere that collides with triangles using an algorithm to get the closest point on the plane containing the triangle and return if the point lies inside of the triangle. (Latter test is a tiny bit complicated due to using a 2D barycentric triangle algorithm with the largest axis projection of the triangle's normal affecting the variables being tested.) (I love you Real Time Collision Detection book)
 				If the second test passes then the distance between the triangle point and the player's position is checked to be below or equal to a constant. If the check fails, then the player is nowhere near close enough for the actual collision resolution to occur.
 				Finally, the edge vector between the triangle point and the player position has the dot product performed on it and the normal vector of the triangle. If the two vectors are (somewhat) in the same direction, then the algorithm will stop.
-				Now that all of the tests have been passed, we can complete collision resolution and add the triangle's surface normal multiplied by the length of the edge vector to the player's position.
+				Now that all of the tests have been passed, we can complete collision resolution and add the triangle's surface normal multiplied by the radius of the player.
 				
 			Physics simulation:
 				The position has been corrected but the velocity remains the same, AND is growing at a constant rate if gravity is accounted for. To solve this, we must implement Newton's three basic laws (the most important being the third).

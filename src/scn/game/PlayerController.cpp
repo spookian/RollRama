@@ -14,9 +14,11 @@ namespace scn
 		void GenerateDebugTriangle(TriangleWrapper& debug)
 		{
 			debug.v0 = new Vector3(-217.31, -100.0, -92.333);
-			debug.v1 = new Vector3(183.79, -100.0, -152.43);
+			//debug.v1 = new Vector3(183.79, -100.0, -152.43);
+			debug.v1 = new Vector3(183.79, -200.0, -152.43);
 			debug.v2 = new Vector3(19.12, -100.0, 180.48);
-			debug.normal = new Vector3(0.0f, 1.0f, 0.0f);
+			//debug.normal = new Vector3(0.0f, 1.0f, 0.0f);
+			debug.normal = new Vector3(0.2161, 0.9582, -0.1873);
 			
 			debug.RecalculateD();
 		}
@@ -26,6 +28,7 @@ namespace scn
 			playerModel = model;
 			GenerateDebugTriangle(debugTriangle);
 			mass = 1.0f;
+			justGrounded = true;
 		}
 
 		void PlayerController::IntegrateForces()
@@ -39,14 +42,23 @@ namespace scn
 			// two different friction subroutines; one for inclined planes and the other for flat ground
 			Vector3 weight(0.0, -9.81 * mass, 0.0);
 			AddForce(weight);
-			
-			IntegrateForces();
 			Vector3 collisionOffset = ResolveCollision(debugTriangle);
 			if (collisionOffset.x + collisionOffset.y + collisionOffset.z)
 			{
+				if (justGrounded) 
+				{
+					justGrounded = false;
+					velocity.y = 0.0;
+				}
 				position += collisionOffset;
-				velocity.y = 0.0f;
+				AddForce(*debugTriangle.normal * weight.length());
 			}
+			else
+			{
+				if (!debugTriangle.CheckPointInTriangle(position)) justGrounded = true;
+			}
+			IntegrateForces();
+			
 		}
 
 		void PlayerController::AddForce(const hel::math::Vector3& force)

@@ -1,0 +1,1 @@
+g3d::Root::lightSet(unsigned long unk) const; suspected to return a LightSetAccessor object.

@@ -66,9 +66,9 @@ void Chowder::drawDebug()
 	using namespace hel::math;
 	
 	SetupEasyRender3D();
-	_GXColor red = {255, 0, 0, 255};
+	_GXColor blue = {0, 0, 255, 255};
 	_GXColor green = {0, 255, 0, 255};
-	gfx::EasyRender3D::SetColor(red);
+	gfx::EasyRender3D::SetColor(blue);
 	
 	Vector3& v0 = *(player->debugTriangle.v0);
 	Vector3& v1 = *(player->debugTriangle.v1);
