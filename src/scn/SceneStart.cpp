@@ -66,7 +66,7 @@ namespace scn
 	{
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
-		//demo->drawDebug();
+		demo->drawDebug();
 		return;
 	}
 	

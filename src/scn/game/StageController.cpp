@@ -19,7 +19,7 @@ namespace scn
 			v2 = &vertexList[data->v2];
 			
 			normal = &data->normal;
-			d = -(v0->x * normal->x + v0->y * normal->y + v0->z * normal->z);
+			d = (v0->x * normal->x + v0->y * normal->y + v0->z * normal->z);
 		}
 		
 		TriangleWrapper::TriangleWrapper()
@@ -37,7 +37,7 @@ namespace scn
 		{
 			if (v0 && normal)
 			{
-				d = -(v0->x * normal->x + v0->y * normal->y + v0->z * normal->z);
+				d = (v0->x * normal->x + v0->y * normal->y + v0->z * normal->z);
 			}
 		};
 		

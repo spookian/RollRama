@@ -10,8 +10,8 @@ Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 	camera.unk = cam->unk;
 	this->player = new scn::roll::PlayerController(player);
 
-	hel::math::Vector3 cameraPos(0.0f, 10.0f, -75.0f);
-	hel::math::Vector3 viewPoint(0.0f, 10.0f, 0.0f);
+	hel::math::Vector3 cameraPos(0.0f, 15.0f, -300.0f);
+	hel::math::Vector3 viewPoint(0.0f, 15.0f, 0.0f);
 		
 	hel::math::Matrix34 viewMat = hel::math::Matrix34::CreateLookAt(cameraPos, hel::math::Vector3::BASIS_Y, viewPoint);
 	camera.setViewMtx(viewMat);
@@ -63,15 +63,24 @@ void Chowder::DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::mat
 
 void Chowder::drawDebug()
 {
+	using namespace hel::math;
+	
 	SetupEasyRender3D();
 	_GXColor red = {255, 0, 0, 255};
+	_GXColor green = {0, 255, 0, 255};
 	gfx::EasyRender3D::SetColor(red);
 	
-	hel::math::Vector3 v0(-24.0f, -20.0f, 0.0f);
-	hel::math::Vector3 v1(0.0f, 15.0f, 0.0f);
-	hel::math::Vector3 v2(30.0f, -10.0f, 0.0f);
+	Vector3& v0 = *(player->debugTriangle.v0);
+	Vector3& v1 = *(player->debugTriangle.v1);
+	Vector3& v2 = *(player->debugTriangle.v2);
+	Matrix34 identity;
 	
-	DrawTriangleWireframe(v0, v1, v2);
+	gfx::EasyRender3D::DrawQuadFill(identity, v0, v1, v2, v2);
+	
+	gfx::EasyRender3D::SetColor(green);
+	GXSetZMode(0, 1, 0);
+	gfx::EasyRender3D::DrawLine(identity, player->GetPosition(), player->debugTriangle.ClosestPointOnPlane( player->GetPosition() ), 3.0f);
+	GXSetZMode(1, 3, 1);
 }
 
 void Chowder::preDraw(g3d::Root& root)

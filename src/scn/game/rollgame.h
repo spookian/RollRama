@@ -73,6 +73,8 @@ namespace scn
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
+			hel::math::Vector3 GetPosition();
+			TriangleWrapper debugTriangle;
 			
 			/*														Collision Detection Algorithm But Awesome: Made by Shinton, age 12
 			Broad-phase:
