@@ -30,4 +30,5 @@
 "BASIS_Y__Q33hel4math7Vector3" = 0x8088a784;
 "BASIS_Z__Q33hel4math7Vector3" = 0x8088a790;
 
-"AbsF32__Q33hel4math4MathFf" = 0x80387a58;
+"AbsF32__Q33hel4math4MathFf" 	= 0x80387a58;
+"CosDegF__Q33hel4math4MathFf" 	= 0x80274620;

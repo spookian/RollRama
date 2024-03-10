@@ -36,6 +36,11 @@ namespace scn
 			this->position += this->velocity;
 			this->net_force = Vector3::ZERO;
 		}
+		
+		void PlayerController::AddTorque(const hel::math::Vector3& torque)
+		{
+			angularVelocity += torque * DELTATIME;
+		}
 
 		void PlayerController::PhysicsUpdate()
 		{
@@ -66,11 +71,19 @@ namespace scn
 			this->velocity += (force * DELTATIME) / this->mass;
 			this->net_force += force;
 		}
-
+		
 		void PlayerController::UpdateModel(g3d::Root& root)
-		{
+		{	
+			Vector3 slopeForward = -Vector3::BASIS_Y + *debugTriangle.normal;
+			Vector3 rotAxis(-slopeForward.z, slopeForward.y, slopeForward.x);
+			float magnitude = velocity.length();
+			if (slopeForward.x < 0 || slopeForward.z < 0) magnitude = -magnitude;
+				
 			Matrix34 translationMatrix = Matrix34::CreateTrans(position);
-			Matrix34 rotationMatrix = Matrix34::CreateRotXYZDeg(rotation);
+			rotationMatrix = Matrix34::CreateRotAxisDeg(rotAxis, magnitude) * rotationMatrix; 
+			// BUG: rotation is affected by y.
+			// Potential solutions: have the surface normal be BASIS_Y in the air; add torque as well and retool above code
+			// WORK ON LATER!!!!!!!
 			playerModel->setModelRTMtx(translationMatrix * rotationMatrix);
 			playerModel->updateWorldMtx();
 			

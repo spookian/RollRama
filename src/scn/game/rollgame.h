@@ -59,8 +59,8 @@ namespace scn
 			hel::math::Vector3 position;
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
-			hel::math::Vector3 rotation; // euler
-			hel::math::Vector3 angVelocity;
+			hel::math::Matrix34 rotationMatrix;
+			hel::math::Vector3 angularVelocity;
 			
 			bool justGrounded;
 			bool grounded;
@@ -73,6 +73,8 @@ namespace scn
 			void PhysicsUpdate();
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
 			void AddImpulse(const hel::math::Vector3& force); // velocity += force/m
+			void AddTorque(const hel::math::Vector3& torque);
+			
 			hel::math::Vector3 ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
 			void IntegrateForces();
 			
