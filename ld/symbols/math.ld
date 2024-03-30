@@ -21,6 +21,7 @@
 "CreateRotXYZRad__Q33hel4math8Matrix34FRCQ33hel4math7Vector3"											= 0x801a6050;
 "CreateRotXYZDeg__Q33hel4math8Matrix34FRCQ33hel4math7Vector3"											= 0x801a60ac;
 "CreateLookAt__Q33hel4math8Matrix34FRCQ33hel4math7Vector3RCQ33hel4math7Vector3RCQ33hel4math7Vector3"	= 0x801a6108;
+"mul__Q33hel4math8Matrix34CFRCQ33hel4math7Vector3" 														= 0x801837e4;
 
 "__ct__Q33hel4math8Matrix44Fv" = 0x801a64bc;
 "CreatePerspective__Q33hel4math8Matrix44Fffff" = 0x801a6444;

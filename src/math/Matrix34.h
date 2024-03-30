@@ -23,6 +23,7 @@ namespace hel
 			static Matrix34 CreateRotAxisDeg(const Vector3& axis, float rotation);
 
 			static Matrix34 CreateLookAt(const Vector3& cam_pos, const Vector3& up, const Vector3& target);
+			Vector3 mul(const Vector3& other) const;
 
 			void operator=(const Matrix34& other);
 			Matrix34 operator*(const Matrix34& other) const;

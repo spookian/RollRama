@@ -47,23 +47,17 @@ namespace scn
 			// two different friction subroutines; one for inclined planes and the other for flat ground
 			Vector3 weight(0.0, -9.81 * mass, 0.0);
 			AddForce(weight);
-			Vector3 collisionOffset = ResolveCollision(debugTriangle);
-			if (collisionOffset.x + collisionOffset.y + collisionOffset.z)
-			{
-				if (justGrounded) 
-				{
-					justGrounded = false;
-					velocity.y = 0.0;
-				}
-				position += collisionOffset;
-				AddForce(*debugTriangle.normal * weight.length());
-			}
-			else
-			{
-				if (!debugTriangle.CheckPointInTriangle(position)) justGrounded = true;
-			}
-			IntegrateForces();
 			
+			IntegrateForces();
+			CollisionResult surfaceCollisionData = ResolveCollision(debugTriangle);
+			if (surfaceCollisionData.collided)
+			{
+				position += surfaceCollisionData.displacement;
+				velocity += surfaceCollisionData.impulse;
+			}
+			
+			//LimitVelocity();
+			//ResolveAllCollisions(triangle_list)
 		}
 
 		void PlayerController::AddForce(const hel::math::Vector3& force)
@@ -92,16 +86,23 @@ namespace scn
 			playerModel->registerToRoot(root);
 		}
 		
-		Vector3 PlayerController::ResolveCollision(TriangleWrapper& plane) // returns position offset
+		CollisionResult PlayerController::ResolveCollision(TriangleWrapper& plane) // returns position offset
 		{
+			CollisionResult result;
 			Vector3 closestPoint = plane.ClosestPointOnPlane(position);
 			Vector3 edgeVector = closestPoint - position;
 			
-			if (edgeVector.length() > PLAYER_RADIUS) return Vector3::ZERO; 
-			if (!plane.CheckPointInTriangle(closestPoint)) return Vector3::ZERO; 
+			if (edgeVector.length() > PLAYER_RADIUS) return result; 
+			if (!plane.CheckPointInTriangle(closestPoint)) return result; 
 			
-			return edgeVector + (*(plane.normal) * PLAYER_RADIUS);
-		} // this is completely untested and wont be tested until like 3/10/24 or something
+			result.displacement = edgeVector + (*(plane.normal) * PLAYER_RADIUS);
+			result.collided = true;
+			
+			float impulse_length = velocity.dot(*plane.normal);
+			result.impulse = *plane.normal * -impulse_length;
+			
+			return result;
+		}
 		
 		Vector3 PlayerController::GetPosition()
 		{

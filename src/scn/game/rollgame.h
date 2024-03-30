@@ -42,6 +42,19 @@ namespace scn
 			TriangleWrapper();
 		};
 		
+		struct CollisionResult
+		{
+			inline CollisionResult()
+			{
+				collided = false;
+			}
+			
+			hel::math::Vector3 displacement;
+			hel::math::Vector3 impulse;
+			
+			bool collided; 
+		};
+		
 		class StageController
 		{
 			TriangleData *triangleSoup;
@@ -75,7 +88,7 @@ namespace scn
 			void AddImpulse(const hel::math::Vector3& force); // velocity += force/m
 			void AddTorque(const hel::math::Vector3& torque);
 			
-			hel::math::Vector3 ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
+			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
