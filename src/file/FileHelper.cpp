@@ -1,5 +1,6 @@
+#include "math/Math.h"
 
-namespace collada
+namespace file
 {
 	const char* skipToEOL(const char *string)
 	{
@@ -53,7 +54,7 @@ namespace collada
 			t = str[idx];
 		}
 		
-		result *= powf(0.1, deccount);
+		result *= (float)pow(0.1, (double)deccount);
 		return result;
 	}
 }

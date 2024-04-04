@@ -15,8 +15,10 @@ namespace hel
 			{
 				return ptr;
 			}
+			
+			static ExplicitSingleton<T> object;
 		};
 		
-		ExplicitSingleton<app::Application> object;
+		
 	}
 }

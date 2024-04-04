@@ -11,7 +11,7 @@ namespace hel
 			T data[SIZE];
 
 		public:
-			T& operator[](int idx);
+			T& operator[](unsigned long idx);
 		};
 	}
 }

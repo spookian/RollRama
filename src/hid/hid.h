@@ -31,6 +31,20 @@ namespace hid
 		hel::math::Vector3 rawVector3();
 	};
 	
+	class SimpleWRHID
+	{
+		bool enabled;
+		bool unk;
+	public:	
+		inline bool isEnabled()
+		{
+			return enabled;
+		}
+		Accel accel() const;
+		//DPD dpd(); used for pointing at screen
+		Button button() const;
+	};
+	
 	class HIDManager
 	{
 	public:
@@ -39,14 +53,5 @@ namespace hid
 			unsigned long x = ((unsigned long)this) + 720;
 			return *reinterpret_cast< hel::common::Array<SimpleWRHID, 4>* >(x);
 		} // PSA: move to a cpp file when you get the chance
-	};
-	
-	class SimpleWRHID
-	{
-	public:	
-		bool isEnable();
-		Accel accel() const;
-		//DPD dpd(); used for pointing at screen
-		Button button() const;
 	};
 }

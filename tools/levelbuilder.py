@@ -3,11 +3,11 @@ import os
 import struct
 
 METERS_TO_CENTIMETERS = 100
-VERT_FILE_PATH = "C:/C++ projects/RollRama/data/stage0_verts.bin"
-TRIANGLE_FILE_PATH = "C:/C++ projects/RollRama/data/stage0_tris.bin"
+FILE_PATH = "C:/C++ projects/RollRama/data/STAGE.roll"
 
 #triangle flags
 TRIANGLE_FLAG_ZHEAVY = 1
+HEADER_SIZE = 12
 
 triangle_file_data = bytes()
 vertexes = 0
@@ -32,39 +32,26 @@ def check_if_all_triangles(obj):
         
     return True
 
-def analyze_triangle(tri):
-    # function returns a number based on which axis has the largest projection, starting with 1
-    result = 1 # x axis
-    x = abs(tri.normal.x)
-    y = abs(tri.normal.y)
-    z = abs(tri.normal.z)
-    
-    if (y > x and y > z):
-        result = 2 # y axis
-    elif (z > x and z > y):
-        result = 3 # z axis
-        
-    return result
-
 x = bpy.data.objects.get('Stage')
 if x:
     if check_if_all_triangles(x):
+        print("Triangle check finished...")
         for vert in x.data.vertices:
             #store all vertex data
             vertex_file_data = vertex_file_data + create_vert_data(vert)
-        #export
-        f = os.open(VERT_FILE_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
-        os.write(f, vertex_file_data)
-        os.close(f)
-        
+        print("Vertices packed...")
         #for every face
         for tri in x.data.polygons:          
             triangle_file_data = triangle_file_data + create_triangle_data(tri)
-            
-        f = os.open(TRIANGLE_FILE_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
-        os.write(f, triangle_file_data)
-        os.close(f)
+        print("Triangles packed...")
+        #write header
+        header = "ROLL".encode(encoding="ascii") # create magic
+        header += struct.pack(">LL", HEADER_SIZE, HEADER_SIZE + len(vertex_file_data)) # then add rest of header
         
+        f = os.open(FILE_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
+        os.write(f, vertex_file_data)
+        os.close(f)
+        print("File written!")
     else: #halt
         print("ERROR: Mesh is not fully triangulated! Apply a Triangulate modifier or select all faces in edit mesh and press CTRL+T.")
         

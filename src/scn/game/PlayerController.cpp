@@ -28,7 +28,6 @@ namespace scn
 			playerModel = model;
 			GenerateDebugTriangle(debugTriangle);
 			mass = 1.0f;
-			justGrounded = true;
 		}
 
 		void PlayerController::IntegrateForces()
@@ -45,19 +44,39 @@ namespace scn
 		void PlayerController::PhysicsUpdate()
 		{
 			// two different friction subroutines; one for inclined planes and the other for flat ground
-			Vector3 weight(0.0, -9.81 * mass, 0.0);
+			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
 			AddForce(weight);
 			
 			IntegrateForces();
 			CollisionResult surfaceCollisionData = ResolveCollision(debugTriangle);
+			
+			// shove this into ResolveAllCollisions()
 			if (surfaceCollisionData.collided)
 			{
 				position += surfaceCollisionData.displacement;
 				velocity += surfaceCollisionData.impulse;
+				AddForce(surfaceCollisionData.surface_normal * GRAVITY * mass);
+				
+				//bounce code
 			}
 			
 			//LimitVelocity();
-			//ResolveAllCollisions(triangle_list)
+			//ResolveAllCollisions()
+		}
+
+		void PlayerController::ResolveAllCollisions()
+		{
+			for (int i = 0; i < stage->numTriangles; i++)
+			{
+				CollisionResult collisionData = ResolveCollision(*stage->triangleList[i]);
+				
+				if (collisionData.collided)
+				{
+					position += collisionData.displacement;
+					velocity += collisionData.impulse;
+					AddForce(collisionData.surface_normal * GRAVITY * mass );
+				}
+			}
 		}
 
 		void PlayerController::AddForce(const hel::math::Vector3& force)
@@ -94,9 +113,11 @@ namespace scn
 			
 			if (edgeVector.length() > PLAYER_RADIUS) return result; 
 			if (!plane.CheckPointInTriangle(closestPoint)) return result; 
+			if (edgeVector.dot(*plane.normal) < 0.0f) return result; // untested
 			
 			result.displacement = edgeVector + (*(plane.normal) * PLAYER_RADIUS);
 			result.collided = true;
+			result.surface_normal = *plane.normal;
 			
 			float impulse_length = velocity.dot(*plane.normal);
 			result.impulse = *plane.normal * -impulse_length;

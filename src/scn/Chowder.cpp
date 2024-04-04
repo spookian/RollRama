@@ -5,6 +5,11 @@
 #include "math/Matrix34.h"
 #include "scn/Chowder.h"
 
+#include "app/app.h"
+#include "hid/hid.h"
+#include "common/ExplicitSingleton.h"
+#include "math/Math.h"
+
 Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 {
 	camera.unk = cam->unk;
@@ -19,7 +24,7 @@ Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	player->PhysicsUpdate();
+	//player->PhysicsUpdate();
 	return;
 }
 
@@ -61,6 +66,29 @@ void Chowder::DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::mat
 	return;
 }
 
+hel::math::Matrix34 obtainWiimoteRotation()
+{
+	using namespace hel::math;
+	hid::SimpleWRHID& wiimote = hel::common::ExplicitSingleton<app::Application>::object->hidManager()->getWiimoteArray()[0]; // wow.
+	Matrix34 result;
+
+	if (wiimote.isEnabled())
+	{
+		hid::Accel accelData = wiimote.accel();
+		Vector3 accel;
+		float sign = 1.0f;
+		if (accelData.z < 0) sign = -sign;
+		
+		accel.x = asin(-accelData.x);
+		accel.y = asin( (accelData.y + 1.0f) * sign ); // curiously, Z seems to hold the right sign
+		accel.z = 0.0f;
+		
+		result = Matrix34::CreateRotXYZRad(accel);
+	}
+	
+	return result;
+}
+
 void Chowder::drawDebug()
 {
 	using namespace hel::math;
@@ -68,6 +96,8 @@ void Chowder::drawDebug()
 	SetupEasyRender3D();
 	_GXColor blue = {0, 0, 255, 255};
 	_GXColor green = {0, 255, 0, 255};
+	_GXColor yellow = {255, 255, 0, 255};
+	
 	gfx::EasyRender3D::SetColor(blue);
 	
 	Vector3& v0 = *(player->debugTriangle.v0);
@@ -80,7 +110,12 @@ void Chowder::drawDebug()
 	gfx::EasyRender3D::SetColor(green);
 	GXSetZMode(0, 1, 0);
 	gfx::EasyRender3D::DrawLine(identity, player->GetPosition(), player->debugTriangle.ClosestPointOnPlane( player->GetPosition() ), 3.0f);
+	
+	gfx::EasyRender3D::SetColor(yellow);
+	gfx::EasyRender3D::DrawLine(obtainWiimoteRotation(), player->GetPosition(), player->GetPosition() + (Vector3::BASIS_Y * 50.0f), 6.0f);
 	GXSetZMode(1, 3, 1);
+	
+	
 }
 
 void Chowder::preDraw(g3d::Root& root)

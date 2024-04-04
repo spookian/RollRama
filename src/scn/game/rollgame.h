@@ -2,6 +2,7 @@
 
 #include "math/Vector3.h"
 #include "g3d/Model.h"
+#include "file/FileAccessor.h"
 
 namespace scn
 {
@@ -13,7 +14,6 @@ namespace scn
 			unsigned short v1;
 			unsigned short v2;
 			
-			unsigned char flags;
 			hel::math::Vector3 normal;
 		};
 		
@@ -51,15 +51,20 @@ namespace scn
 			
 			hel::math::Vector3 displacement;
 			hel::math::Vector3 impulse;
+			hel::math::Vector3 surface_normal;
 			
 			bool collided; 
 		};
 		
-		class StageController
+		struct StageController
 		{
-			TriangleData *triangleSoup;
-			hel::math::Vector3 *vertexList;
+			// implement some kind of list
+			TriangleWrapper *triangleList[255];
+			unsigned long numTriangles;
 			g3d::CharaModel *stageModel; // i only decompiled one type of model, okay? cut me some slack
+			
+			bool CreateStage(file::FileData& file);
+			// create a destructor later
 		};
 		
 		/*
@@ -75,9 +80,6 @@ namespace scn
 			hel::math::Matrix34 rotationMatrix;
 			hel::math::Vector3 angularVelocity;
 			
-			bool justGrounded;
-			bool grounded;
-			
 			g3d::CharaModel *playerModel;
 			StageController *stage;
 			
@@ -89,6 +91,7 @@ namespace scn
 			void AddTorque(const hel::math::Vector3& torque);
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
+			void ResolveAllCollisions();
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
