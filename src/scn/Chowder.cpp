@@ -66,6 +66,15 @@ void Chowder::DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::mat
 	return;
 }
 
+inline float convertAccel(signed short accel)
+{
+	signed short clamp = accel;
+	if (clamp > 108) clamp = 108;
+	else if (clamp < -108) clamp = -108;
+	
+	return ((float)clamp) / 108.0f;
+}
+
 hel::math::Matrix34 obtainWiimoteRotation()
 {
 	using namespace hel::math;
@@ -74,14 +83,15 @@ hel::math::Matrix34 obtainWiimoteRotation()
 
 	if (wiimote.isEnabled())
 	{
-		hid::Accel accelData = wiimote.accel();
-		Vector3 accel;
-		float sign = 1.0f;
-		if (accelData.z < 0) sign = -sign;
+		WPADStatus wpad_data;
+		WPADRead(0, (void*)&wpad_data);
 		
-		accel.x = asin(-accelData.x);
-		accel.y = asin( (accelData.y + 1.0f) * sign ); // curiously, Z seems to hold the right sign
-		accel.z = 0.0f;
+		float accelX = convertAccel(wpad_data.accelX);
+		float accelY = convertAccel(-wpad_data.accelY);
+		Vector3 accel;
+		
+		accel.x = asin(accelX);
+		accel.z = asin(accelY);
 		
 		result = Matrix34::CreateRotXYZRad(accel);
 	}
