@@ -13,6 +13,7 @@ class Chowder
 {
 	g3d::CameraAccessor camera;
 	scn::roll::PlayerController *player;
+	scn::roll::StageController *stage;
 	
 public:
 

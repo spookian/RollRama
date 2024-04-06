@@ -7,11 +7,33 @@
 #include "math/Math.h"
 
 #define nullptr (Vector3*)0
+#define NULL ((void*)0)
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
+		StageController::StageController()
+		{
+			numTriangles = 0;
+			stageModel = (g3d::CharaModel*)NULL;
+		}
+		
+		StageController::~StageController()
+		{
+			// destroy all triangle wrappers
+			for (int i = 0; i < numTriangles; i++)
+			{
+				delete triangleList[i];
+			}
+			
+			// delete model
+			if (stageModel != NULL)
+			{
+				delete stageModel; // remind me to add dl
+			}
+		}
+		
 		TriangleWrapper::TriangleWrapper(Vector3* vertexList, TriangleData* data)
 		{
 			v0 = &vertexList[data->v0];

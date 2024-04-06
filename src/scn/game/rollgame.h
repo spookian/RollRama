@@ -58,13 +58,17 @@ namespace scn
 		
 		struct StageController
 		{
-			// implement some kind of list
+			StageController();
+			~StageController(); // clean up triangle list and model
+			
+			// implement some kind of linked list instead of array
 			TriangleWrapper *triangleList[255];
 			unsigned long numTriangles;
 			g3d::CharaModel *stageModel; // i only decompiled one type of model, okay? cut me some slack
+			hel::math::Matrix34 gameRotation;
 			
 			bool CreateStage(file::FileData& file);
-			// create a destructor later
+			bool LoadModel(const char* path);
 		};
 		
 		/*
@@ -84,19 +88,18 @@ namespace scn
 			StageController *stage;
 			
 		public:
-			PlayerController(g3d::CharaModel *model);
+			PlayerController(g3d::CharaModel *model, StageController *stage);
 			void PhysicsUpdate();
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
 			void AddImpulse(const hel::math::Vector3& force); // velocity += force/m
 			void AddTorque(const hel::math::Vector3& torque);
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
-			void ResolveAllCollisions();
+			bool ResolveAllCollisions();
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
 			hel::math::Vector3 GetPosition();
-			TriangleWrapper debugTriangle;
 			
 			/*														Collision Detection Algorithm But Awesome: Made by Shinton, age 12
 			Broad-phase:

@@ -10,21 +10,76 @@
 #include "common/ExplicitSingleton.h"
 #include "math/Math.h"
 
+#define MAX_HID_ACCEL 108.0f
+#define MAX_ACCEL 50
+
+inline float convertAccel(signed short accel)
+{
+	signed short clamp = accel;
+	if (clamp > MAX_ACCEL) clamp = MAX_ACCEL;
+	else if (clamp < -MAX_ACCEL) clamp = -MAX_ACCEL;
+	
+	return ((float)clamp) / MAX_HID_ACCEL;
+}
+
+hel::math::Matrix34 obtainWiimoteRotation()
+{
+	using namespace hel::math;
+	hid::SimpleWRHID& wiimote = hel::common::ExplicitSingleton<app::Application>::object->hidManager()->getWiimoteArray()[0]; // wow.
+	Matrix34 result;
+
+	if (wiimote.isEnabled())
+	{
+		WPADStatus wpad_data;
+		WPADRead(0, (void*)&wpad_data);
+		
+		float accelX = convertAccel(wpad_data.accelX);
+		float accelY = convertAccel(-wpad_data.accelY);
+		Vector3 accel;
+		
+		accel.x = asin(accelX);
+		accel.z = asin(accelY);
+		
+		result = Matrix34::CreateRotXYZRad(accel);
+	}
+	
+	return result;
+}
+
+// ONLY use these for debugging... due to the nature of file loading, TriangleWrapper objects do not clear the stored memory
+void debugAddTriangles(scn::roll::StageController& stage)
+{
+	stage.numTriangles = 1;
+	scn::roll::TriangleWrapper* t = new scn::roll::TriangleWrapper();
+	t->v0 = new hel::math::Vector3(-300, -100, -300);
+	t->v1 = new hel::math::Vector3( 300, -100, -300);
+	t->v2 = new hel::math::Vector3( 0,   -100,  300);
+	t->normal = new hel::math::Vector3(0, 1, 0);
+	t->RecalculateD();
+	
+	stage.triangleList[0] = t;
+	return;
+}
+
 Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 {
 	camera.unk = cam->unk;
-	this->player = new scn::roll::PlayerController(player);
-
-	hel::math::Vector3 cameraPos(0.0f, 15.0f, -300.0f);
-	hel::math::Vector3 viewPoint(0.0f, 15.0f, 0.0f);
-		
-	hel::math::Matrix34 viewMat = hel::math::Matrix34::CreateLookAt(cameraPos, hel::math::Vector3::BASIS_Y, viewPoint);
-	camera.setViewMtx(viewMat);
+	this->stage = new scn::roll::StageController();
+	debugAddTriangles(*stage);
+	
+	this->player = new scn::roll::PlayerController(player, stage);
 }
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	//player->PhysicsUpdate();
+	hel::math::Vector3 offset(0.0f, 100.0f, -300.0f);
+	hel::math::Vector3 offsetLook(0.0f, 100.0f, 0);
+	
+	hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() + offsetLook);
+	camera.setViewMtx(viewMatrix);
+	
+	stage->gameRotation = obtainWiimoteRotation();
+	player->PhysicsUpdate();
 	return;
 }
 
@@ -66,37 +121,27 @@ void Chowder::DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::mat
 	return;
 }
 
-inline float convertAccel(signed short accel)
-{
-	signed short clamp = accel;
-	if (clamp > 108) clamp = 108;
-	else if (clamp < -108) clamp = -108;
-	
-	return ((float)clamp) / 108.0f;
-}
-
-hel::math::Matrix34 obtainWiimoteRotation()
+void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& focalPoint)
 {
 	using namespace hel::math;
-	hid::SimpleWRHID& wiimote = hel::common::ExplicitSingleton<app::Application>::object->hidManager()->getWiimoteArray()[0]; // wow.
-	Matrix34 result;
-
-	if (wiimote.isEnabled())
-	{
-		WPADStatus wpad_data;
-		WPADRead(0, (void*)&wpad_data);
-		
-		float accelX = convertAccel(wpad_data.accelX);
-		float accelY = convertAccel(-wpad_data.accelY);
-		Vector3 accel;
-		
-		accel.x = asin(accelX);
-		accel.z = asin(accelY);
-		
-		result = Matrix34::CreateRotXYZRad(accel);
-	}
 	
-	return result;
+	_GXColor blue = {0, 0, 255, 255};
+	Vector3 translation = -focalPoint;
+	Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
+	Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
+	
+	Matrix34 finalMatrix = reverseMatrix * (stage.gameRotation * focalMatrix);
+	
+	for (int i = 0; i < stage.numTriangles; i++)
+	{
+		scn::roll::TriangleWrapper& triangle = *stage.triangleList[i];
+		Vector3& v0 = *(triangle.v0);
+		Vector3& v1 = *(triangle.v1);
+		Vector3& v2 = *(triangle.v2);
+		
+		gfx::EasyRender3D::SetColor(blue);
+		gfx::EasyRender3D::DrawQuadFill(finalMatrix, v0, v1, v2, v2);
+	}
 }
 
 void Chowder::drawDebug()
@@ -104,25 +149,16 @@ void Chowder::drawDebug()
 	using namespace hel::math;
 	
 	SetupEasyRender3D();
+	Vector3 playerPos = player->GetPosition();
 	_GXColor blue = {0, 0, 255, 255};
 	_GXColor green = {0, 255, 0, 255};
 	_GXColor yellow = {255, 255, 0, 255};
+
+	drawStageController(*this->stage, playerPos);
 	
-	gfx::EasyRender3D::SetColor(blue);
-	
-	Vector3& v0 = *(player->debugTriangle.v0);
-	Vector3& v1 = *(player->debugTriangle.v1);
-	Vector3& v2 = *(player->debugTriangle.v2);
-	Matrix34 identity;
-	
-	gfx::EasyRender3D::DrawQuadFill(identity, v0, v1, v2, v2);
-	
-	gfx::EasyRender3D::SetColor(green);
 	GXSetZMode(0, 1, 0);
-	gfx::EasyRender3D::DrawLine(identity, player->GetPosition(), player->debugTriangle.ClosestPointOnPlane( player->GetPosition() ), 3.0f);
-	
 	gfx::EasyRender3D::SetColor(yellow);
-	gfx::EasyRender3D::DrawLine(obtainWiimoteRotation(), player->GetPosition(), player->GetPosition() + (Vector3::BASIS_Y * 50.0f), 6.0f);
+	gfx::EasyRender3D::DrawLine(obtainWiimoteRotation(), playerPos, playerPos + (Vector3::BASIS_Y * 50.0f), 6.0f);
 	GXSetZMode(1, 3, 1);
 	
 	

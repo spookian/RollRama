@@ -29,7 +29,7 @@ namespace scn
 		
 		bool StageController::CreateStage(file::FileData& stageFile)
 		{
-			RollHeader *header = reinterpret_cast<RollHeader*>(stageFile.file_data)
+			RollHeader *header = reinterpret_cast<RollHeader*>(stageFile.file_data);
 			if (header->MAGIC != ROLL_SIGNATURE)
 			{
 				return false;

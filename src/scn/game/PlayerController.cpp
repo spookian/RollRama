@@ -6,27 +6,17 @@
 #include "math/Matrix34.h"
 #include "math/Math.h"
 
+#define FRICTION_CONST 0.05
+
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
-	{
-		void GenerateDebugTriangle(TriangleWrapper& debug)
-		{
-			debug.v0 = new Vector3(-217.31, -100.0, -92.333);
-			//debug.v1 = new Vector3(183.79, -100.0, -152.43);
-			debug.v1 = new Vector3(183.79, -200.0, -152.43);
-			debug.v2 = new Vector3(19.12, -100.0, 180.48);
-			//debug.normal = new Vector3(0.0f, 1.0f, 0.0f);
-			debug.normal = new Vector3(0.2161, 0.9582, -0.1873);
-			
-			debug.RecalculateD();
-		}
-		
-		PlayerController::PlayerController(g3d::CharaModel *model)
+	{	
+		PlayerController::PlayerController(g3d::CharaModel *model, StageController *stage)
 		{
 			playerModel = model;
-			GenerateDebugTriangle(debugTriangle);
+			this->stage = stage;
 			mass = 1.0f;
 		}
 
@@ -48,35 +38,41 @@ namespace scn
 			AddForce(weight);
 			
 			IntegrateForces();
-			CollisionResult surfaceCollisionData = ResolveCollision(debugTriangle);
-			
-			// shove this into ResolveAllCollisions()
-			if (surfaceCollisionData.collided)
+			if (ResolveAllCollisions())
 			{
-				position += surfaceCollisionData.displacement;
-				velocity += surfaceCollisionData.impulse;
-				AddForce(surfaceCollisionData.surface_normal * GRAVITY * mass);
+				//friction
+				Vector3 friction = velocity;
+				friction.normalize();
+				friction = friction * -FRICTION_CONST;
 				
-				//bounce code
+				if ((velocity + friction).length() < 0.1)
+				{
+					velocity = Vector3::ZERO;
+				}
+				else
+				{
+					velocity += friction;
+				}
 			}
-			
-			//LimitVelocity();
-			//ResolveAllCollisions()
 		}
 
-		void PlayerController::ResolveAllCollisions()
+		bool PlayerController::ResolveAllCollisions()
 		{
+			bool result = false;
 			for (int i = 0; i < stage->numTriangles; i++)
 			{
 				CollisionResult collisionData = ResolveCollision(*stage->triangleList[i]);
+				result = result || collisionData.collided;
 				
 				if (collisionData.collided)
 				{
 					position += collisionData.displacement;
 					velocity += collisionData.impulse;
-					AddForce(collisionData.surface_normal * GRAVITY * mass );
+					AddForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
 				}
 			}
+			
+			return result;
 		}
 
 		void PlayerController::AddForce(const hel::math::Vector3& force)
@@ -87,16 +83,15 @@ namespace scn
 		
 		void PlayerController::UpdateModel(g3d::Root& root)
 		{	
-			Vector3 slopeForward = -Vector3::BASIS_Y + *debugTriangle.normal;
-			Vector3 rotAxis(-slopeForward.z, slopeForward.y, slopeForward.x);
-			float magnitude = velocity.length();
-			if (slopeForward.x < 0 || slopeForward.z < 0) magnitude = -magnitude;
-				
+			//Vector3 slopeForward = -Vector3::BASIS_Y + *debugTriangle.normal;
+			//Vector3 rotAxis(-slopeForward.z, slopeForward.y, slopeForward.x);
+			//float magnitude = velocity.length();
+			//if (slopeForward.x < 0 || slopeForward.z < 0) magnitude = -magnitude;
+			//rotationMatrix = Matrix34::CreateRotAxisDeg(rotAxis, magnitude) * rotationMatrix; 
+			// rework rotation based on slope normal
+			
 			Matrix34 translationMatrix = Matrix34::CreateTrans(position);
-			rotationMatrix = Matrix34::CreateRotAxisDeg(rotAxis, magnitude) * rotationMatrix; 
-			// BUG: rotation is affected by y.
-			// Potential solutions: have the surface normal be BASIS_Y in the air; add torque as well and retool above code
-			// WORK ON LATER!!!!!!!
+		
 			playerModel->setModelRTMtx(translationMatrix * rotationMatrix);
 			playerModel->updateWorldMtx();
 			
@@ -113,7 +108,7 @@ namespace scn
 			
 			if (edgeVector.length() > PLAYER_RADIUS) return result; 
 			if (!plane.CheckPointInTriangle(closestPoint)) return result; 
-			if (edgeVector.dot(*plane.normal) < 0.0f) return result; // untested
+			//if (edgeVector.dot(*plane.normal) < 0.0f) return result; // untested
 			
 			result.displacement = edgeVector + (*(plane.normal) * PLAYER_RADIUS);
 			result.collided = true;
