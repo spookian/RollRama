@@ -6,7 +6,7 @@
 #include "math/Matrix34.h"
 #include "math/Math.h"
 
-#define FRICTION_CONST 0.05
+#define FRICTION_CONST 0.02
 
 using namespace hel::math;
 namespace scn
@@ -53,6 +53,9 @@ namespace scn
 				{
 					velocity += friction;
 				}
+				
+				//rotation 
+				
 			}
 		}
 

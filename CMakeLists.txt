@@ -32,7 +32,7 @@ add_custom_command(
 	COMMAND ${CW_CC} ${CXX_FLAGS} ${CXX_FILES}
 	COMMAND ${DKP_AS_TOOL} asm/link.s -o link.o
 	COMMAND ${DKP_AS_TOOL} asm/hook.s -o hook.o
-	COMMAND ${DKP_C_COMP} ${LD_FLAGS} link.o hook.o ${OBJ_FILES} -o ./build/RTDLBASE.elf
-	COMMAND python tools/adjust_section_offsets.py build/RTDLBASE.elf
-	COMMAND ${DKP_OBJCOPY} -O binary ./build/RTDLBASE.elf ./build/RTDLBASE.dol
+	COMMAND ${DKP_C_COMP} ${LD_FLAGS} link.o hook.o ${OBJ_FILES} -o ./build/main.elf
+	COMMAND python tools/adjust_section_offsets.py build/main.elf
+	COMMAND ${DKP_OBJCOPY} -O binary build/main.elf ./build/main.dol
 )

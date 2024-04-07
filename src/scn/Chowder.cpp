@@ -10,8 +10,8 @@
 #include "common/ExplicitSingleton.h"
 #include "math/Math.h"
 
-#define MAX_HID_ACCEL 108.0f
-#define MAX_ACCEL 50
+#define MAX_HID_ACCEL 216.0f
+#define MAX_ACCEL 100
 
 inline float convertAccel(signed short accel)
 {
@@ -72,10 +72,9 @@ Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	hel::math::Vector3 offset(0.0f, 100.0f, -300.0f);
-	hel::math::Vector3 offsetLook(0.0f, 100.0f, 0);
+	hel::math::Vector3 offset(0.0f, 200.0f, -300.0f);
 	
-	hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() + offsetLook);
+	hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
 	camera.setViewMtx(viewMatrix);
 	
 	stage->gameRotation = obtainWiimoteRotation();
