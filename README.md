@@ -17,7 +17,7 @@ This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to 
 * Check out this guide by Ninji, the lead developer of Newer Super Mario Bros. Wii. (https://wuffs.org/blog/reversing-games-with-hashcat)
 
 #### What's the deadline?
-* April 1st. This is going to be a public release.
+* Somewhere around June-July 2024.
 
 ## Requirements
 
