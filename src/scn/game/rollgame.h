@@ -91,7 +91,6 @@ namespace scn
 			PlayerController(g3d::CharaModel *model, StageController *stage);
 			void PhysicsUpdate();
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
-			void AddImpulse(const hel::math::Vector3& force); // velocity += force/m
 			void AddTorque(const hel::math::Vector3& torque);
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
