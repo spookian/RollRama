@@ -20,6 +20,8 @@ namespace g3d
 		float getProjNear() const;
 		float getProjAspect() const;
 		float getProjFovy() const;
+		
+		void setProjPerspective(float fov, float aspect, float near, float far) const;
 	};
 
 	class RootContext

@@ -10,6 +10,7 @@
 "getProjAspect__Q23g3d14CameraAccessorCFv" = 0x80193748;
 "getProjFovy__Q23g3d14CameraAccessorCFv" = 0x801936d0;
 "viewMtx__Q23g3d14CameraAccessorCFv" = 0x80193574;
+"setProjPerspective__Q23g3d14CameraAccessorCFffff" = 0x80193674;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 
@@ -32,8 +33,10 @@
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
 
+"_restfpr_27" = 0x800072f0;
 "_restfpr_28" = 0x800072f4;
 "_restfpr_29" = 0x800072f8;
 
+"_savefpr_27" = 0x800072a4;
 "_savefpr_28" = 0x800072a8;
 "_savefpr_29" = 0x800072ac;

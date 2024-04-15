@@ -1,6 +1,7 @@
 #include "g3d/Model.h"
 #include "math/Vector3.h"
 #include "gfx/EasyRender3D.h"
+#include "gfx/Utility.h"
 #include "math/Matrix44.h"
 #include "math/Matrix34.h"
 #include "scn/Chowder.h"
@@ -12,6 +13,21 @@
 
 #define MAX_HID_ACCEL 216.0f
 #define MAX_ACCEL 100
+
+// this function is needed
+void reconstructPerspectiveMatrix(g3d::CameraAccessor& camera)
+{
+	using namespace hel::math;
+	
+	float far = camera.getProjFar();
+	float near = camera.getProjNear();
+	float fov = camera.getProjFovy();
+	float aspect_ratio = ( (float)gfx::Utility::CurrentGameWidth() / (float)gfx::Utility::CurrentGameHeight() );
+	
+	camera.setProjPerspective(fov, aspect_ratio, near, far);
+	
+	return; 
+}
 
 inline float convertAccel(signed short accel)
 {
@@ -64,6 +80,8 @@ void debugAddTriangles(scn::roll::StageController& stage)
 Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
 {
 	camera.unk = cam->unk;
+	// get rmode or enable progressive at start?
+	reconstructPerspectiveMatrix(*cam);
 	this->stage = new scn::roll::StageController();
 	debugAddTriangles(*stage);
 	

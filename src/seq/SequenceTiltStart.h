@@ -5,6 +5,13 @@
 
 namespace seq
 {
+	enum TiltSequenceMode
+	{
+		FAKE_START,
+		GAMEPLAY,
+		END_CREDITS
+	};
+
 	class SequenceTiltStart : public ISequence
 	{
 	public:

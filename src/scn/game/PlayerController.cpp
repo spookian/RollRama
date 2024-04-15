@@ -25,11 +25,6 @@ namespace scn
 			this->position += this->velocity;
 			this->net_force = Vector3::ZERO;
 		}
-		
-		void PlayerController::AddTorque(const hel::math::Vector3& torque)
-		{
-			angularVelocity += torque * DELTATIME;
-		}
 
 		void PlayerController::PhysicsUpdate()
 		{
@@ -55,7 +50,9 @@ namespace scn
 				}
 				
 				//rotation 
+				Vector3 rotAxis(velocity.z, 0.0f, -velocity.x);
 				
+				angularVelocity = Matrix34::CreateRotXYZDeg(rotAxis);
 			}
 		}
 
@@ -93,6 +90,7 @@ namespace scn
 			//rotationMatrix = Matrix34::CreateRotAxisDeg(rotAxis, magnitude) * rotationMatrix; 
 			// rework rotation based on slope normal
 			
+			rotationMatrix = angularVelocity * rotationMatrix;
 			Matrix34 translationMatrix = Matrix34::CreateTrans(position);
 		
 			playerModel->setModelRTMtx(translationMatrix * rotationMatrix);

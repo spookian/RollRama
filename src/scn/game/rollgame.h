@@ -82,7 +82,7 @@ namespace scn
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			hel::math::Matrix34 rotationMatrix;
-			hel::math::Vector3 angularVelocity;
+			hel::math::Matrix34 angularVelocity;
 			
 			g3d::CharaModel *playerModel;
 			StageController *stage;
@@ -91,7 +91,7 @@ namespace scn
 			PlayerController(g3d::CharaModel *model, StageController *stage);
 			void PhysicsUpdate();
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
-			void AddTorque(const hel::math::Vector3& torque);
+			void AddTorque(const hel::math::Matrix34& torque); // euler
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
 			bool ResolveAllCollisions();

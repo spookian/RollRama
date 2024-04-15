@@ -4,7 +4,7 @@
 	<img src="logo.svg" width="300" alt="RollRama logo"></img>
 </p>
 
-This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to create an entirely new subgame based off of the 2001 Game Boy Color game "Kirby Tilt 'n' Tumble".
+This is a work-in-progress romhack for Kirby's Return to Dreamland that aims to create an entirely new subgame based off of the 2001 Game Boy Color game, "Kirby Tilt 'n' Tumble".
 
 ## FAQ
 
