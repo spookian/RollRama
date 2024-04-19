@@ -5,6 +5,7 @@
 #include "math/Matrix44.h"
 #include "math/Matrix34.h"
 #include "scn/Chowder.h"
+#include "scn/game/PlayerController.h"
 
 #include "app/app.h"
 #include "hid/hid.h"
@@ -77,15 +78,14 @@ void debugAddTriangles(scn::roll::StageController& stage)
 	return;
 }
 
-Chowder::Chowder(g3d::CameraAccessor *cam, g3d::CharaModel *player)
+Chowder::Chowder(g3d::CameraAccessor *cam)
 {
 	camera.unk = cam->unk;
 	// get rmode or enable progressive at start?
 	reconstructPerspectiveMatrix(*cam);
 	this->stage = new scn::roll::StageController();
 	debugAddTriangles(*stage);
-	
-	this->player = new scn::roll::PlayerController(player, stage);
+	this->player = new scn::roll::PlayerController(*this);
 }
 
 void Chowder::updateMain() // update physics and setup drawing
@@ -96,7 +96,7 @@ void Chowder::updateMain() // update physics and setup drawing
 	camera.setViewMtx(viewMatrix);
 	
 	stage->gameRotation = obtainWiimoteRotation();
-	player->PhysicsUpdate();
+	player->Update(stage);
 	return;
 }
 
@@ -166,16 +166,11 @@ void Chowder::drawDebug()
 	using namespace hel::math;
 	
 	SetupEasyRender3D();
+	
 	Vector3 playerPos = player->GetPosition();
-	_GXColor blue = {0, 0, 255, 255};
-	_GXColor green = {0, 255, 0, 255};
-	_GXColor yellow = {255, 255, 0, 255};
-
 	drawStageController(*this->stage, playerPos);
 	
 	GXSetZMode(0, 1, 0);
-	gfx::EasyRender3D::SetColor(yellow);
-	gfx::EasyRender3D::DrawLine(obtainWiimoteRotation(), playerPos, playerPos + (Vector3::BASIS_Y * 50.0f), 6.0f);
 	GXSetZMode(1, 3, 1);
 	
 	

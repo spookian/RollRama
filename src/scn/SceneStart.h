@@ -8,8 +8,6 @@ namespace scn
 {
 	class SceneStart : public IScene
 	{
-		g3d::ResFileRepository fileRepo;
-		
 		g3d::Root *modelRoot;
 		g3d::CharaModel *cube;
 		

@@ -3,13 +3,16 @@
 #include "math/Matrix34.h"
 #include "math/Matrix44.h"
 
-struct _GXColor
+extern "C"
 {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
-	unsigned char a;
-}; // also stolen (donated) from doldecomp.github.io
+	typedef struct _GXColor
+	{
+		unsigned char r;
+		unsigned char g;
+		unsigned char b;
+		unsigned char a;
+	} GXColor; // also stolen (donated) from doldecomp.github.io
+}
 
 namespace gfx
 {
