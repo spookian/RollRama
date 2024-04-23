@@ -8,3 +8,5 @@
 
 "CurrentGameWidth__Q23gfx7UtilityFv" = 0x8019f4ac;
 "CurrentGameHeight__Q23gfx7UtilityFv" = 0x8019f4d8;
+
+"object__Q33hel6common35ExplicitSingleton<Q23gfx9VISetting>" = 0x808c1d78;

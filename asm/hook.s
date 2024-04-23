@@ -27,3 +27,9 @@ hook_sequenceroot:
 	cmpwi %r3, 0
 	beq 0x8
 	bl __ct__Q23seq17SequenceTiltStartFv
+
+.section __007E393C, "awx", @progbits
+.long 0x00000000
+.long 0x00000000
+.long 0x44200000
+.long 0x43e40000

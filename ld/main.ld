@@ -53,6 +53,9 @@ SECTIONS
 	
 	. = 0x806f9e2c;
 	__006F5C6C :	{ KEEP(*(__006F5C6C)) }
+	
+	. = 0x808c529c;
+	__007E393C :	{ KEEP(*(__007E393C)) }
 }
 
 "TXT2_SIZE" = SIZEOF(.text);

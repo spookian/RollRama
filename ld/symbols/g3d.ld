@@ -11,6 +11,7 @@
 "getProjFovy__Q23g3d14CameraAccessorCFv" = 0x801936d0;
 "viewMtx__Q23g3d14CameraAccessorCFv" = 0x80193574;
 "setProjPerspective__Q23g3d14CameraAccessorCFffff" = 0x80193674;
+"SetViewport__Q34nw4r3g3d6CameraFffff" = 0x800e54f0;
 
 "__ct__Q23g3d11RootContextFRQ23mem10IAllocatorUlUlUlUl" 	= 0x8019bff4;
 

@@ -18,6 +18,7 @@ def parse_elf(bfile):
             new_addr = (int(x.name[2:10], 16)).to_bytes(4, byteorder='big')
             bfile.seek(x.header_offset + 0xC)
             bfile.write(new_addr)
+            print("hook found")
             
 
 if __name__ == "__main__":

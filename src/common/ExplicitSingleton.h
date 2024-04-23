@@ -18,7 +18,5 @@ namespace hel
 			
 			static ExplicitSingleton<T> object;
 		};
-		
-		
 	}
 }

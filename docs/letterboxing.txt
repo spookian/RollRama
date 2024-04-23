@@ -1,0 +1,6 @@
+letterboxing addresses: all correspond to GXSetViewport arguments
+draw__Q23gfx14EFBToLetterBoxCFv
+-0x6864 (808cbb00) -> x
+-0x6860 (808cbb00) -> y
+-0x685C (808cbb00) -> width
+-0x6858 (808cbb00) -> height

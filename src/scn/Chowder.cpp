@@ -11,19 +11,23 @@
 #include "hid/hid.h"
 #include "common/ExplicitSingleton.h"
 #include "math/Math.h"
+#include "gfx/VISetting.h"
+#include "gfx/GXStructs.h"
 
 #define MAX_HID_ACCEL 216.0f
 #define MAX_ACCEL 100
 
 // this function is needed
-void reconstructPerspectiveMatrix(g3d::CameraAccessor& camera)
+void adjustScreen(g3d::CameraAccessor& camera)
 {
 	using namespace hel::math;
+	const _GXRenderModeObj *rmode = &hel::common::ExplicitSingleton<gfx::VISetting>::object->rmode;
+	if (rmode->fbWidth == 608) return;
+	float aspect_ratio = (16.0f/9.0f);
 	
 	float far = camera.getProjFar();
 	float near = camera.getProjNear();
 	float fov = camera.getProjFovy();
-	float aspect_ratio = ( (float)gfx::Utility::CurrentGameWidth() / (float)gfx::Utility::CurrentGameHeight() );
 	
 	camera.setProjPerspective(fov, aspect_ratio, near, far);
 	
@@ -82,7 +86,7 @@ Chowder::Chowder(g3d::CameraAccessor *cam)
 {
 	camera.unk = cam->unk;
 	// get rmode or enable progressive at start?
-	reconstructPerspectiveMatrix(*cam);
+	adjustScreen(*cam);
 	this->stage = new scn::roll::StageController();
 	debugAddTriangles(*stage);
 	this->player = new scn::roll::PlayerController(*this);

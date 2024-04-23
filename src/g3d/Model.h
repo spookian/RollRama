@@ -8,12 +8,23 @@
 #include "common/FixedString.h"
 #include "defines.h"
 
+namespace nw4r
+{
+	namespace g3d
+	{
+		struct Camera
+		{
+			unsigned long unk;
+			
+			void SetViewport(float x, float y, float width, float height);
+		};
+	}
+}
+
 namespace g3d
 {
-	struct CameraAccessor
-	{
-		unsigned long unk;
-		
+	struct CameraAccessor : public nw4r::g3d::Camera
+	{	
 		hel::math::Matrix34 viewMtx() const;
 		void setViewMtx(const hel::math::Matrix34& mtx) const;
 		float getProjFar() const;

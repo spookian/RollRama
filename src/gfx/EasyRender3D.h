@@ -2,18 +2,7 @@
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
 #include "math/Matrix44.h"
-
-extern "C"
-{
-	typedef struct _GXColor
-	{
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-		unsigned char a;
-	} GXColor; // also stolen (donated) from doldecomp.github.io
-}
-
+#include "gfx/GXStructs.h"
 namespace gfx
 {
 	class EasyRender3D
