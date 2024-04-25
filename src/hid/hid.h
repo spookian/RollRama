@@ -1,5 +1,8 @@
 #pragma once
 
+#include "math/Vector3.h"
+#include "common/Array.h"
+
 extern "C"
 {
 	extern void WPADRead(unsigned long channel, void* buffer); // typecast buffer to WPADStatus

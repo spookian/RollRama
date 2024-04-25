@@ -49,5 +49,16 @@ extern "C"
 		unsigned char sample_pattern[12][2];
 		unsigned char vfilter[7];
 	} GXRenderModeObj;
+	
+	typedef enum _GXSpotFn
+	{
+		GX_SP_OFF,
+		GX_SP_FLAT,
+		GX_SP_COS,
+		GX_SP_COS2,
+		GX_SP_SHARP,
+		GX_SP_RING1,
+		GX_SP_RING2
+	} GXSpotFn;
 }
 // all stolen (donated) from doldecomp.github.io

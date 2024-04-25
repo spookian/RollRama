@@ -1,5 +1,9 @@
 #pragma once
 
+#include "math/Vector3.h"
+#include "math/Matrix44.h"
+#include "math/Matrix34.h"
+
 #define PI (355.0f/113.0f)
 #define HALFPI (PI / 2.0f)
 

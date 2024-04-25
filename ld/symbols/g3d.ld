@@ -3,6 +3,9 @@
 "sceneDrawOpa__Q23g3d4RootCFv"								= 0x8019bda0;
 "sceneCalcOnDraw__Q23g3d4RootCFv"							= 0x8019bd48;
 "currentCamera__Q23g3d4RootCFv"								= 0x8019bde4;
+"lightSet__Q23g3d4RootCFUl"									= 0x8019be54;
+"sceneCalcOnUpdateMain__Q23g3d4RootFv"						= 0x8019bc98;
+"sceneCalcOnUpdateUseGPU__Q23g3d4RootFv"					= 0x8019bd40;
 
 "setViewMtx__Q23g3d14CameraAccessorCFRCQ33hel4math8Matrix34"= 0x801935b8;
 "getProjFar__Q23g3d14CameraAccessorCFv" = 0x80193790;

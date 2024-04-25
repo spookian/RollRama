@@ -12,7 +12,9 @@ extern "C"
 
 class Chowder
 {
+	g3d::Root *modelRoot;
 	g3d::CameraAccessor camera;
+	
 	scn::roll::PlayerController *player;
 	scn::roll::StageController *stage;
 	
@@ -20,12 +22,13 @@ class Chowder
 	
 public:
 
-	Chowder(g3d::CameraAccessor *cam);
+	Chowder();
 	void SetupEasyRender3D();
 	void DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::math::Vector3& v1, const hel::math::Vector3& v2);
 	void updateMain();
 	void drawDebug();
-	void preDraw(g3d::Root& root);
+	void preDraw();
+	void draw();
 	
 	void addScore(unsigned long offset);
 	

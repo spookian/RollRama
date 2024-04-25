@@ -17,12 +17,7 @@ namespace scn
 	SceneStart::SceneStart()
 	{
 		// initialize root object
-		mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
-		g3d::RootContext rootContext(*defAllocator, 32, 32, 8, 1);
-		modelRoot = new g3d::Root(rootContext);
-		
-		g3d::CameraAccessor cam = modelRoot->currentCamera();
-		demo = new Chowder(&cam);
+		demo = new Chowder();
 		return;
 	}
 	
@@ -33,9 +28,8 @@ namespace scn
 	
 	void SceneStart::updateMain()
 	{
-		modelRoot->sceneClear();
 		demo->updateMain();
-		demo->preDraw(*modelRoot);
+		demo->preDraw();
 		return;
 	}
 	
@@ -51,9 +45,7 @@ namespace scn
 	
 	void SceneStart::draw(const DrawReqInfo& info)
 	{
-		modelRoot->sceneCalcOnDraw();
-		modelRoot->sceneDrawOpa();
-		demo->drawDebug();
+		demo->draw();
 		return;
 	}
 	

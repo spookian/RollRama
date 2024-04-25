@@ -1,21 +1,18 @@
-#include "g3d/Model.h"
-#include "math/Vector3.h"
-#include "gfx/EasyRender3D.h"
-#include "gfx/Utility.h"
-#include "math/Matrix44.h"
-#include "math/Matrix34.h"
-#include "scn/Chowder.h"
-#include "scn/game/PlayerController.h"
-
+#include "math/math.h"
+#include "gfx/gfx.h"
 #include "app/app.h"
 #include "hid/hid.h"
+
+#include "g3d/Model.h"
+#include "scn/Chowder.h"
+#include "scn/game/PlayerController.h"
+#include "mem/Memory.h"
 #include "common/ExplicitSingleton.h"
-#include "math/Math.h"
-#include "gfx/VISetting.h"
-#include "gfx/GXStructs.h"
 
 #define MAX_HID_ACCEL 216.0f
 #define MAX_ACCEL 100
+
+// split this poor fucking file into multiple
 
 // this function is needed
 void adjustScreen(g3d::CameraAccessor& camera)
@@ -82,18 +79,33 @@ void debugAddTriangles(scn::roll::StageController& stage)
 	return;
 }
 
-Chowder::Chowder(g3d::CameraAccessor *cam)
+Chowder::Chowder()
 {
-	camera.unk = cam->unk;
+	// create root
+	mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
+	g3d::RootContext rootContext(*defAllocator, 32, 64, 8, 1);
+	modelRoot = new g3d::Root(rootContext);
+	g3d::CameraAccessor cam = modelRoot->currentCamera();
+	camera.unk = cam.unk;
+	
 	// get rmode or enable progressive at start?
-	adjustScreen(*cam);
+	adjustScreen(cam);
 	this->stage = new scn::roll::StageController();
 	debugAddTriangles(*stage);
 	this->player = new scn::roll::PlayerController(*this);
+	
+	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
+	lightSet.disableLightObjAll();
+	lightSet.enableAmbientLightObj(0);
+	lightSet.enableLightObj(0, 0);
+	
+	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
+	lightSet.setAmbientLightObj(ambColor);
 }
 
 void Chowder::updateMain() // update physics and setup drawing
 {
+	modelRoot->sceneClear();
 	hel::math::Vector3 offset(0.0f, 200.0f, -300.0f);
 	
 	hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
@@ -176,11 +188,32 @@ void Chowder::drawDebug()
 	
 	GXSetZMode(0, 1, 0);
 	GXSetZMode(1, 3, 1);
-	
-	
 }
 
-void Chowder::preDraw(g3d::Root& root)
+void Chowder::preDraw()
 {
-	player->UpdateModel(root);
+	player->UpdateModel(*modelRoot);
+		// create lightset
+	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
+	_GXColor white = {255, 255, 255, 255};
+	
+	nw4r::g3d::LightObj lobj;
+	lobj.Clear();
+	// curiously, the light won't render unless 0x3 is 5
+	// this curious phenomenon can be seen in base rtdl as well. strange!
+	lobj.InitLightColor(white);
+	lobj.InitLightPos(100.0f, 0.0f, 0.0f);
+	lobj.InitLightDir(-1.0f, 0.0f, 0.0f);
+	lobj.InitLightAttnA(1.0f, 0.0f, 0.0f);
+	lobj.InitLightAttnK(1.0f, 0.0f, 0.0f);
+	
+	lobj.unk = 5;
+	lightSet.setLightObj(0, lobj);
+}
+
+void Chowder::draw()
+{
+	modelRoot->sceneCalcOnDraw();
+	modelRoot->sceneDrawOpa();
+	drawDebug();
 }

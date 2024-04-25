@@ -3,6 +3,7 @@
 #include "g3d/ResFileRepository.h"
 #include "math/Matrix34.h"
 #include "math/Vector3.h"
+#include "gfx/LightSet.h"
 
 #include "mem/Memory.h"
 #include "common/FixedString.h"
@@ -58,9 +59,12 @@ namespace g3d
 	public:
 		Root(const RootContext& context);
 		CameraAccessor currentCamera() const;
+		LightSetAccessor lightSet(unsigned long idx) const;
 		void sceneClear(); // i believe you either clear and refill the root object or you call a Root::sceneCalc* function
 		void sceneDrawOpa() const;
 		void sceneCalcOnDraw() const;
+		void sceneCalcOnUpdateMain();
+		void sceneCalcOnUpdateUseGPU();
 		// note: 0x1c of root object is pointer to nw4r::g3d::scnroot object
 		// scnroot contains a lightset object with various lights, that's your ticket in
 	};
