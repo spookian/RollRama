@@ -1,16 +1,11 @@
 #include "math/math.h"
 #include "gfx/gfx.h"
-#include "app/app.h"
 #include "hid/hid.h"
-
+#include "common/ExplicitSingleton.h"
 #include "g3d/Model.h"
 #include "scn/Chowder.h"
 #include "scn/game/PlayerController.h"
 #include "mem/Memory.h"
-#include "common/ExplicitSingleton.h"
-
-#define MAX_HID_ACCEL 216.0f
-#define MAX_ACCEL 100
 
 // split this poor fucking file into multiple
 
@@ -31,40 +26,7 @@ void adjustScreen(g3d::CameraAccessor& camera)
 	return; 
 }
 
-inline float convertAccel(signed short accel)
-{
-	signed short clamp = accel;
-	if (clamp > MAX_ACCEL) clamp = MAX_ACCEL;
-	else if (clamp < -MAX_ACCEL) clamp = -MAX_ACCEL;
-	
-	return ((float)clamp) / MAX_HID_ACCEL;
-}
-
-hel::math::Matrix34 obtainWiimoteRotation()
-{
-	using namespace hel::math;
-	hid::SimpleWRHID& wiimote = hel::common::ExplicitSingleton<app::Application>::object->hidManager()->getWiimoteArray()[0]; // wow.
-	Matrix34 result;
-
-	if (wiimote.isEnabled())
-	{
-		WPADStatus wpad_data;
-		WPADRead(0, (void*)&wpad_data);
-		
-		float accelX = convertAccel(wpad_data.accelX);
-		float accelY = convertAccel(-wpad_data.accelY);
-		Vector3 accel;
-		
-		accel.x = asin(accelX);
-		accel.z = asin(accelY);
-		
-		result = Matrix34::CreateRotXYZRad(accel);
-	}
-	
-	return result;
-}
-
-// ONLY use these for debugging... due to the nature of file loading, TriangleWrapper objects do not clear the stored memory
+// ONLY use these for debugging... due to the nature of file loading, TriangleWrapper objects do not clear the stored memory when deleted
 void debugAddTriangles(scn::roll::StageController& stage)
 {
 	stage.numTriangles = 1;
@@ -86,14 +48,13 @@ Chowder::Chowder()
 	g3d::RootContext rootContext(*defAllocator, 32, 64, 8, 1);
 	modelRoot = new g3d::Root(rootContext);
 	g3d::CameraAccessor cam = modelRoot->currentCamera();
-	camera.unk = cam.unk;
 	
 	// get rmode or enable progressive at start?
 	adjustScreen(cam);
-	this->stage = new scn::roll::StageController();
+	this->stage = new scn::roll::StageController(*this);
 	debugAddTriangles(*stage);
-	this->player = new scn::roll::PlayerController(*this);
 	
+	// note: move to stage controller object and/or abstract
 	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
 	lightSet.disableLightObjAll();
 	lightSet.enableAmbientLightObj(0);
@@ -106,18 +67,16 @@ Chowder::Chowder()
 void Chowder::updateMain() // update physics and setup drawing
 {
 	modelRoot->sceneClear();
-	hel::math::Vector3 offset(0.0f, 200.0f, -300.0f);
-	
-	hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
-	camera.setViewMtx(viewMatrix);
 	
 	stage->gameRotation = obtainWiimoteRotation();
-	player->Update(stage);
+	stage->Update();
+	
 	return;
 }
 
 void Chowder::SetupEasyRender3D()
 {
+	g3d::CameraAccessor camera = modelRoot->currentCamera();
 	float far = camera.getProjFar();
 	float near = camera.getProjNear();
 	float aspect_ratio = camera.getProjAspect();
@@ -141,19 +100,6 @@ void Chowder::SetupEasyRender3D()
 	return;
 }
 
-void Chowder::DrawTriangleWireframe(const hel::math::Vector3& v0, const hel::math::Vector3& v1, const hel::math::Vector3& v2)
-{
-	GXSetZMode(0, 1, 0); // ignore z buffer LMFAAAAO
-	
-	hel::math::Matrix34 basicMtx; // identity matrix; holds no transforms
-	gfx::EasyRender3D::DrawLine(basicMtx, v0, v1, 3.0f);
-	gfx::EasyRender3D::DrawLine(basicMtx, v1, v2, 3.0f);
-	gfx::EasyRender3D::DrawLine(basicMtx, v2, v0, 3.0f);
-	
-	GXSetZMode(1, 3, 1); // restore z comparisons
-	return;
-}
-
 void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& focalPoint)
 {
 	using namespace hel::math;
@@ -173,7 +119,7 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 		Vector3& v2 = *(triangle.v2);
 		
 		gfx::EasyRender3D::SetColor(blue);
-		gfx::EasyRender3D::DrawQuadFill(finalMatrix, v0, v1, v2, v2);
+		gfx::EasyRender3D::DrawTriangleWireframe(finalMatrix, v0, v1, v2);
 	}
 }
 
@@ -183,7 +129,7 @@ void Chowder::drawDebug()
 	
 	SetupEasyRender3D();
 	
-	Vector3 playerPos = player->GetPosition();
+	Vector3 playerPos = stage->player->GetPosition();
 	drawStageController(*this->stage, playerPos);
 	
 	GXSetZMode(0, 1, 0);
@@ -192,7 +138,8 @@ void Chowder::drawDebug()
 
 void Chowder::preDraw()
 {
-	player->UpdateModel(*modelRoot);
+	stage->preDraw(*modelRoot);
+	
 		// create lightset
 	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
 	_GXColor white = {255, 255, 255, 255};
@@ -202,7 +149,7 @@ void Chowder::preDraw()
 	// curiously, the light won't render unless 0x3 is 5
 	// this curious phenomenon can be seen in base rtdl as well. strange!
 	lobj.InitLightColor(white);
-	lobj.InitLightPos(100.0f, 0.0f, 0.0f);
+	lobj.InitLightPos(0.0f, 700.0f, 300.0f);
 	lobj.InitLightDir(-1.0f, 0.0f, 0.0f);
 	lobj.InitLightAttnA(1.0f, 0.0f, 0.0f);
 	lobj.InitLightAttnK(1.0f, 0.0f, 0.0f);

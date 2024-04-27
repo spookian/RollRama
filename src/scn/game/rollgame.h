@@ -4,10 +4,16 @@
 #include "g3d/Model.h"
 #include "file/FileAccessor.h"
 
+#include "common/List.h"
+#include "scn/game/PointStar.h"
+
+class Chowder;
+
 namespace scn
 {
 	namespace roll
 	{
+		class PlayerController;
 		struct TriangleData
 		{
 			unsigned short v0;
@@ -58,17 +64,25 @@ namespace scn
 		
 		struct StageController
 		{
-			StageController();
+			StageController(Chowder& parent);
 			~StageController(); // clean up triangle list and model
 			
 			// implement some kind of linked list instead of array
 			TriangleWrapper *triangleList[255];
 			unsigned long numTriangles;
+			
+			hel::common::List<scn::roll::PointStar*> pstarList;
+			
+			Chowder *parent;
+			
+			PlayerController *player;
 			g3d::CharaModel *stageModel; // i only decompiled one type of model, okay? cut me some slack
 			hel::math::Matrix34 gameRotation;
+			hel::math::Matrix34 worldRotation;
 			
 			bool CreateStage(file::FileData& file);
-			bool LoadModel(const char* path);
+			void Update();
+			void preDraw(g3d::Root& root);
 		};
 		
 		/*

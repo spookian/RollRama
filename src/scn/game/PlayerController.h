@@ -3,6 +3,8 @@
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
 #include "g3d/Model.h"
+#include "scn/game/Collision.h"
+#include "scn/game/rollgame.h"
 
 class Chowder;
 // messy class prototype 
@@ -11,14 +13,12 @@ namespace scn
 {
 	namespace roll
 	{
-		class SimpleRigidbody
+		class SimpleRigidbody : public SphereCollider
 		// This is a simple spherical rigidbody.
 		{
 			// physics settings
 			float mass;	
-			float radius;
 			
-			hel::math::Vector3 position;
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			hel::math::Matrix34 angularVelocity;
@@ -35,8 +35,6 @@ namespace scn
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
-			
-			hel::math::Vector3 GetPosition();
 			hel::math::Matrix34 GetAngularVelocity();
 			
 			void SetRadius(float new_radius);

@@ -2,31 +2,7 @@
 
 #include "math/Vector3.h"
 #include "common/Array.h"
-
-extern "C"
-{
-	extern void WPADRead(unsigned long channel, void* buffer); // typecast buffer to WPADStatus
-}
-
-struct IRObject
-{
-	unsigned short x;
-	unsigned short y;
-	unsigned short size;
-	unsigned char ID;
-	unsigned char pad;
-};
-
-struct WPADStatus
-{
-	unsigned short buttons;
-	signed short accelX;
-	signed short accelY;
-	signed short accelZ;
-	IRObject IR[4];
-	unsigned char ext;
-	unsigned char err;
-};
+#include "hid/WPADReader.h"
 
 // if you're wondering why these struct definitions seem so suspicious, then don't worry because i am too
 // https://wiiubrew.org/wiki/Padscore.rpl

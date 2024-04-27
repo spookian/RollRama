@@ -4,19 +4,18 @@
 
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
-#include "math/Math.h"
+#include "math/math.h"
 
-#define FRICTION_CONST 0.02
+#define FRICTION_CONST 0.015
 
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{	
-		SimpleRigidbody::SimpleRigidbody(float _mass, float _radius)
+		SimpleRigidbody::SimpleRigidbody(float _mass, float _radius) :  SphereCollider(_radius)
 		{
 			mass = _mass;
-			radius = _radius;
 		}
 
 		void SimpleRigidbody::IntegrateForces()
@@ -38,7 +37,7 @@ namespace scn
 				friction.normalize();
 				friction = friction * -FRICTION_CONST;
 				
-				if ((velocity + friction).length() < 0.1)
+				if ((velocity + friction).length() < 0.12)
 				{
 					velocity = Vector3::ZERO;
 				}
@@ -102,11 +101,6 @@ namespace scn
 		Matrix34 SimpleRigidbody::GetAngularVelocity()
 		{
 			return angularVelocity;
-		}
-		
-		Vector3 SimpleRigidbody::GetPosition()
-		{
-			return position;
 		}
 	}
 }

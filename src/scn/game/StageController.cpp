@@ -1,10 +1,12 @@
 #include "scn/game/PhysicsConstants.h"
 #include "scn/game/rollgame.h"
 #include "g3d/Model.h"
+#include "scn/game/PlayerController.h"
 
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
-#include "math/Math.h"
+#include "math/math.h"
+#include "scn/Chowder.h"
 
 #define nullptr (Vector3*)0
 #define NULL ((void*)0)
@@ -13,25 +15,64 @@ namespace scn
 {
 	namespace roll
 	{
-		StageController::StageController()
+		StageController::StageController(Chowder& parent)
 		{
 			numTriangles = 0;
 			stageModel = (g3d::CharaModel*)NULL;
+			
+			Vector3 pstar_pos(70.0f, -80.0f, 0.0f);
+			PointStar* p = new PointStar(parent, pstar_pos);
+			player = new PlayerController(parent);
+			pstarList.append(p);
+			
+			this->parent = &parent;
 		}
 		
 		StageController::~StageController()
 		{
+			delete player;
 			// destroy all triangle wrappers
 			for (int i = 0; i < numTriangles; i++)
 			{
 				delete triangleList[i];
 			}
 			
+			for (int j = 0; j < pstarList.getSize(); j++)
+			{
+				delete pstarList[j];
+			};
+			
 			// delete model
 			if (stageModel != NULL)
 			{
 				delete stageModel; // remind me to add dl
 			}
+		}
+		
+		void StageController::Update()
+		{
+			player->Update(this);
+			
+			Vector3 translation = -player->GetPosition();
+			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
+			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
+	
+			worldRotation = reverseMatrix * (gameRotation * focalMatrix);
+		}
+		
+		void StageController::preDraw(g3d::Root& root)
+		{
+			g3d::CameraAccessor camera = root.currentCamera();
+			hel::math::Vector3 offset(0.0f, 150.0f, 225.0f);
+			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
+			camera.setViewMtx(viewMatrix);
+	
+			player->UpdateModel(root);
+			for (int i = 0; i < pstarList.getSize(); i++)
+			{
+				pstarList[i]->UpdateModel(root, worldRotation);
+			}
+			return;
 		}
 		
 		TriangleWrapper::TriangleWrapper(Vector3* vertexList, TriangleData* data)

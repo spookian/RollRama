@@ -1,24 +1,28 @@
 #pragma once
-#define POINTSTAR_RADIUS 20.0f
+#define POINTSTAR_RADIUS 15.0f
 
-using hel::math;
+#include "scn/game/Collision.h"
+#include "math/math.h"
+#include "g3d/Model.h"
+
+class Chowder;
+
+using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
-		class PointStar
+		class PointStar : public SphereCollider
 		{
-			Vector3 position;
 			Matrix34 rotation;
 			unsigned long score;
 			
 			g3d::CharaModel *model;
 		public:
-			PointStar();
+			PointStar(Chowder& parent, Vector3 position);
 			~PointStar();
 			
-			void UpdateModel();
-			Vector3 GetPosition();
+			void UpdateModel(g3d::Root& root, Matrix34& worldRotation);
 		};
 	}
 }
