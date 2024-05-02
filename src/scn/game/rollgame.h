@@ -43,6 +43,7 @@ namespace scn
 			hel::math::Vector3 ClosestPointOnPlane(const hel::math::Vector3& point);
 			bool CheckPointInTriangle(const hel::math::Vector3& point);
 			
+			void operator=(const TriangleWrapper& other);
 			// for debug purposes
 			void RecalculateD(); 
 			TriangleWrapper();
@@ -67,10 +68,7 @@ namespace scn
 			StageController(Chowder& parent);
 			~StageController(); // clean up triangle list and model
 			
-			// implement some kind of linked list instead of array
-			TriangleWrapper *triangleList[255];
-			unsigned long numTriangles;
-			
+			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::PointStar*> pstarList;
 			
 			Chowder *parent;

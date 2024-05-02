@@ -10,6 +10,10 @@
 
 #define nullptr (Vector3*)0
 #define NULL ((void*)0)
+
+const GlobalObject<const hel::math::Vector3, float> star1 = { {70.0f, -80.0f, -20.0f} };
+const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -80.0f, 30.0f} };
+
 using namespace hel::math;
 namespace scn
 {
@@ -17,13 +21,14 @@ namespace scn
 	{
 		StageController::StageController(Chowder& parent)
 		{
-			numTriangles = 0;
 			stageModel = (g3d::CharaModel*)NULL;
 			
-			Vector3 pstar_pos(70.0f, -80.0f, 0.0f);
-			PointStar* p = new PointStar(parent, pstar_pos);
-			player = new PlayerController(parent);
+			PointStar* p = new PointStar(parent, star1);
 			pstarList.append(p);
+			p = new PointStar(parent, star2);
+			pstarList.append(p);
+			
+			player = new PlayerController(parent);
 			
 			this->parent = &parent;
 		}
@@ -32,11 +37,6 @@ namespace scn
 		{
 			delete player;
 			// destroy all triangle wrappers
-			for (int i = 0; i < numTriangles; i++)
-			{
-				delete triangleList[i];
-			}
-			
 			for (int j = 0; j < pstarList.getSize(); j++)
 			{
 				delete pstarList[j];
@@ -67,7 +67,7 @@ namespace scn
 			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
 			camera.setViewMtx(viewMatrix);
 	
-			player->UpdateModel(root);
+			player->UpdateModel(root, gameRotation);
 			for (int i = 0; i < pstarList.getSize(); i++)
 			{
 				pstarList[i]->UpdateModel(root, worldRotation);
@@ -169,5 +169,14 @@ namespace scn
 			return (regionU >= 0) && (regionV >= 0) && (regionW >= 0);
 			
 		} // fucked up barycentric coords
+		
+		void TriangleWrapper::operator=(const TriangleWrapper& other)
+		{
+			v0 = other.v0;
+			v1 = other.v1;
+			v2 = other.v2;
+			normal = other.normal;
+			d = other.d;
+		}
 	}
 }

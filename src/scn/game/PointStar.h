@@ -1,5 +1,5 @@
 #pragma once
-#define POINTSTAR_RADIUS 15.0f
+#define POINTSTAR_RADIUS 10.0f
 
 #include "scn/game/Collision.h"
 #include "math/math.h"

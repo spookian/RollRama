@@ -40,10 +40,9 @@ namespace scn
 			
 			for (int i = 0; i < header->num_triangles; i++)
 			{
-				TriangleWrapper* triangle = new TriangleWrapper(vertexList, triangleDataList[i]);
-				this->triangleList[i] = triangle; // note: IMPLEMENT A LINKED LIST SOON
+				TriangleWrapper triangle(vertexList, &triangleDataList[i]);
+				triangleList.append(triangle);
 			}
-			this->numTriangles = header->num_triangles;
 			return true;
 		}
 	}

@@ -22,11 +22,11 @@ set(DKP_OBJCOPY ${DEVKITPATH}/devkitPPC/bin/powerpc-eabi-objcopy)
 
 set(CXX_FILES src/seq/SequenceTiltStart.cpp src/scn/SceneStart.cpp src/scn/Chowder.cpp src/scn/game/PlayerController.cpp 
 	src/scn/game/StageController.cpp src/scn/game/SimpleRigidbody.cpp src/g3d/ResFileHelper.cpp src/scn/game/SphereCollider.cpp
-	src/scn/game/PointStar.cpp src/hid/WPADReader.cpp)
+	src/scn/game/PointStar.cpp src/hid/WPADReader.cpp src/scn/game/StageLoader.cpp)
 	
 set(OBJ_FILES SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o 
 	StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o
-	PointStar.o WPADReader.o)
+	PointStar.o WPADReader.o StageLoader.o)
 
 set(CXX_FLAGS -i ./src -RTTI off -Cpp_exceptions off -enum int -Os -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -c)
 set(LD_FLAGS -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld/main.ld -I ./)

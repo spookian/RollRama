@@ -30,5 +30,16 @@ namespace hel
 			static const Vector3 BASIS_Y;
 			static const Vector3 BASIS_Z;
 		}; // include functions later
+		
+		template <typename T, typename P>
+		struct GlobalObject
+		{
+			P array[sizeof(T) / sizeof(P)];
+			
+			inline operator T() const 
+			{ 
+				return *reinterpret_cast<T*>(this);
+			}
+		};
 	}
 }

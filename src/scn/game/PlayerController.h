@@ -52,7 +52,7 @@ namespace scn
 			~PlayerController();
 			
 			void Update(StageController* stage);
-			void UpdateModel(g3d::Root& root); // updates position. save last.
+			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
 			hel::math::Vector3 GetPosition()
 			{
 				return rb->GetPosition();

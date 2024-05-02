@@ -10,6 +10,8 @@
 #include "math/math.h"
 #include "g3d/ResFileHelper.h"
 
+GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
+
 using namespace hel::math;
 namespace scn
 {
@@ -42,16 +44,15 @@ namespace scn
 			}
 		}
 
-		void PlayerController::UpdateModel(g3d::Root& root)
+		void PlayerController::UpdateModel(g3d::Root& root, Matrix34& worldRotation)
 		{	
 			rotation = rb->GetAngularVelocity() * rotation;
 			Matrix34 translation = Matrix34::CreateTrans(rb->GetPosition());
 		
-			model->setModelRTMtx(translation * rotation);
+			model->setModelRTMtx(translation * (worldRotation * rotation));
 			model->updateWorldMtx();
 			
-			Vector3 scale(50.0, 50.0, 50.0);
-			model->setModelScale(scale);
+			model->setModelScale(playerScale);
 			model->registerToRoot(root);
 		}
 	}

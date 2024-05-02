@@ -56,9 +56,10 @@ namespace scn
 		bool SimpleRigidbody::ResolveAllCollisions(StageController* stage)
 		{
 			bool result = false;
-			for (int i = 0; i < stage->numTriangles; i++)
+			for (int i = 0; i < stage->triangleList.getSize(); i++)
 			{
-				CollisionResult collisionData = ResolveCollision(*stage->triangleList[i]);
+				TriangleWrapper tri = stage->triangleList[i]; // optimize?
+				CollisionResult collisionData = ResolveCollision( tri );
 				result = result || collisionData.collided;
 				
 				if (collisionData.collided)

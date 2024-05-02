@@ -6,6 +6,7 @@
 #include "scn/Chowder.h"
 #include "scn/game/PlayerController.h"
 #include "mem/Memory.h"
+#include "file/FileAccessor.h"
 
 // split this poor fucking file into multiple
 
@@ -29,15 +30,14 @@ void adjustScreen(g3d::CameraAccessor& camera)
 // ONLY use these for debugging... due to the nature of file loading, TriangleWrapper objects do not clear the stored memory when deleted
 void debugAddTriangles(scn::roll::StageController& stage)
 {
-	stage.numTriangles = 1;
-	scn::roll::TriangleWrapper* t = new scn::roll::TriangleWrapper();
-	t->v0 = new hel::math::Vector3(-300, -100, -300);
-	t->v1 = new hel::math::Vector3( 300, -100, -300);
-	t->v2 = new hel::math::Vector3( 0,   -100,  300);
-	t->normal = new hel::math::Vector3(0, 1, 0);
-	t->RecalculateD();
+	scn::roll::TriangleWrapper t;
+	t.v0 = new hel::math::Vector3(-300, -100, -300);
+	t.v1 = new hel::math::Vector3( 300, -100, -300);
+	t.v2 = new hel::math::Vector3( 0,   -100,  300);
+	t.normal = new hel::math::Vector3(0, 1, 0);
+	t.RecalculateD();
 	
-	stage.triangleList[0] = t;
+	stage.triangleList.append(t);
 	return;
 }
 
@@ -52,7 +52,14 @@ Chowder::Chowder()
 	// get rmode or enable progressive at start?
 	adjustScreen(cam);
 	this->stage = new scn::roll::StageController(*this);
-	debugAddTriangles(*stage);
+	//debugAddTriangles(*stage);
+	file::FileAccessor file("gcn/STAGE.roll", false);
+	if (file.isLoaded()) 
+	{
+		file::FileData stage_data = file.block();
+		stage->CreateStage(stage_data);
+	}
+	else debugAddTriangles(*stage);
 	
 	// note: move to stage controller object and/or abstract
 	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
@@ -111,9 +118,9 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 	
 	Matrix34 finalMatrix = reverseMatrix * (stage.gameRotation * focalMatrix);
 	
-	for (int i = 0; i < stage.numTriangles; i++)
+	for (int i = 0; i < stage.triangleList.getSize(); i++)
 	{
-		scn::roll::TriangleWrapper& triangle = *stage.triangleList[i];
+		const scn::roll::TriangleWrapper& triangle = stage.triangleList[i];
 		Vector3& v0 = *(triangle.v0);
 		Vector3& v1 = *(triangle.v1);
 		Vector3& v2 = *(triangle.v2);
