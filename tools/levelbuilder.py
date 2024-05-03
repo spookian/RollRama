@@ -4,10 +4,7 @@ import struct
 
 METERS_TO_CENTIMETERS = 100
 FILE_PATH = "C:/C++ projects/RollRama/data/STAGE.roll"
-
-#triangle flags
-TRIANGLE_FLAG_ZHEAVY = 1
-HEADER_SIZE = 12
+HEADER_SIZE = 16
 
 triangle_file_data = bytes()
 vertexes = 0
@@ -19,11 +16,27 @@ vertex_file_data = bytes()
 #triangles will be three short indices, a short consisting of 16 flags, and one vector3 for the normal
 
 def create_triangle_data(tri):
-    return struct.pack(">HHHBfff", tri.vertices[0], tri.vertices[1], tri.vertices[2], False, tri.normal.x, tri.normal.z, tri.normal.y)
+    x = tri.normal.x
+    if (x == -0): x = 0
+    y = -tri.normal.y
+    if (y == -0): y = 0
+    z = tri.normal.z
+    if (z == -0): z = 0
+    return struct.pack(">HHHHfff", tri.vertices[0], tri.vertices[1], tri.vertices[2], 0, x, z, y)
+
+# 18 bytes a triangle?
 
 def create_vert_data(vert):
     c = vert.co * METERS_TO_CENTIMETERS
-    return struct.pack(">fff", c.x, c.z, c.y) #z up to y up
+    print(c)
+    
+    x = vert.co.x * METERS_TO_CENTIMETERS
+    if (x == -0): x = 0
+    y = vert.co.y * METERS_TO_CENTIMETERS
+    if (y == -0): y = 0
+    z = vert.co.z * METERS_TO_CENTIMETERS
+    if (z == -0): z = 0
+    return struct.pack(">fff", x, z, -y) #z up to y up
 
 def check_if_all_triangles(obj):
     for ngon in obj.data.polygons:
@@ -39,18 +52,21 @@ if x:
         for vert in x.data.vertices:
             #store all vertex data
             vertex_file_data = vertex_file_data + create_vert_data(vert)
-        print("Vertices packed...")
+        print("Vertices packed...\n")
         #for every face
         for tri in x.data.polygons:          
             triangle_file_data = triangle_file_data + create_triangle_data(tri)
-        print("Triangles packed...")
+        print("Triangles packed...\n")
         #write header
         header = "ROLL".encode(encoding="ascii") # create magic
-        header += struct.pack(">LL", HEADER_SIZE, HEADER_SIZE + len(vertex_file_data)) # then add rest of header
+        num_triangles = len(triangle_file_data) / 20
+        print("num triangles: " + str(num_triangles) )
+        header += struct.pack(">LLL", HEADER_SIZE, int(num_triangles), HEADER_SIZE + len(vertex_file_data)) # then add rest of header
         
-        f = os.open(FILE_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
-        os.write(f, vertex_file_data)
-        os.close(f)
+        
+        f = open(FILE_PATH, mode="wb")
+        f.write(header + vertex_file_data + triangle_file_data)
+        f.close()
         print("File written!")
     else: #halt
         print("ERROR: Mesh is not fully triangulated! Apply a Triangulate modifier or select all faces in edit mesh and press CTRL+T.")

@@ -40,8 +40,8 @@ namespace scn
 			float d;
 			
 			TriangleWrapper(hel::math::Vector3* vertexList, TriangleData* data);
-			hel::math::Vector3 ClosestPointOnPlane(const hel::math::Vector3& point);
-			bool CheckPointInTriangle(const hel::math::Vector3& point);
+			hel::math::Vector3 ClosestPointOnPlane(const hel::math::Vector3& point) const;
+			bool CheckPointInTriangle(const hel::math::Vector3& point) const;
 			
 			void operator=(const TriangleWrapper& other);
 			// for debug purposes

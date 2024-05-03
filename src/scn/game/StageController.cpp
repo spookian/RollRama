@@ -11,8 +11,8 @@
 #define nullptr (Vector3*)0
 #define NULL ((void*)0)
 
-const GlobalObject<const hel::math::Vector3, float> star1 = { {70.0f, -80.0f, -20.0f} };
-const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -80.0f, 30.0f} };
+const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -40.0f, -20.0f} };
+const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -40.0f, 30.0f} };
 
 using namespace hel::math;
 namespace scn
@@ -104,11 +104,11 @@ namespace scn
 			}
 		};
 		
-		Vector3 TriangleWrapper::ClosestPointOnPlane(const hel::math::Vector3& point)
+		Vector3 TriangleWrapper::ClosestPointOnPlane(const hel::math::Vector3& point) const
 		{
 			// function stolen from the RTCD book
-			float unsignedDistance = normal->dot(point) - d;
-			return point - ((*normal) * unsignedDistance);
+			float signedDistance = normal->dot(point) - d;
+			return point - ((*normal) * signedDistance);
 		}
 		
 		//
@@ -117,32 +117,32 @@ namespace scn
 			return (x0 - x1) * (y1 - y2) - (x1 - x2) * (y0 - y1);
 		} // isn't this like a 2d cross product
 		
-		inline unsigned long checkProjectionTriangle(TriangleWrapper& triangle)
+		inline unsigned long checkProjectionTriangle(const TriangleWrapper& triangle)
 		{
 			unsigned long result = PROJECTION_X;
 			float x = Math::AbsF32(triangle.normal->x);
 			float y = Math::AbsF32(triangle.normal->y);
 			float z = Math::AbsF32(triangle.normal->z);
 			
-			if ((y > x) && (y > z))
+			if ((y >= x) && (y >= z))
 			{
 				result = PROJECTION_Y;
 			}
-			else if ((z > x) && (z > y))
+			if ((z >= x) && (z >= y))
 			{
 				result = PROJECTION_Z;
 			}
 			return result;
 		}
 		
-		bool TriangleWrapper::CheckPointInTriangle(const Vector3& point)
+		bool TriangleWrapper::CheckPointInTriangle(const Vector3& point) const
 		{
 			unsigned long largestProj = checkProjectionTriangle(*this);
 			Vector3& A = *v0;
 			Vector3& B = *v1;
 			Vector3& C = *v2;
 			
-			float regionU, regionV, regionW;
+			float ood, regionU, regionV, regionW;
 			
 			switch (largestProj)
 			{
@@ -151,22 +151,25 @@ namespace scn
 				regionU = getTriangleArea2D(point.y, point.z, B.y, B.z, C.y, C.z); // PBC
 				regionV = getTriangleArea2D(point.y, point.z, C.y, C.z, A.y, A.z); // PCA
 				regionW = getTriangleArea2D(point.y, point.z, A.y, A.z, B.y, B.z); // PAB
+				ood = -normal->x;
 				break;
 				
 				case PROJECTION_Y: // y heavy, so xz plane
 				regionU = getTriangleArea2D(point.x, point.z, B.x, B.z, C.x, C.z); // PBC
 				regionV = getTriangleArea2D(point.x, point.z, C.x, C.z, A.x, A.z); // PCA
 				regionW = getTriangleArea2D(point.x, point.z, A.x, A.z, B.x, B.z); // PAB
+				ood = normal->y;
 				break;
 				
 				case PROJECTION_Z: // z heavy, so xy plane
 				regionU = getTriangleArea2D(point.x, point.y, B.x, B.y, C.x, C.y); // PBC
 				regionV = getTriangleArea2D(point.x, point.y, C.x, C.y, A.x, A.y); // PCA
 				regionW = getTriangleArea2D(point.x, point.y, A.x, A.y, B.x, B.y); // PAB
+				ood = -normal->z;
 				break;
 			}
 			
-			return (regionU >= 0) && (regionV >= 0) && (regionW >= 0);
+			return (regionU * ood >= 0.0f) && (regionV * ood >= 0.0f) && (regionW * ood >= 0.0f);
 			
 		} // fucked up barycentric coords
 		
