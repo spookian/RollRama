@@ -77,7 +77,9 @@ void Chowder::updateMain() // update physics and setup drawing
 {
 	modelRoot->sceneClear();
 	
-	stage->gameRotation = obtainWiimoteRotation();
+	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
+	stage->gameRotation = rotation.actual;
+	stage->visualRotation = rotation.visual;
 	stage->Update();
 	
 	return;
@@ -126,19 +128,6 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 		Vector3& v1 = *(triangle.v1);
 		Vector3& v2 = *(triangle.v2);
 		
-		
-		Vector3 closest = triangle.ClosestPointOnPlane(focalPoint);
-		Vector3 edge = closest - focalPoint;
-		
-		if (edge.length() > 40.0f) 
-		{
-			gfx::EasyRender3D::SetColor(green);
-			if (triangle.CheckPointInTriangle(closest)) gfx::EasyRender3D::SetColor(blue);
-		}
-		else gfx::EasyRender3D::SetColor(red);
-		
-		gfx::EasyRender3D::DrawLine(finalMatrix, focalPoint, closest, 3.0f);
-		
 		gfx::EasyRender3D::SetColor(blue);
 		gfx::EasyRender3D::DrawTriangleWireframe(finalMatrix, v0, v1, v2);
 	}
@@ -151,7 +140,7 @@ void Chowder::drawDebug()
 	SetupEasyRender3D();
 	
 	Vector3 playerPos = stage->player->GetPosition();
-	drawStageController(*this->stage, playerPos);
+	//drawStageController(*this->stage, playerPos);
 	GXSetZMode(0, 1, 0);
 	GXSetZMode(1, 3, 1);
 }

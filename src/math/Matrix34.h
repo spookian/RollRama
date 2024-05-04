@@ -2,6 +2,11 @@
 
 #include "math/Vector3.h"
 
+extern "C"
+{
+	typedef float[3][4] Mtx; // found in mkwii decomp
+}
+
 namespace hel
 {
 	namespace math
@@ -10,7 +15,7 @@ namespace hel
 		// the perspective matrix explicitly needs to be a 4x4 matrix, so don't even try using this for perspective
 		struct Matrix34
 		{
-			float mtx[3][4];
+			Mtx mtx;
 
 			Matrix34();
 			static Matrix34 CreateScale(const Vector3& scale);

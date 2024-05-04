@@ -14,7 +14,7 @@ namespace scn
 	{
 		class PointStar : public SphereCollider
 		{
-			Matrix34 rotation;
+			Vector3 rotation;
 			unsigned long score;
 			
 			g3d::CharaModel *model;

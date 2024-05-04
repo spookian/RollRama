@@ -42,6 +42,7 @@ namespace scn
 			TriangleWrapper(hel::math::Vector3* vertexList, TriangleData* data);
 			hel::math::Vector3 ClosestPointOnPlane(const hel::math::Vector3& point) const;
 			bool CheckPointInTriangle(const hel::math::Vector3& point) const;
+			hel::math::Vector3 GetMidpoint() const;
 			
 			void operator=(const TriangleWrapper& other);
 			// for debug purposes
@@ -76,7 +77,7 @@ namespace scn
 			PlayerController *player;
 			g3d::CharaModel *stageModel; // i only decompiled one type of model, okay? cut me some slack
 			hel::math::Matrix34 gameRotation;
-			hel::math::Matrix34 worldRotation;
+			hel::math::Matrix34 visualRotation;
 			
 			bool CreateStage(file::FileData& file);
 			void Update();

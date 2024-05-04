@@ -6,13 +6,17 @@
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
 #include "math/math.h"
+#include "g3d/ResFileHelper.h"
 #include "scn/Chowder.h"
 
 #define nullptr (Vector3*)0
 #define NULL ((void*)0)
+#define ROTATION_SHRINK 4.0f
 
-const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -40.0f, -20.0f} };
-const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -40.0f, 30.0f} };
+const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -15.0f, -20.0f} };
+const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -15.0f, 30.0f} };
+const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 141.0f} };
+const GlobalObject<const hel::math::Vector3, float> viewMtxOffset = { {0.0f, 250.0f, 225.0f} };
 
 using namespace hel::math;
 namespace scn
@@ -21,7 +25,7 @@ namespace scn
 	{
 		StageController::StageController(Chowder& parent)
 		{
-			stageModel = (g3d::CharaModel*)NULL;
+			stageModel = InitResModel(parent.FileRepository, "step/TestStage");
 			
 			PointStar* p = new PointStar(parent, star1);
 			pstarList.append(p);
@@ -52,22 +56,27 @@ namespace scn
 		void StageController::Update()
 		{
 			player->Update(this);
-			
-			Vector3 translation = -player->GetPosition();
-			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
-			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
-	
-			worldRotation = reverseMatrix * (gameRotation * focalMatrix);
 		}
 		
 		void StageController::preDraw(g3d::Root& root)
 		{
+			// setup worldRotation
+			Vector3 translation = -player->GetPosition();
+			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
+			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
+			Matrix34 worldRotation = reverseMatrix * (visualRotation * focalMatrix);
+			
 			g3d::CameraAccessor camera = root.currentCamera();
-			hel::math::Vector3 offset(0.0f, 150.0f, 225.0f);
-			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + offset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
+			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
 			camera.setViewMtx(viewMatrix);
-	
-			player->UpdateModel(root, gameRotation);
+			
+			Matrix34 stageTranslation = Matrix34::CreateTrans(stagePos);
+			
+			stageModel->setModelRTMtx(worldRotation * stageTranslation);
+			stageModel->updateWorldMtx();
+			stageModel->registerToRoot(root);
+			
+			player->UpdateModel(root, visualRotation);
 			for (int i = 0; i < pstarList.getSize(); i++)
 			{
 				pstarList[i]->UpdateModel(root, worldRotation);
@@ -180,6 +189,11 @@ namespace scn
 			v2 = other.v2;
 			normal = other.normal;
 			d = other.d;
+		}
+		
+		Vector3 TriangleWrapper::GetMidpoint() const
+		{
+			return (*v0 + *v1 + *v2) / 3.0f;
 		}
 	}
 }

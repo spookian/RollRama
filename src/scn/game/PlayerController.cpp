@@ -46,10 +46,11 @@ namespace scn
 
 		void PlayerController::UpdateModel(g3d::Root& root, Matrix34& worldRotation)
 		{	
-			rotation = rb->GetAngularVelocity() * rotation;
+			rotation += rb->GetAngularVelocity();
 			Matrix34 translation = Matrix34::CreateTrans(rb->GetPosition());
-		
-			model->setModelRTMtx(translation * (worldRotation * rotation));
+			Matrix34 rotationMtx = Matrix34::CreateRotXYZRad(rotation);
+			
+			model->setModelRTMtx(translation * (worldRotation * rotationMtx));
 			model->updateWorldMtx();
 			
 			model->setModelScale(playerScale);

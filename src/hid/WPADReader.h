@@ -10,6 +10,12 @@ extern "C"
 	extern void WPADRead(unsigned long channel, void* buffer); // typecast buffer to WPADStatus
 }
 
+struct RotationResult
+{
+	hel::math::Matrix34 visual;
+	hel::math::Matrix34 actual;
+};
+
 struct IRObject
 {
 	unsigned short x;
@@ -30,4 +36,4 @@ struct WPADStatus
 	unsigned char err;
 };
 
-hel::math::Matrix34 obtainWiimoteRotation();
+RotationResult obtainWiimoteRotation(float size);

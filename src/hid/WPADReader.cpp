@@ -11,12 +11,12 @@ inline float convertAccel(signed short accel)
 	return ((float)clamp) / MAX_HID_ACCEL;
 }
 
-hel::math::Matrix34 obtainWiimoteRotation()
+RotationResult obtainWiimoteRotation(float size)
 {
 	using namespace hel::math;
 	hid::SimpleWRHID& wiimote = hel::common::ExplicitSingleton<app::Application>::object->hidManager()->getWiimoteArray()[0]; // wow.
 	// placeholder code until i find out how to check for wpad conection in leftover sdk functions
-	Matrix34 result;
+	RotationResult result;
 
 	if (wiimote.isEnabled())
 	{
@@ -30,7 +30,10 @@ hel::math::Matrix34 obtainWiimoteRotation()
 		accel.x = asin(accelX);
 		accel.z = asin(accelY);
 		
-		result = Matrix34::CreateRotXYZRad(accel);
+		result.actual = Matrix34::CreateRotXYZRad(accel);
+		accel = accel * size;
+		result.visual = Matrix34::CreateRotXYZRad(accel);
+		
 	}
 	
 	return result;

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "math/Vector3.h"
-#include "math/Matrix34.h"
+#include "math/math.h"
 #include "g3d/Model.h"
 #include "scn/game/Collision.h"
 #include "scn/game/rollgame.h"
@@ -21,7 +20,7 @@ namespace scn
 			
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
-			hel::math::Matrix34 angularVelocity;
+			hel::math::Vector3 angularVelocity;
 			
 		public:
 			SimpleRigidbody(float _mass, float _radius);
@@ -35,7 +34,7 @@ namespace scn
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
-			hel::math::Matrix34 GetAngularVelocity();
+			hel::math::Vector3 GetAngularVelocity();
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);
@@ -45,7 +44,7 @@ namespace scn
 		{
 			g3d::CharaModel *model;
 			SimpleRigidbody *rb;
-			hel::math::Matrix34 rotation;
+			hel::math::Vector3 rotation;
 			
 		public:
 			PlayerController(Chowder& parent);
