@@ -47,7 +47,7 @@ namespace scn
 		void PlayerController::UpdateModel(g3d::Root& root, Matrix34& worldRotation)
 		{	
 			// use quaternions to multiply matrices
-			RVLQuat r, ang, final;
+			Quaternion r, ang, final;
 			Matrix34 angular = rb->GetAngularVelocity();
 			C_QUATMtx(&r, rotation.mtx);
 			C_QUATMtx(&ang, angular.mtx);
