@@ -6,7 +6,7 @@
 #include "math/Matrix34.h"
 #include "math/math.h"
 
-#define FRICTION_CONST 0.015
+#define FRICTION_CONST 0.017
 
 using namespace hel::math;
 namespace scn
@@ -48,7 +48,7 @@ namespace scn
 				
 				//rotation 
 				Vector3 rotAxis(velocity.z, 0.0f, -velocity.x);
-				angularVelocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
+				angularVelocity = Matrix34::CreateRotXYZRad(rotAxis / radius); // linear velocity = angular * radius... angular in radians/sec
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace scn
 			return result;
 		}
 		
-		Vector3 SimpleRigidbody::GetAngularVelocity()
+		Matrix34 SimpleRigidbody::GetAngularVelocity()
 		{
 			return angularVelocity;
 		}

@@ -39,5 +39,7 @@
 "pow" = 0x800147b0;
 "asin" = 0x800147a0;
 
-"PSQUATMultiply" 	= 0x80030e20;
+"PSQUATMultiply" 	= 0x80031950;
 "PSMTXQuat" 		= 0x80030e20;
+"C_QUATRotAxisRad"	= 0x800319b0;
+"C_QUATMtx"			= 0x80031a50;

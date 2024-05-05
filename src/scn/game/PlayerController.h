@@ -20,7 +20,7 @@ namespace scn
 			
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
-			hel::math::Vector3 angularVelocity;
+			hel::math::Matrix34 angularVelocity;
 			
 		public:
 			SimpleRigidbody(float _mass, float _radius);
@@ -34,7 +34,7 @@ namespace scn
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
-			hel::math::Vector3 GetAngularVelocity();
+			hel::math::Matrix34 GetAngularVelocity();
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);
@@ -44,8 +44,7 @@ namespace scn
 		{
 			g3d::CharaModel *model;
 			SimpleRigidbody *rb;
-			hel::math::Vector3 rotation;
-			
+			hel::math::Matrix34 rotation;
 		public:
 			PlayerController(Chowder& parent);
 			~PlayerController();

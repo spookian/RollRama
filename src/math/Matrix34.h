@@ -4,7 +4,7 @@
 
 extern "C"
 {
-	typedef float[3][4] Mtx; // found in mkwii decomp
+	typedef float Mtx[3][4]; // found in mkwii decomp
 }
 
 namespace hel
