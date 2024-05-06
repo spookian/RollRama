@@ -33,7 +33,8 @@ RotationResult obtainWiimoteRotation(float size)
 		result.actual = Matrix34::CreateRotXYZRad(accel);
 		accel = accel * size;
 		result.visual = Matrix34::CreateRotXYZRad(accel);
-		
+		result.accelX = wpad_data.accelX;
+		result.accelY = wpad_data.accelY;
 	}
 	
 	return result;

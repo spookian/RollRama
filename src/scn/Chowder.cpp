@@ -69,6 +69,10 @@ Chowder::Chowder()
 	lightSet.enableAmbientLightObj(0);
 	lightSet.enableLightObj(0, 0);
 	
+	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
+	flick.prevAccelX = rotation.accelX;
+	flick.prevAccelY = rotation.accelY;
+	
 	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
 	lightSet.setAmbientLightObj(ambColor);
 }
@@ -78,6 +82,15 @@ void Chowder::updateMain() // update physics and setup drawing
 	modelRoot->sceneClear();
 	
 	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
+	if (flick.Update(rotation.accelX, rotation.accelY))
+	{
+		if (stage->player->IsOnGround())
+		{
+			hel::math::Vector3 impulse(0.0f, 6.0f, 0.0f);
+			stage->player->AddImpulse(impulse);
+		}
+	}
+	
 	stage->gameRotation = rotation.actual;
 	stage->visualRotation = rotation.visual;
 	stage->Update();

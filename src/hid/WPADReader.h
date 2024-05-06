@@ -14,6 +14,9 @@ struct RotationResult
 {
 	hel::math::Matrix34 visual;
 	hel::math::Matrix34 actual;
+	
+	unsigned short accelX;
+	unsigned short accelY;
 };
 
 struct IRObject

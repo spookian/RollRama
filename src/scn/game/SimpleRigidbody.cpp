@@ -26,6 +26,7 @@ namespace scn
 
 		void SimpleRigidbody::PhysicsUpdate(StageController* stage)
 		{
+			grounded = false;
 			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
 			AddForce(weight);
 			
@@ -63,6 +64,8 @@ namespace scn
 				
 				if (collisionData.collided)
 				{
+					if (collisionData.surface_normal.dot(Vector3::BASIS_Y) > 0.15) grounded = true; // magic number i came up with on the spot
+					
 					position += collisionData.displacement;
 					velocity += collisionData.impulse;
 					AddForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
@@ -101,6 +104,11 @@ namespace scn
 		Matrix34 SimpleRigidbody::GetAngularVelocity()
 		{
 			return angularVelocity;
+		}
+		
+		bool SimpleRigidbody::IsOnGround()
+		{
+			return grounded;
 		}
 	}
 }

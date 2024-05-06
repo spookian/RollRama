@@ -62,5 +62,20 @@ namespace scn
 			model->setModelScale(playerScale);
 			model->registerToRoot(root);
 		}
+		
+		void PlayerController::AddImpulse(const hel::math::Vector3& impulse)
+		{
+			rb->AddForce(impulse / DELTATIME);
+		}
+		
+		bool PlayerController::IsOnGround()
+		{
+			return rb->IsOnGround();
+		}
+		
+		hel::math::Vector3 PlayerController::GetPosition()
+		{
+			return rb->GetPosition();
+		}
 	}
 }

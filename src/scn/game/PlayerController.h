@@ -21,6 +21,7 @@ namespace scn
 			hel::math::Vector3 velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			hel::math::Matrix34 angularVelocity;
+			bool grounded;
 			
 		public:
 			SimpleRigidbody(float _mass, float _radius);
@@ -38,6 +39,7 @@ namespace scn
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);
+			bool IsOnGround();
 		};
 		
 		class PlayerController // we're making a pseudo physics simulation because i came to the realization that the inclined plane problem solves itself if you have the normal vector of a plane
@@ -49,12 +51,11 @@ namespace scn
 			PlayerController(Chowder& parent);
 			~PlayerController();
 			
+			void AddImpulse(const hel::math::Vector3& impulse);
+			bool IsOnGround();
 			void Update(StageController* stage);
 			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
-			hel::math::Vector3 GetPosition()
-			{
-				return rb->GetPosition();
-			}
+			hel::math::Vector3 GetPosition();
 		};
 	}
 }
