@@ -11,31 +11,35 @@
 #include "g3d/ResFileHelper.h"
 
 GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
+GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::FlickImpulse[4] = {
+	{{0.0f, 0.0f, 0.0f}},
+	{{0.0f, 0.0f, 0.0f}},
+	{{0.0f, 0.0f, 0.0f}},
+	{{0.0f, 0.0f, 0.0f}}
+};
 
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
-		PlayerController::PlayerController(Chowder& parent)
+		PlayerController::PlayerController(Chowder& parent) : SimpleRigidbody(1.0f, PLAYER_RADIUS)
 		{
-			rb = new SimpleRigidbody(1.0f, PLAYER_RADIUS);
 			model = InitResModel(parent.FileRepository, "step/RollChar");
 		}
 		
 		PlayerController::~PlayerController()
 		{
-			delete rb;
 			delete model;
 		}
 		
 		void PlayerController::Update(StageController* stage)
 		{
-			rb->PhysicsUpdate(stage);
+			PhysicsUpdate(stage);
 			for (int i = 0; i < stage->pstarList.getSize(); i++)
 			{
 				PointStar* cur_star = stage->pstarList[i];
-				if (rb->isCollide(*cur_star))
+				if (isCollide(*cur_star))
 				{
 					//stage->parent->addScore(); not implemented yet
 					delete cur_star;
@@ -48,13 +52,12 @@ namespace scn
 		{	
 			// use quaternions to multiply matrices
 			Quaternion r, ang, final;
-			Matrix34 angular = rb->GetAngularVelocity();
 			C_QUATMtx(&r, rotation.mtx);
-			C_QUATMtx(&ang, angular.mtx);
+			C_QUATMtx(&ang, angular_velocity.mtx);
 			PSQUATMultiply(&ang, &r, &final);
 			PSMTXQuat(rotation.mtx, &final);
 			
-			Matrix34 translation = Matrix34::CreateTrans(rb->GetPosition());
+			Matrix34 translation = Matrix34::CreateTrans(position);
 			
 			model->setModelRTMtx(translation * (worldRotation * rotation));
 			model->updateWorldMtx();
@@ -65,17 +68,7 @@ namespace scn
 		
 		void PlayerController::AddImpulse(const hel::math::Vector3& impulse)
 		{
-			rb->AddForce(impulse / DELTATIME);
-		}
-		
-		bool PlayerController::IsOnGround()
-		{
-			return rb->IsOnGround();
-		}
-		
-		hel::math::Vector3 PlayerController::GetPosition()
-		{
-			return rb->GetPosition();
+			AddForce(impulse / DELTATIME);
 		}
 	}
 }

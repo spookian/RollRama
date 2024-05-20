@@ -8,13 +8,24 @@
 
 #define DELTATILT_MIN 14
 
+enum FlickType
+{
+	FLICK_NONE,
+	FLICK_FORWARD,
+	FLICK_BACK,
+	FLICK_LEFT,
+	FLICK_RIGHT
+};
+
 struct FlickTimer
 {
-	unsigned short prevAccelX;
-	unsigned short prevAccelY;
+	short prevAccelX;
+	short prevAccelY;
 	
 	unsigned char timerX;
 	unsigned char timerY;
+
+	unsigned short buttons;
 	
 	signed short sabs(signed short i)
 	{
@@ -23,7 +34,7 @@ struct FlickTimer
 	}
 	
 	// very rudimentary
-	bool Update(signed short accelX, signed short accelY)
+	short Update(signed short accelX, signed short accelY)
 	{
 		if (sabs(accelX - prevAccelX) >= DELTATILT_MIN) 
 		{
@@ -42,14 +53,22 @@ struct FlickTimer
 		prevAccelX = accelX;
 		prevAccelY = accelY;
 		
-		if (timerX > 3 || timerY > 3)
+		if (timerX > 3)
 		{
 			timerX = 0;
 			timerY = 0;
-			
-			return true;
+			if (prevAccelX > 0) return FLICK_RIGHT;
+			return FLICK_LEFT;
+			// i can't test on my computer rn but just trust me okay
 		}
-		return false;
+		else if (timerY > 3)
+		{
+			timerX = 0;
+			timerY = 0;
+			if (prevAccelY > 0) return FLICK_FORWARD;
+			return FLICK_BACK;
+		}
+		return FLICK_NONE;
 	}
 };
 

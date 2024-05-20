@@ -6,7 +6,7 @@
 #include "math/Matrix34.h"
 #include "math/math.h"
 
-#define FRICTION_CONST 0.017
+#define FRICTION_CONST 0.02
 
 using namespace hel::math;
 namespace scn
@@ -16,11 +16,12 @@ namespace scn
 		SimpleRigidbody::SimpleRigidbody(float _mass, float _radius) :  SphereCollider(_radius)
 		{
 			mass = _mass;
+			grounded = false;
 		}
 
 		void SimpleRigidbody::IntegrateForces()
 		{
-			this->position += this->velocity;
+			this->position += this->linear_velocity;
 			this->net_force = Vector3::ZERO;
 		}
 
@@ -34,22 +35,22 @@ namespace scn
 			if (ResolveAllCollisions(stage))
 			{
 				//friction
-				Vector3 friction = velocity;
+				Vector3 friction = linear_velocity;
 				friction.normalize();
 				friction = friction * -FRICTION_CONST;
 				
-				if ((velocity + friction).length() < 0.12)
+				if ((linear_velocity + friction).length() < 0.12)
 				{
-					velocity = Vector3::ZERO;
+					linear_velocity = Vector3::ZERO;
 				}
 				else
 				{
-					velocity += friction;
+					linear_velocity += friction;
 				}
 				
 				//rotation 
-				Vector3 rotAxis(velocity.z, 0.0f, -velocity.x);
-				angularVelocity = Matrix34::CreateRotXYZRad(rotAxis / radius); // linear velocity = angular * radius... angular in radians/sec
+				Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
+				angular_velocity = Matrix34::CreateRotXYZRad(rotAxis / radius); // linear velocity = angular * radius... angular in radians/sec
 			}
 		}
 
@@ -67,7 +68,7 @@ namespace scn
 					if (collisionData.surface_normal.dot(Vector3::BASIS_Y) > 0.15) grounded = true; // magic number i came up with on the spot
 					
 					position += collisionData.displacement;
-					velocity += collisionData.impulse;
+					linear_velocity += collisionData.impulse;
 					AddForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
 				}
 			}
@@ -77,7 +78,7 @@ namespace scn
 
 		void SimpleRigidbody::AddForce(const hel::math::Vector3& force)
 		{
-			this->velocity += (force * DELTATIME) / this->mass;
+			this->linear_velocity += (force * DELTATIME) / this->mass;
 			this->net_force += force;
 		}
 		
@@ -95,7 +96,7 @@ namespace scn
 			result.collided = true;
 			result.surface_normal = *plane.normal;
 			
-			float impulse_length = velocity.dot(*plane.normal);
+			float impulse_length = linear_velocity.dot(*plane.normal);
 			result.impulse = *plane.normal * -impulse_length;
 			
 			return result;
@@ -103,7 +104,7 @@ namespace scn
 		
 		Matrix34 SimpleRigidbody::GetAngularVelocity()
 		{
-			return angularVelocity;
+			return angular_velocity;
 		}
 		
 		bool SimpleRigidbody::IsOnGround()

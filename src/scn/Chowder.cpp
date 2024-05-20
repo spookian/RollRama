@@ -82,11 +82,14 @@ void Chowder::updateMain() // update physics and setup drawing
 	modelRoot->sceneClear();
 	
 	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
-	if (flick.Update(rotation.accelX, rotation.accelY))
+	short flick_update = flick.Update(rotation.accelX, rotation.accelY);
+	if (flick_update)
 	{
+		// move to stage?
+		// additionally:: transform flicktimer into an input class
 		if (stage->player->IsOnGround())
 		{
-			hel::math::Vector3 impulse(0.0f, 6.0f, 0.0f);
+			hel::math::Vector3 impulse = scn::roll::PlayerController::FlickImpulse[flick_update - 1];
 			stage->player->AddImpulse(impulse);
 		}
 	}
