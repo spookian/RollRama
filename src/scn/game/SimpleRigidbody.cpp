@@ -50,7 +50,7 @@ namespace scn
 				
 				//rotation 
 				Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
-				angular_velocity = Matrix34::CreateRotXYZRad(rotAxis / radius); // linear velocity = angular * radius... angular in radians/sec
+				angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace scn
 			return result;
 		}
 		
-		Matrix34 SimpleRigidbody::GetAngularVelocity()
+		Vector3 SimpleRigidbody::GetAngularVelocity()
 		{
 			return angular_velocity;
 		}

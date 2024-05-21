@@ -18,9 +18,8 @@ namespace scn
 		protected:
 			// physics settings
 			float mass;	
-			
 			hel::math::Vector3 linear_velocity;
-			hel::math::Matrix34 angular_velocity;
+			hel::math::Vector3 angular_velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			bool grounded;
 			
@@ -28,7 +27,7 @@ namespace scn
 			SimpleRigidbody(float _mass, float _radius);
 			void PhysicsUpdate(StageController* stage);
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
-			void AddTorque(const hel::math::Matrix34& torque); // euler
+			void AddTorque(const hel::math::Vector3& torque); // euler
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
 			bool ResolveAllCollisions(StageController *stage);
@@ -36,7 +35,7 @@ namespace scn
 			void IntegrateForces();
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
-			hel::math::Matrix34 GetAngularVelocity();
+			hel::math::Vector3 GetAngularVelocity();
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);
@@ -48,14 +47,17 @@ namespace scn
 			g3d::CharaModel *model;
 			hel::math::Matrix34 rotation;
 		public:
-			static GlobalObject<const hel::math::Vector3, float> FlickImpulse[4];
+			static GlobalObject<const hel::math::Vector3, float> jumpLinearImpulses[2];
+			static GlobalObject<const hel::math::Vector3, float> jumpAngularImpulses[2];
 
 			PlayerController(Chowder& parent);
 			~PlayerController();
 			
 			void AddImpulse(const hel::math::Vector3& impulse);
+			void AddAngularImpulse(const hel::math::Vector3& impulse);
 			void Update(StageController* stage);
 			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
+			void ZeroVelocity();
 		};
 	}
 }

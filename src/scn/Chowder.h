@@ -6,28 +6,27 @@
 #include "common/List.h"
 #include "scn/game/PointStar.h"
 
-#define DELTATILT_MIN 14
+#define DELTATILT_MIN 13
+#define MAX_FRAME 2
 
 enum FlickType
 {
-	FLICK_NONE,
+	FLICK_NONE = 0,
 	FLICK_FORWARD,
-	FLICK_BACK,
-	FLICK_LEFT,
-	FLICK_RIGHT
+	FLICK_BACK
 };
 
 struct FlickTimer
 {
-	short prevAccelX;
-	short prevAccelY;
+	signed short prevAccelX;
+	signed short prevAccelY;
 	
 	unsigned char timerX;
 	unsigned char timerY;
 
 	unsigned short buttons;
 	
-	signed short sabs(signed short i)
+	inline signed short sabs(signed short i)
 	{
 		if (i < 0) return -i;
 		return i;
@@ -36,38 +35,31 @@ struct FlickTimer
 	// very rudimentary
 	short Update(signed short accelX, signed short accelY)
 	{
-		if (sabs(accelX - prevAccelX) >= DELTATILT_MIN) 
-		{
-			if (timerX == 0 && (accelX >= 80 || accelX <= -80)) timerX++;
-			else if (timerX != 0) timerX++;
-		}
+		signed short deltaX = accelX - prevAccelX;
+		signed short deltaY = accelY - prevAccelY;
+		if (sabs(deltaX) >= DELTATILT_MIN) timerX++;
 		else timerX = 0;
-		
-		if (sabs(accelY - prevAccelY) >= DELTATILT_MIN)
-		{
-			if (timerY == 0 && (accelY >= 80 || accelY <= -80)) timerY++;
-			else if (timerY != 0) timerY++;
-		}
-		else timerY = 0;
 		
 		prevAccelX = accelX;
 		prevAccelY = accelY;
 		
-		if (timerX > 3)
+		if (timerX > MAX_FRAME)
 		{
 			timerX = 0;
 			timerY = 0;
-			if (prevAccelX > 0) return FLICK_RIGHT;
-			return FLICK_LEFT;
+			if (deltaX > 0) return FLICK_FORWARD;
+			return FLICK_BACK;
 			// i can't test on my computer rn but just trust me okay
 		}
-		else if (timerY > 3)
+		/*
+		else if (timerY > MAX_FRAME)
 		{
 			timerX = 0;
 			timerY = 0;
-			if (prevAccelY > 0) return FLICK_FORWARD;
-			return FLICK_BACK;
-		}
+			if (deltaY > 0) return FLICK_RIGHT;
+			return FLICK_LEFT;
+		}*/
+		
 		return FLICK_NONE;
 	}
 };

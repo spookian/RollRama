@@ -11,11 +11,13 @@
 #include "g3d/ResFileHelper.h"
 
 GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
-GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::FlickImpulse[4] = {
-	{{0.0f, 0.0f, 0.0f}},
-	{{0.0f, 0.0f, 0.0f}},
-	{{0.0f, 0.0f, 0.0f}},
-	{{0.0f, 0.0f, 0.0f}}
+GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpLinearImpulses[2] = {
+	{{0.0f, 5.0f, -3.0f}},
+	{{0.0f, 5.0f, 3.0f}}
+};
+GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpAngularImpulses[2] = {
+	{{-3.0f/PLAYER_RADIUS, 0.0f, 0.0f}},
+	{{3.0f/PLAYER_RADIUS, 0.0f, 0.0f}}
 };
 
 using namespace hel::math;
@@ -53,7 +55,7 @@ namespace scn
 			// use quaternions to multiply matrices
 			Quaternion r, ang, final;
 			C_QUATMtx(&r, rotation.mtx);
-			C_QUATMtx(&ang, angular_velocity.mtx);
+			C_QUATMtx(&ang, Matrix34::CreateRotXYZRad(angular_velocity).mtx);
 			PSQUATMultiply(&ang, &r, &final);
 			PSMTXQuat(rotation.mtx, &final);
 			
@@ -68,7 +70,20 @@ namespace scn
 		
 		void PlayerController::AddImpulse(const hel::math::Vector3& impulse)
 		{
-			AddForce(impulse / DELTATIME);
+			linear_velocity += impulse;
+			return;
+		}
+		
+		void PlayerController::AddAngularImpulse(const hel::math::Vector3& ang_impulse)
+		{
+			angular_velocity += ang_impulse;
+			return;
+		}
+		
+		void PlayerController::ZeroVelocity()
+		{
+			linear_velocity = Vector3::ZERO;
+			angular_velocity = Vector3::ZERO;
 		}
 	}
 }
