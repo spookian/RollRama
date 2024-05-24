@@ -5,6 +5,7 @@
 #include "scn/game/rollgame.h"
 #include "common/List.h"
 #include "scn/game/PointStar.h"
+#include "lyt/lyt.h"
 
 #define DELTATILT_MIN 13
 #define MAX_FRAME 2
@@ -69,12 +70,13 @@ class Chowder
 	g3d::Root *modelRoot;
 	
 	scn::roll::StageController *stage;
+	
 	FlickTimer flick;
 	
 	unsigned long score;
 	unsigned long lives;
 	unsigned char stars;
-	
+	lyt::Layout test;
 	
 public:
 

@@ -9,6 +9,7 @@ INCLUDE ./ld/symbols/gx.ld
 INCLUDE ./ld/symbols/file.ld
 INCLUDE ./ld/symbols/app.ld
 INCLUDE ./ld/symbols/hid.ld
+INCLUDE ./ld/symbols/lyt.ld
 
 "__start" = 0x80006310;
 ENTRY(__start)

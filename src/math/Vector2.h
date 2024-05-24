@@ -3,9 +3,10 @@ namespace hel
 {
 	namespace math
 	{
-		class Vector2
+		struct Vector2
 		{
-			Vector2(float x, float y);
+			float x, y;
+			Vector2();
 		};
 	}
 }

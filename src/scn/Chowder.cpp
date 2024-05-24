@@ -12,7 +12,8 @@
 _GXColor red = {255, 0, 0, 255};
 _GXColor blue = {0, 0, 255, 255};
 _GXColor green = {0, 255, 0, 255};
-// this function is needed
+
+// turn into method function
 void adjustScreen(g3d::CameraAccessor& camera)
 {
 	using namespace hel::math;
@@ -43,13 +44,15 @@ void debugAddTriangles(scn::roll::StageController& stage)
 	return;
 }
 
-Chowder::Chowder()
+Chowder::Chowder() : test(lyt::LayoutContext::quickContext("strap/WarningScreen", "WS"))
 {
 	// create root
 	mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
 	g3d::RootContext rootContext(*defAllocator, 32, 64, 8, 1);
 	modelRoot = new g3d::Root(rootContext);
 	g3d::CameraAccessor cam = modelRoot->currentCamera();
+	
+	test.adjustFor4b3();
 	
 	// get rmode or enable progressive at start?
 	adjustScreen(cam);
@@ -98,6 +101,8 @@ void Chowder::updateMain() // update physics and setup drawing
 	stage->gameRotation = rotation.actual;
 	stage->visualRotation = rotation.visual;
 	stage->Update();
+	
+	test.updateMatrix();
 	
 	return;
 }
@@ -173,7 +178,7 @@ void Chowder::preDraw()
 	nw4r::g3d::LightObj lobj;
 	lobj.Clear();
 	// curiously, the light won't render unless 0x3 is 5
-	// this curious phenomenon can be seen in base rtdl as well. strange!
+	// this phenomenon can be seen in base rtdl as well. strange!
 	lobj.InitLightColor(white);
 	lobj.InitLightPos(0.0f, 700.0f, 300.0f);
 	lobj.InitLightDir(-1.0f, 0.0f, 0.0f);
@@ -188,5 +193,7 @@ void Chowder::draw()
 {
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
+	lyt::Utility::SetupGX();
+	test.draw();
 	drawDebug();
 }

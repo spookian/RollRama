@@ -1,3 +1,5 @@
+"__ct__Q33hel4math7Vector2Fv" = 0x801a6e24;
+
 "__ct__Q33hel4math7Vector3Fv"						= 0x80182a78;
 "__ct__Q33hel4math7Vector3Ffff"						= 0x800bdad0;
 "__as__Q33hel4math7Vector3FRCQ33hel4math7Vector3"	= 0x80182ad0;
