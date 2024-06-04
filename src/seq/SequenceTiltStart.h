@@ -8,13 +8,16 @@ namespace seq
 	enum TiltSequenceMode
 	{
 		FAKE_START,
+		MENU,
 		GAMEPLAY,
 		END_CREDITS
 	};
 
 	class SequenceTiltStart : public ISequence
 	{
+		int mode;
 	public:
+		SequenceTiltStart();
 		~SequenceTiltStart();
 		long nextAction() const;
 		std::auto_ptr<ISequence> createChildSequence() const;

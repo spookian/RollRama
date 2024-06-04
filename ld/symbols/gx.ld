@@ -5,6 +5,7 @@
 "SetupGX__Q23gfx12EasyRender3DFRCQ33hel4math8Matrix44b" 																						= 0x8019cab0;
 
 "GXSetZMode" = 0x80038940;
+"GXSetCopyClear" = 0x80035a00;
 
 "CurrentGameWidth__Q23gfx7UtilityFv" 	= 0x8019f4ac;
 "CurrentGameHeight__Q23gfx7UtilityFv" 	= 0x8019f4d8;

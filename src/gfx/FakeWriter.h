@@ -1,8 +1,13 @@
+#pragma once
+
 #include "gfx/GXReimplementation.h"
 #define FONT_WIDTH 8
 #define FONT_HEIGHT 16
 #define MAX_EFB_WIDTH 640
 #define MAX_EFB_HEIGHT 528
+
+#define GLYPH_XPOS(x) (x << 3)
+#define GLYPH_YPOS(y) (y << 4)
 
 extern "C"
 {
@@ -34,61 +39,11 @@ namespace gfx
 		}
 	
 		void setPosition(unsigned short _x, unsigned short _y);
-		void setForegroundColor(GXColor set)
-		{
-			*reinterpret_cast<unsigned long*>(&fore_color) = *reinterpret_cast<unsigned long*>(&set);
-		}
-		void setBackgroundColor(GXColor set)
-		{
-			*reinterpret_cast<unsigned long*>(&back_color) = *reinterpret_cast<unsigned long*>(&set);
-		}
 		
-		void printCharacter(char c)
-		{
-			if (this->x >= MAX_EFB_WIDTH) return;
-			if (this->y >= MAX_EFB_HEIGHT) return;
-			
-			unsigned char* cur_char = &console_font_8x16[c * FONT_HEIGHT];
-			for (int i = 0; i < FONT_HEIGHT; i++)
-			{
-				for (int j = 0; j < FONT_WIDTH; j++)
-				{
-					unsigned short pixelX = this->x + j;
-					if (pixelX >= MAX_EFB_WIDTH) continue;
-					
-					unsigned short pixelY = this->y + i;
-					if (pixelY >= MAX_EFB_HEIGHT) continue;
-					
-					char bitmask = (128 >> j);
-					
-					if (cur_char[i] & bitmask) GXPokeARGB(pixelX, pixelY, fore_color);
-					else GXPokeARGB(pixelX, pixelY, back_color);
-				}
-			}
-		}
+		void setForegroundColor(unsigned long set);
+		void setBackgroundColor(unsigned long set);
 		
-		void printString(const char *string)
-		{
-			short old_x = x;
-			short old_y = y;
-			int idx = 0;
-			while (true)
-			{
-				// OH BOY I LOVE POTENTIAL CRASHES
-				if (string[idx] == 0) break;
-
-				if (string[idx] != '\n') 
-				{
-					printCharacter(string[idx]);
-					this->x += FONT_WIDTH;
-				}
-				else this->y += FONT_HEIGHT;
-				
-				idx++;
-			}
-			x = old_x;
-			y = old_y;
-			return;
-		}
+		void printCharacter(char c);
+		void printString(const char *string);
 	};
 }

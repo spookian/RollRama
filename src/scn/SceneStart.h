@@ -9,8 +9,6 @@ namespace scn
 	class SceneStart : public IScene
 	{
 		g3d::Root *modelRoot;
-		g3d::CharaModel *cube;
-		
 		Chowder *demo;
 		
 	public:

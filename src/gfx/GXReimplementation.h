@@ -6,4 +6,5 @@ extern "C"
 {
 	extern void GXPokeBlendMode(GXBlendMode type, GXBlendFactor src_fact, GXBlendFactor dst_fact, GXLogicOp op);
 	extern void GXPokeARGB(unsigned short x, unsigned short y, _GXColor color);
+	extern void GXSetCopyClear(GXColor clearColor, unsigned long clearZ); // apparently this is on a public patent by Nintendo https://patents.google.com/patent/US7071945B2/en
 }

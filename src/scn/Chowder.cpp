@@ -194,8 +194,6 @@ void Chowder::draw()
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
 	lyt::Utility::SetupGX();
-	test.draw();
+	//test.draw();
 	drawDebug();
-	
-	console.printString("kirby test 12");
 }

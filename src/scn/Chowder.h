@@ -78,7 +78,6 @@ class Chowder
 	unsigned long lives;
 	unsigned char stars;
 	lyt::Layout test;
-	gfx::FakeWriter console;
 	
 public:
 
