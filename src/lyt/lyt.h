@@ -23,6 +23,12 @@ namespace lyt
 		}
 	};
 	
+	class MaterialAccessor
+	{
+	public:
+		
+	};
+	
 	class PaneAccessor
 	{
 		SET_OBJECT_SIZE(0x14);
@@ -37,6 +43,7 @@ namespace lyt
 		void setAlpha(unsigned char alpha) const;
 		
 		void show() const;
+		MaterialAccessor material();
 	};
 	
 	class Layout

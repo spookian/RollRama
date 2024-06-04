@@ -196,4 +196,6 @@ void Chowder::draw()
 	lyt::Utility::SetupGX();
 	test.draw();
 	drawDebug();
+	
+	console.printString("kirby test 12");
 }

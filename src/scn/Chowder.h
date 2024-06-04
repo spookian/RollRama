@@ -6,6 +6,7 @@
 #include "common/List.h"
 #include "scn/game/PointStar.h"
 #include "lyt/lyt.h"
+#include "gfx/FakeWriter.h"
 
 #define DELTATILT_MIN 13
 #define MAX_FRAME 2
@@ -77,6 +78,7 @@ class Chowder
 	unsigned long lives;
 	unsigned char stars;
 	lyt::Layout test;
+	gfx::FakeWriter console;
 	
 public:
 

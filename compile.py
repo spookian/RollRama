@@ -12,9 +12,9 @@ DKP_CC 		    = "\\devkitPPC\\bin\\powerpc-eabi-gcc"
 DKP_AS 		    = "\\devkitPPC\\bin\\powerpc-eabi-as"
 DKP_OBJCOPY     = "\\devkitPPC\\bin\\powerpc-eabi-objcopy"
 
-CXX_FILES 	= " src\\seq\\SequenceTiltStart.cpp src\\scn\\SceneStart.cpp src\\scn\\Chowder.cpp src\\scn\\game\\PlayerController.cpp src\\scn\\game\\StageController.cpp src\\scn\\game\\SimpleRigidbody.cpp src\\g3d\\ResFileHelper.cpp src\\scn\\game\\SphereCollider.cpp src\\scn\\game\\PointStar.cpp src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp"
+CXX_FILES 	= " src\\seq\\SequenceTiltStart.cpp src\\scn\\SceneStart.cpp src\\scn\\Chowder.cpp src\\scn\\game\\PlayerController.cpp src\\scn\\game\\StageController.cpp src\\scn\\game\\SimpleRigidbody.cpp src\\g3d\\ResFileHelper.cpp src\\scn\\game\\SphereCollider.cpp src\\scn\\game\\PointStar.cpp src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp src\\gfx\\GXReimplementation.cpp src\\console_font_8x16.c"
 CXX_FLAGS 	= " -i .\\src -RTTI off -Cpp_exceptions off -enum int -Os -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -align mac68k4byte -c"
-LD_FILES 	= " SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o PointStar.o WPADReader.o StageLoader.o"
+LD_FILES 	= " SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o PointStar.o WPADReader.o StageLoader.o GXReimplementation.o console_font_8x16.o"
 LD_FLAGS 	= " -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld\\main.ld -I .\\"
 
 DKP_PATH 	= DEFAULT_DKP_PATH
