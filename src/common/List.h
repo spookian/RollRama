@@ -60,26 +60,30 @@ namespace hel
 			void remove(unsigned long idx)
 			{
 				if (idx > (size - 1)) return;
-				
+				if (idx == cache_idx) cache_node = (Node*)0;
 				Node* cur_node = start;
 				Node* prev_node = start; // safeguard against crash
-				
-				for (int i = 0; i < idx; i++)
+				if (idx == 0)
 				{
-					prev_node = cur_node;
-					cur_node = cur_node->next;
+					start = cur_node->next;
+					if (size == 1)
+					{
+						// clear 
+						start = (Node*)0;
+						end = (Node*)0;
+					}
 				}
-				
-				prev_node->next = cur_node->next;
-				if (idx == 0) start = cur_node->next;
-				if (idx == (size - 1)) end = prev_node;
-				if (size == 1)
+				else
 				{
-					// clear 
-					start = (Node*)0;
-					end = (Node*)0;
+					for (int i = 0; i < idx; i++)
+					{
+						prev_node = cur_node;
+						cur_node = cur_node->next;
+					}
+					
+					prev_node->next = cur_node->next;
+					if (idx == (size - 1)) end = prev_node;
 				}
-				// if else if else if else
 				
 				delete cur_node;
 				size--;
