@@ -12,4 +12,5 @@ Makefile
 cmake_install.cmake
 
 build/
+datastuff/
 CMakeFiles/
