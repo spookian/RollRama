@@ -18,27 +18,17 @@ namespace gfx
 {
 	class FakeWriter
 	{
-		unsigned short x, y;
+		unsigned short screen_x, screen_y;
+		unsigned short cursor_x, cursor_y;
+		
 		GXColor fore_color;
 		GXColor back_color;
 		
 	public:
-		FakeWriter()
-		{
-			x = 0;
-			y = 0;
-			back_color.r = 0;
-			back_color.g = 0;
-			back_color.b = 0;
-			back_color.a = 0;
-			
-			fore_color.r = 255;
-			fore_color.g = 255;
-			fore_color.b = 255;
-			fore_color.a = 255;
-		}
+		FakeWriter();
 	
 		void setPosition(unsigned short _x, unsigned short _y);
+		void setCursor(unsigned char x, unsigned char y);
 		
 		void setForegroundColor(unsigned long set);
 		void setBackgroundColor(unsigned long set);

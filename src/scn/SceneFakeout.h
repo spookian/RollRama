@@ -8,14 +8,18 @@ namespace scn
 {
 	struct MessageNode
 	{
-		unsigned long time; // in frames
-		const char *string;
+		char *string;
+		int time; // in frames
 	};
 	
 	class SceneFakeout : public IScene
 	{
 		gfx::FakeWriter console;
-		hel::common::List<const char*> drawList;
+		hel::common::List<char*> drawList;
+		
+		int messageIdx;
+		int timer;
+		
 		bool isEnd;
 		
 	public:
@@ -29,3 +33,5 @@ namespace scn
 		bool isSceneEnd() const;
 	};
 }
+
+extern const scn::MessageNode messageTable[];

@@ -10,7 +10,7 @@ namespace seq
 {
 	SequenceTiltStart::SequenceTiltStart()
 	{
-		mode = 0;
+		mode = GAMEPLAY;
 	}
 	
 	SequenceTiltStart::~SequenceTiltStart()

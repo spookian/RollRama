@@ -17,12 +17,18 @@ namespace hel
 			Node* start;
 			Node* end;
 			
+			//performanace increase
+			Node* cache_node;
+			int cache_idx;
 		public:
 			List()
 			{
 				size = 0;
+				cache_idx = 0;
+				
 				start = (Node*)0;
-				end = (Node*)0;
+				end = start;
+				cache_node = start;
 			}
 			
 			~List()
@@ -81,11 +87,22 @@ namespace hel
 			
 			T operator[](unsigned long index)
 			{	
+				int iterate = index;
 				Node* cur_node = start;
-				for (int i = 0; i < index; i++)
+				
+				if ((cache_node) && (index >= cache_idx))
+				{
+					cur_node = cache_node;
+					iterate = index - cache_idx;
+				}
+
+				for (int i = 0; i < iterate; i++)
 				{
 					cur_node = cur_node->next;
 				}
+				
+				cache_idx = index; 
+				cache_node = cur_node;
 				return cur_node->data;
 			}
 			

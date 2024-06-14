@@ -76,6 +76,16 @@ namespace scn
 			return result;
 		}
 
+		Vector3 closestPointOnLineSegment(Vector3& pt, Vector3& segA, Vector3& segB)
+		{
+			Vector3 segment = segB - segA;
+			float t = (pt - segA).dot(segment) / (segment.dot(segment));
+			if (t < 0.0f) t = 0.0f;
+			if (t > 1.0f) t = 1.0f;
+			
+			return segA + (segment * t);
+		}
+
 		void SimpleRigidbody::AddForce(const hel::math::Vector3& force)
 		{
 			this->linear_velocity += (force * DELTATIME) / this->mass;
@@ -89,15 +99,60 @@ namespace scn
 			Vector3 edgeVector = closestPoint - position;
 			
 			if (edgeVector.length() > radius) return result; 
-			if (!plane.CheckPointInTriangle(closestPoint)) return result; 
-			//if (edgeVector.dot(*plane.normal) < 0.0f) return result; // untested
-			
-			result.displacement = edgeVector + (*(plane.normal) * radius);
-			result.collided = true;
-			result.surface_normal = *plane.normal;
-			
-			float impulse_length = linear_velocity.dot(*plane.normal);
-			result.impulse = *plane.normal * -impulse_length;
+			if (plane.CheckPointInTriangle(closestPoint))
+			{		
+				result.displacement = edgeVector + (*(plane.normal) * radius);
+				result.collided = true;
+				result.surface_normal = *plane.normal;
+				
+				float impulse_length = linear_velocity.dot(*plane.normal);
+				result.impulse = *plane.normal * -impulse_length;
+			}
+			else
+			{
+				// check all edges of triangle, if there's a close point on the edge then push the 
+				Vector3 closestPt = closestPointOnLineSegment(position, *plane.v0, *plane.v1);
+				Vector3 edge = closestPt - position;
+				if (edge.length() <= radius)
+				{
+					Vector3 normal = position - closestPt;
+					normal.normalize();
+					
+					result.displacement = edge + (normal * radius); 
+					result.collided = true;
+					result.surface_normal = normal;
+					
+					return result;
+				}
+				
+				closestPt = closestPointOnLineSegment(position, *plane.v1, *plane.v2);
+				edge = closestPt - position;
+				if (edge.length() <= radius)
+				{
+					Vector3 normal = position - closestPt;
+					normal.normalize();
+					
+					result.displacement = edge + (normal * radius); 
+					result.collided = true;
+					result.surface_normal = normal;
+
+					return result;
+				}
+				
+				closestPt = closestPointOnLineSegment(position, *plane.v2, *plane.v0);
+				edge = closestPt - position;
+				if (edge.length() <= radius)
+				{
+					Vector3 normal = position - closestPt;
+					normal.normalize();
+					
+					result.displacement = edge + (normal * radius); 
+					result.collided = true;
+					result.surface_normal = normal;
+
+					return result;
+				}
+			}
 			
 			return result;
 		}
