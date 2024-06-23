@@ -2,6 +2,9 @@
 #include "scn/IScene.h"
 #include "scn/SceneTitle.h"
 #include "math/math.h"
+#include "hid/hid.h"
+
+#define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
 
 namespace scn
 {
@@ -12,7 +15,7 @@ namespace scn
 	
 	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen"))
 	{
-		state = TITLE_NINTENDO;
+		state = TITLE_BLACK;
 		timer = 0;
 		isEnd = false;
 		
@@ -31,17 +34,26 @@ namespace scn
 	
 	void SceneTitle::updateMain()
 	{
+		WPADStatus wpad_data;
+		WPADRead(0, (void*)&wpad_data);
+		
 		switch (state)
 		{
-			case TITLE_NINTENDO:
+			case TITLE_BLACK:
 			if (timer > 120)
 			{
+				timer = -1;
 				nintendoDisclaimer.paneByName("NintenGroup").setAlpha(255);
-				if (timer > 300)
-				{
-					timer = -1;
-					state = TITLE_NINTENDOFADE;
-				}
+				sndReq.start(0x84);
+				state = TITLE_NINTENDO;
+			}
+			break;
+			
+			case TITLE_NINTENDO:
+			if (timer > 180)
+			{
+				timer = -1;
+				state = TITLE_NINTENDOFADE;
 			}
 			break;
 			
@@ -66,12 +78,14 @@ namespace scn
 			}
 			
 			case TITLE_WARNING:
-			if (timer > 255)
 			{
-				timer = -1;
-				state = TITLE_WARNINGFADE;
+				if (wpad_data.buttons & WPAD_ACCEPT_BUTTONS)
+				{
+					state = TITLE_WARNINGFADE;
+					timer = -1;
+				}
+				break;
 			}
-			break;
 			
 			case TITLE_WARNINGFADE:
 			{ // apparently c++ thinks declaring variables is out of scope
@@ -88,8 +102,27 @@ namespace scn
 			
 			case TITLE_MENU:
 			{
+				if (wpad_data.buttons & WPAD_BUTTON_PLUS)
+				{
+					timer = -1;
+					state = TITLE_MENUFADE;
+				}
+				
 				float wiener = -hel::math::Math::CosFIdx((float)timer * PI / 60.0f) * 127.5 + 127.5;
 				titleScreen.paneByName("StartGroup").setAlpha((unsigned char)wiener);
+				break;
+			}
+			
+			case TITLE_MENUFADE:
+			{
+				int blackScreen = (timer << 3);
+				if (blackScreen > 255)
+				{
+					blackScreen = 255;
+					isEnd = true;
+				}
+				
+				nintendoDisclaimer.paneByName("Back").setAlpha(blackScreen);
 				break;
 			}
 		}

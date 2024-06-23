@@ -1,11 +1,13 @@
 #pragma once
 #include "scn/IScene.h"
 #include "lyt/lyt.h"
+#include "snd/SERequestor.h"
 
 namespace scn
 {
 	enum TitleStates
 	{
+		TITLE_BLACK,
 		TITLE_NINTENDO,
 		TITLE_NINTENDOFADE,
 		TITLE_WARNING,
@@ -16,6 +18,7 @@ namespace scn
 	
 	class SceneTitle : public IScene
 	{
+		snd::SERequestor sndReq;
 		int timer;
 		int state;
 		
