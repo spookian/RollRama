@@ -60,7 +60,7 @@ namespace hel
 			void remove(unsigned long idx)
 			{
 				if (idx > (size - 1)) return;
-				if (idx == cache_idx) cache_node = (Node*)0;
+				if (idx == cache_idx) cache_node = (Node*)0; // this is the simplest solution
 				Node* cur_node = start;
 				Node* prev_node = start; // safeguard against crash
 				if (idx == 0)

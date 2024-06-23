@@ -1,8 +1,11 @@
 #include "seq/ISequence.h"
 #include "seq/SequenceTiltStart.h"
+
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
 #include "scn/SceneFakeout.h"
+#include "scn/SceneTitle.h"
+
 #include "std/auto_ptr.h"
 #include "allocate.h"
 
@@ -10,7 +13,7 @@ namespace seq
 {
 	SequenceTiltStart::SequenceTiltStart()
 	{
-		mode = GAMEPLAY;
+		mode = MENU;
 	}
 	
 	SequenceTiltStart::~SequenceTiltStart()
@@ -42,6 +45,7 @@ namespace seq
 			scene = new scn::SceneFakeout();
 			
 			case MENU:
+			scene = new scn::SceneTitle();
 			break;
 			
 			case GAMEPLAY:

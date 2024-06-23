@@ -2,6 +2,7 @@
 #include "mem/Memory.h"
 #include "math/math.h"
 #include "gfx/gfx.h"
+#include "g3d/Model.h"
 #include "common/ExplicitSingleton.h"
 #include "defines.h"
 

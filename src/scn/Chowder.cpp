@@ -44,15 +44,13 @@ void debugAddTriangles(scn::roll::StageController& stage)
 	return;
 }
 
-Chowder::Chowder() : test(lyt::LayoutContext::quickContext("strap/WarningScreen", "WS"))
+Chowder::Chowder()
 {
 	// create root
 	mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
 	g3d::RootContext rootContext(*defAllocator, 32, 64, 8, 1);
 	modelRoot = new g3d::Root(rootContext);
 	g3d::CameraAccessor cam = modelRoot->currentCamera();
-	
-	test.adjustFor4b3();
 	
 	// get rmode or enable progressive at start?
 	adjustScreen(cam);
@@ -101,8 +99,6 @@ void Chowder::updateMain() // update physics and setup drawing
 	stage->gameRotation = rotation.actual;
 	stage->visualRotation = rotation.visual;
 	stage->Update();
-	
-	test.updateMatrix();
 	
 	return;
 }
@@ -193,7 +189,6 @@ void Chowder::draw()
 {
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
-	lyt::Utility::SetupGX();
-	//test.draw();
+
 	drawDebug();
 }

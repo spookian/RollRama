@@ -77,7 +77,6 @@ class Chowder
 	unsigned long score;
 	unsigned long lives;
 	unsigned char stars;
-	lyt::Layout test;
 	
 public:
 

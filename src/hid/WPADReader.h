@@ -19,6 +19,7 @@ struct RotationResult
 	unsigned short accelY;
 };
 
+//https://wiiubrew.org/wiki/Padscore.rpl
 struct IRObject
 {
 	unsigned short x;
