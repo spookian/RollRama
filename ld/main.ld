@@ -11,6 +11,7 @@ INCLUDE ./ld/symbols/app.ld
 INCLUDE ./ld/symbols/hid.ld
 INCLUDE ./ld/symbols/lyt.ld
 INCLUDE ./ld/symbols/snd.ld
+INCLUDE ./ld/symbols/runtime.ld
 
 "__start" = 0x80006310;
 ENTRY(__start)

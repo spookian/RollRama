@@ -36,11 +36,3 @@
 "__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
-
-"_restfpr_27" = 0x800072f0;
-"_restfpr_28" = 0x800072f4;
-"_restfpr_29" = 0x800072f8;
-
-"_savefpr_27" = 0x800072a4;
-"_savefpr_28" = 0x800072a8;
-"_savefpr_29" = 0x800072ac;

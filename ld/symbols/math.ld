@@ -10,6 +10,7 @@
 "__ml__Q33hel4math7Vector3CFf"						= 0x80182aec;
 "__dv__Q33hel4math7Vector3CFf"						= 0x801cfde8;
 "dot__Q33hel4math7Vector3CFRCQ33hel4math7Vector3"	= 0x80183f90;
+"cross__Q33hel4math7Vector3CFRCQ33hel4math7Vector3" = 0x80189484;
 "normalize__Q33hel4math7Vector3Fv"					= 0x801a6f9c;
 "length__Q33hel4math7Vector3CFv"					= 0x80183ee8;
 

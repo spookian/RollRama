@@ -58,6 +58,8 @@ namespace scn
 			void Update(StageController* stage);
 			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
 			void ZeroVelocity();
+			
+			void DebugDrawOctreeBlock();
 		};
 	}
 }

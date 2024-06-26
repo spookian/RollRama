@@ -6,6 +6,7 @@
 
 #include "common/List.h"
 #include "scn/game/PointStar.h"
+#include "scn/game/Octree.h"
 
 class Chowder;
 
@@ -71,6 +72,7 @@ namespace scn
 			
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::PointStar*> pstarList;
+			scn::roll::Octree< hel::common::List<scn::roll::TriangleWrapper> > collisionData;
 			
 			Chowder *parent;
 			

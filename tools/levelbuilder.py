@@ -1,10 +1,11 @@
 import bpy
+import mathutils
 import os
 import struct
 
 METERS_TO_CENTIMETERS = 100
-FILE_PATH = "C:/C++ projects/RollRama/data/STAGE.roll"
-HEADER_SIZE = 16
+FILE_PATH = "C:/C++ projects/RollRama/datastuff/STAGE.roll"
+HEADER_SIZE = 16 + 12 + 12
 
 triangle_file_data = bytes()
 vertexes = 0
@@ -18,7 +19,7 @@ vertex_file_data = bytes()
 def create_triangle_data(tri):
     x = tri.normal.x
     if (x == -0): x = 0
-    y = -tri.normal.y
+    y = tri.normal.y
     if (y == -0): y = 0
     z = tri.normal.z
     if (z == -0): z = 0
@@ -36,7 +37,7 @@ def create_vert_data(vert):
     if (y == -0): y = 0
     z = vert.co.z * METERS_TO_CENTIMETERS
     if (z == -0): z = 0
-    return struct.pack(">fff", x, z, -y) #z up to y up
+    return struct.pack(">fff", x, z, y) #z up to y up
 
 def check_if_all_triangles(obj):
     for ngon in obj.data.polygons:
@@ -46,6 +47,15 @@ def check_if_all_triangles(obj):
     return True
 
 x = bpy.data.objects.get('Stage')
+bound_center = mathutils.Vector()
+bound_center.resize_3d()
+
+for corner in x.bound_box:
+    bound_center += mathutils.Vector(corner)
+bound_center = bound_center * (1/8) * 100
+dimensions = x.dimensions * 100
+print(bound_center)
+
 if x:
     if check_if_all_triangles(x):
         print("Triangle check finished...")
@@ -62,12 +72,13 @@ if x:
         num_triangles = len(triangle_file_data) / 20
         print("num triangles: " + str(num_triangles) )
         header += struct.pack(">LLL", HEADER_SIZE, int(num_triangles), HEADER_SIZE + len(vertex_file_data)) # then add rest of header
+        header += struct.pack(">ffffff", bound_center.x, bound_center.z, bound_center.y, dimensions.x, dimensions.z, dimensions.y)
         
         
         f = open(FILE_PATH, mode="wb")
         f.write(header + vertex_file_data + triangle_file_data)
         f.close()
-        print("File written!")
+        print("File written!\n\n")
     else: #halt
         print("ERROR: Mesh is not fully triangulated! Apply a Triangulate modifier or select all faces in edit mesh and press CTRL+T.")
         
