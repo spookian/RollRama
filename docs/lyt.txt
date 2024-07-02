@@ -1,0 +1,17 @@
+lyt::PaneAccessor
+	-> this + 0x10 = pointer to nw4r::lyt::Picture
+
+nw4r::lyt::Picture : public nw4r::lyt::Pane
+	DrawSelf(const nw4r::math::VEC2&, const nw4r::lyt::Size&, unsigned char, A4_*, const nw4r::math::VEC2, const nw4r::ut::Color*, unsigned char) 
+		-> sets vertex format, vertex color and presumably texture for drawing, not that i can find the latter
+		-> A4 may contain UVs
+	-> this + 0xD8 = vertex colors (GXColor[4])
+	-> this + 0x100 = TexCoord
+		Top Left
+		Top Right
+	-> this + 0x1d8 = UV coords (float[5])
+		Translation X
+		Translation Y
+		Rotation
+		Scale X
+		Scale Y

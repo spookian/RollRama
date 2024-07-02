@@ -25,6 +25,7 @@ namespace scn
 		lyt::Layout warningScreen;
 		lyt::Layout titleScreen;
 		lyt::Layout nintendoDisclaimer;
+		lyt::Layout number;
 
 		bool isEnd;
 	public:

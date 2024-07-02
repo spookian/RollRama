@@ -1,0 +1,9 @@
+classes of interest:
+nand::NandThread
+	void Save()
+	void CreateTmpBanner()
+app::SaveInfo
+nand::NandManager
+	void saveData() - loops back to NandThread; if NandThread saves does the banner get generated?
+
+no idea how data gets saved at all
