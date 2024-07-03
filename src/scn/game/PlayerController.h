@@ -26,7 +26,7 @@ namespace scn
 			
 		public:
 			SimpleRigidbody(float _mass, float _radius);
-			void PhysicsUpdate(StageController* stage, TriangleList& triangleList);
+			void PhysicsUpdate(StageController* stage, TriOctree::OctreeNode *octBlock);
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
 			void AddTorque(const hel::math::Vector3& torque); // euler
 			

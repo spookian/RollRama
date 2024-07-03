@@ -25,32 +25,36 @@ namespace scn
 			this->net_force = Vector3::ZERO;
 		}
 
-		void SimpleRigidbody::PhysicsUpdate(StageController* stage, TriangleList& triangleList)
+		void SimpleRigidbody::PhysicsUpdate(StageController* stage, TriOctree::OctreeNode *octBlock)
 		{
 			grounded = false;
 			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
 			AddForce(weight);
 			
 			IntegrateForces();
-			if (ResolveAllCollisions(stage, triangleList))
+			if (octBlock->type == OCTREE_LEAF)
 			{
-				//friction
-				Vector3 friction = linear_velocity;
-				friction.normalize();
-				friction = friction * -FRICTION_CONST;
-				
-				if ((linear_velocity + friction).length() < 0.12)
+				TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)octBlock;
+				if (ResolveAllCollisions(stage, leaf->obj))
 				{
-					linear_velocity = Vector3::ZERO;
+					//friction
+					Vector3 friction = linear_velocity;
+					friction.normalize();
+					friction = friction * -FRICTION_CONST;
+					
+					if ((linear_velocity + friction).length() < 0.12)
+					{
+						linear_velocity = Vector3::ZERO;
+					}
+					else
+					{
+						linear_velocity += friction;
+					}
+					
+					//rotation 
+					Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
+					angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
 				}
-				else
-				{
-					linear_velocity += friction;
-				}
-				
-				//rotation 
-				Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
-				angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
 			}
 		}
 

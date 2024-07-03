@@ -32,17 +32,6 @@ namespace scn
 			hel::math::Vector3 position;
 			hel::math::Vector3 bounds; // should be used for cubes only in this case;
 			
-			static AABB CreateCube(float width, hel::math::Vector3& position)
-			{
-				AABB result;
-				result.bounds.x = width;
-				result.bounds.y = width;
-				result.bounds.z = width;
-				result.position = position;
-				
-				return result;
-			}
-			
 			bool Contains(hel::math::Vector3& otherPos)
 			{
 				float halfx = bounds.x / 2.0f;
@@ -56,11 +45,11 @@ namespace scn
 				float lz = position.z - halfz;
 				float hz = position.z + halfz;
 				
-				if (otherPos.x >= lx && otherPos.x <= hx)
+				if (otherPos.x >= lx && otherPos.x < hx)
 				{
-					if (otherPos.y >= ly && otherPos.y <= hy)
+					if (otherPos.y >= ly && otherPos.y < hy)
 					{
-						if (otherPos.z >= lz && otherPos.z <= hz) return true;
+						if (otherPos.z >= lz && otherPos.z < hz) return true;
 					}
 				}
 				return false;

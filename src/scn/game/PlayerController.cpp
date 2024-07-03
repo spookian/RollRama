@@ -49,7 +49,7 @@ namespace scn
 			TriOctree::OctreeNode *check = node;
 			TriOctree::OctreeNode *cur = node;
 			
-			while (check && cur->type != OCTREE_LEAF)
+			while (check && check->type != OCTREE_LEAF)
 			{
 				cur = check;
 				if (cur->box.Contains(position))
@@ -63,23 +63,27 @@ namespace scn
 				}
 			}
 			
-			result.prev = check;
-			result.current = cur;
+			result.prev = cur;
+			result.current = check;
 			return result;
 		}
 		
 		void PlayerController::Update(StageController* stage)
 		{
 			if (currentOctreeNode == 0) currentOctreeNode = stage->collisionData.startBranch;
-			if (currentOctreeNode->type != OCTREE_LEAF || !currentOctreeNode->box.Contains(position) )
+			if (!currentOctreeNode->box.Contains(position))
+			{
+				if (currentOctreeNode->parent != 0) currentOctreeNode = currentOctreeNode->parent;
+			}
+			if (currentOctreeNode->type != OCTREE_LEAF)
 			{
 				OctreeInfo info = TraverseOctree(position, currentOctreeNode);
 				if (info.current) currentOctreeNode = info.current;
 				else currentOctreeNode = info.prev;
 			}
-			TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)currentOctreeNode;
+			// if if if if if 
 			
-			PhysicsUpdate(stage, leaf->obj);
+			PhysicsUpdate(stage, currentOctreeNode);
 			for (int i = 0; i < stage->pstarList.getSize(); i++)
 			{
 				PointStar* cur_star = stage->pstarList[i];
@@ -126,6 +130,20 @@ namespace scn
 		{
 			linear_velocity = Vector3::ZERO;
 			angular_velocity = Vector3::ZERO;
+		}
+		
+		void PlayerController::DebugDrawOctreeBlock()
+		{
+			if (currentOctreeNode == 0) return;
+			
+			hel::math::Matrix34 mtx;
+			hel::math::Vector3 list[8];
+			currentOctreeNode->box.getVertices(list);
+			
+			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[1], list[5], list[4]);
+			gfx::EasyRender3D::DrawQuadFill(mtx, list[1], list[3], list[5], list[7]);
+			gfx::EasyRender3D::DrawQuadFill(mtx, list[2], list[3], list[7], list[6]);
+			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[2], list[6], list[4]);
 		}
 	}
 }

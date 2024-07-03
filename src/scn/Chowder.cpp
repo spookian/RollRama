@@ -156,11 +156,7 @@ void Chowder::drawDebug()
 	using namespace hel::math;
 	
 	SetupEasyRender3D();
-	
-	Vector3 playerPos = stage->player->GetPosition();
-	//drawStageController(*this->stage, playerPos);
-	GXSetZMode(0, 1, 0);
-	GXSetZMode(1, 3, 1);
+	stage->player->DebugDrawOctreeBlock();
 }
 
 void Chowder::preDraw()
