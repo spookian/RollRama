@@ -2,6 +2,7 @@
 #include "scn/IScene.h"
 #include "lyt/lyt.h"
 #include "snd/SERequestor.h"
+#include "scn/hud/NumberDisplay.h"
 
 namespace scn
 {
@@ -26,6 +27,8 @@ namespace scn
 		lyt::Layout titleScreen;
 		lyt::Layout nintendoDisclaimer;
 		lyt::Layout number;
+		
+		roll::NumberDisplay num;
 
 		bool isEnd;
 	public:

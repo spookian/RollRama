@@ -25,9 +25,10 @@ namespace scn
 {
 	namespace roll
 	{
-		PlayerController::PlayerController(Chowder& parent) : SimpleRigidbody(1.0f, PLAYER_RADIUS)
+		PlayerController::PlayerController(Chowder& component) : SimpleRigidbody(1.0f, PLAYER_RADIUS)
 		{
-			model = InitResModel(parent.FileRepository, "step/RollChar");
+			this->model = InitResModel(component.FileRepository, "step/RollChar");
+			this->currentOctreeNode = 0;
 		}
 		
 		PlayerController::~PlayerController()
@@ -35,9 +36,50 @@ namespace scn
 			delete model;
 		}
 		
+		struct OctreeInfo
+		{
+			TriOctree::OctreeNode *prev;
+			TriOctree::OctreeNode *current;
+		};
+		
+		// this function
+		OctreeInfo TraverseOctree(hel::math::Vector3& position, TriOctree::OctreeNode *node)
+		{
+			OctreeInfo result;
+			TriOctree::OctreeNode *check = node;
+			TriOctree::OctreeNode *cur = node;
+			
+			while (check && cur->type != OCTREE_LEAF)
+			{
+				cur = check;
+				if (cur->box.Contains(position))
+				{
+					TriOctree::OctreeBranch *branch = (TriOctree::OctreeBranch*)cur;
+					check = branch->GetSector(position);
+				}
+				else
+				{
+					check = cur->parent;
+				}
+			}
+			
+			result.prev = check;
+			result.current = cur;
+			return result;
+		}
+		
 		void PlayerController::Update(StageController* stage)
 		{
-			PhysicsUpdate(stage);
+			if (currentOctreeNode == 0) currentOctreeNode = stage->collisionData.startBranch;
+			if (currentOctreeNode->type != OCTREE_LEAF || !currentOctreeNode->box.Contains(position) )
+			{
+				OctreeInfo info = TraverseOctree(position, currentOctreeNode);
+				if (info.current) currentOctreeNode = info.current;
+				else currentOctreeNode = info.prev;
+			}
+			TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)currentOctreeNode;
+			
+			PhysicsUpdate(stage, leaf->obj);
 			for (int i = 0; i < stage->pstarList.getSize(); i++)
 			{
 				PointStar* cur_star = stage->pstarList[i];

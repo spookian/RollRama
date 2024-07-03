@@ -3,14 +3,16 @@
 #include "scn/SceneTitle.h"
 #include "math/math.h"
 #include "hid/hid.h"
+#include "common/Color.h"
 
 #define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
 #define NUMBER_UV_SCALE (60.0f/64.0f)
 #define NUMBER_TEXCOORD_SHIFT (34.0f / 352.0f)
 #define NUMBER_TEXCOORD_ORIGINLEFT (4.0f / 352.0f)
-#define NUMBER_TEXCOORD_ORIGINRIGHT (35.0f / 352.0f)
+#define NUMBER_TEXCOORD_ORIGINRIGHT (36.0f / 352.0f)
 
 _GXColor sky = {0x75, 0xF3, 0xFF, 0xFF};
+_GXColor lime = {0x78, 0xFF, 0x78, 0xFF};
 
 namespace scn
 {
@@ -19,7 +21,7 @@ namespace scn
 		return;
 	}
 	
-	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen")), number(lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number"))
+	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen")), number(lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number")), num(number)
 	{
 		state = TITLE_BLACK;
 		timer = 0;
@@ -31,18 +33,6 @@ namespace scn
 		titleScreen.paneByName("StartGroup").setAlpha(0);
 		nintendoDisclaimer.paneByName("NintenGroup").setAlpha(0);
 		nintendoDisclaimer.updateMatrix();
-		lyt::PaneAccessor n = number.paneByName("P_pict");
-		n.setUV(1.0f, NUMBER_UV_SCALE, 0.0f, 0.0f, 0.0f);
-		
-		n.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + NUMBER_TEXCOORD_SHIFT, 0.0f, UPPER_LEFT);
-		n.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + NUMBER_TEXCOORD_SHIFT, 0.0f, UPPER_RIGHT);
-		n.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + NUMBER_TEXCOORD_SHIFT, 1.0f, LOWER_LEFT);
-		n.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + NUMBER_TEXCOORD_SHIFT, 1.0f, LOWER_RIGHT);
-		
-		n.setVertexColor(sky, UPPER_LEFT);
-		n.setVertexColor(sky, UPPER_RIGHT);
-		
-		number.updateMatrix();
 	}
 	
 	SceneTitle::~SceneTitle()
@@ -149,7 +139,6 @@ namespace scn
 		titleScreen.updateMatrix();
 		warningScreen.updateMatrix();
 		nintendoDisclaimer.updateMatrix();
-		number.updateMatrix();
 	}
 	
 	void SceneTitle::updateUseGPU()
@@ -166,7 +155,8 @@ namespace scn
 	{
 		lyt::Utility::SetupGX();
 		titleScreen.draw();
-		number.draw();
+		num.draw(0, hel::math::Vector3::ZERO, hel::math::Vector2::ALL_ONE, hel::common::Color::WHITE, hel::common::Color::WHITE);
+		num.draw(0, averageShift, hel::math::Vector2::ALL_ONE, hel::common::Color::BLUE, hel::common::Color::WHITE);
 		warningScreen.draw();
 		nintendoDisclaimer.draw();
 	}

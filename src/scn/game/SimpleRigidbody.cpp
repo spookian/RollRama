@@ -25,14 +25,14 @@ namespace scn
 			this->net_force = Vector3::ZERO;
 		}
 
-		void SimpleRigidbody::PhysicsUpdate(StageController* stage)
+		void SimpleRigidbody::PhysicsUpdate(StageController* stage, TriangleList& triangleList)
 		{
 			grounded = false;
 			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
 			AddForce(weight);
 			
 			IntegrateForces();
-			if (ResolveAllCollisions(stage))
+			if (ResolveAllCollisions(stage, triangleList))
 			{
 				//friction
 				Vector3 friction = linear_velocity;
@@ -54,12 +54,12 @@ namespace scn
 			}
 		}
 
-		bool SimpleRigidbody::ResolveAllCollisions(StageController* stage)
+		bool SimpleRigidbody::ResolveAllCollisions(StageController* stage, TriangleList& triangleList)
 		{
 			bool result = false;
-			for (int i = 0; i < stage->triangleList.getSize(); i++)
+			for (int i = 0; i < triangleList.getSize(); i++)
 			{
-				TriangleWrapper tri = stage->triangleList[i]; // optimize?
+				TriangleWrapper tri = triangleList[i]; // optimize?
 				CollisionResult collisionData = ResolveCollision( tri );
 				result = result || collisionData.collided;
 				

@@ -4,6 +4,7 @@
 #include "g3d/Model.h"
 #include "scn/game/Collision.h"
 #include "scn/game/rollgame.h"
+#include "scn/game/Octree.h"
 
 class Chowder;
 // messy class prototype 
@@ -25,12 +26,12 @@ namespace scn
 			
 		public:
 			SimpleRigidbody(float _mass, float _radius);
-			void PhysicsUpdate(StageController* stage);
+			void PhysicsUpdate(StageController* stage, TriangleList& triangleList);
 			void AddForce(const hel::math::Vector3& force); // velocity += force*dt / m 
 			void AddTorque(const hel::math::Vector3& torque); // euler
 			
 			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
-			bool ResolveAllCollisions(StageController *stage);
+			bool ResolveAllCollisions(StageController* stage, TriangleList& triangleList);
 			
 			void IntegrateForces();
 			
@@ -46,6 +47,7 @@ namespace scn
 		{
 			g3d::CharaModel *model;
 			hel::math::Matrix34 rotation;
+			TriOctree::OctreeNode *currentOctreeNode;
 		public:
 			static GlobalObject<const hel::math::Vector3, float> jumpLinearImpulses[2];
 			static GlobalObject<const hel::math::Vector3, float> jumpAngularImpulses[2];

@@ -104,9 +104,9 @@ namespace scn
 				{
 					// lol im gonna assume that position is in octree to save on speed
 					unsigned char idx = 0;
-					if (position.x >= this->box.position.x) idx |= 1;
-					if (position.z >= this->box.position.z) idx |= 2;
-					if (position.y >= this->box.position.y) idx |= 4;
+					if (position.x > this->box.position.x) idx |= 1;
+					if (position.z > this->box.position.z) idx |= 2;
+					if (position.y < this->box.position.y) idx |= 4;
 					
 					return branches[idx];
 				}

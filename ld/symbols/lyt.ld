@@ -7,6 +7,7 @@
 
 "__ct__Q23lyt13LayoutContextFPCcPCcRQ23mem10IAllocator" = 0x801b947c;
 
+"__ct__Q23lyt12PaneAccessorFRCQ23lyt12PaneAccessor" = 0x801b87b0;
 "__dt__Q23lyt12PaneAccessorFv" = 0x8017d074;
 "setText__Q23lyt12PaneAccessorCFPCc" = 0x801b9b08;
 "setText__Q23lyt12PaneAccessorCFPCw" = 0x801b9b04;

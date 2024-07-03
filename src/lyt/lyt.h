@@ -46,12 +46,12 @@ namespace lyt
 		void setSize(const hel::math::Vector2& size) const;
 		void setAlpha(unsigned char alpha) const;
 		
-		void setVertexColor(_GXColor& col, int idx)
+		void setVertexColor(const _GXColor& col, int idx) const
 		{
-			*reinterpret_cast<unsigned long*>(panePtr + 0xD8 + (idx << 2)) = *reinterpret_cast<unsigned long*>(&col); // this is insanely evil.
+			*reinterpret_cast<unsigned long*>(panePtr + 0xD8 + (idx << 2)) = *reinterpret_cast<const unsigned long*>(&col); // this is insanely evil.
 		}
 		
-		void setUV(float scaleX, float scaleY, float rotation, float transX, float transY)
+		void setUV(float scaleX, float scaleY, float rotation, float transX, float transY) const 
 		{
 			float* UVs = reinterpret_cast<float*>(panePtr + 0x1d8);
 			UVs[0] = transX;
@@ -61,7 +61,7 @@ namespace lyt
 			UVs[4] = scaleY;
 		}
 		
-		void setTexCoords(float u, float v, int idx)
+		void setTexCoords(float u, float v, int idx) const
 		{
 			float* texCoords = reinterpret_cast<float*>( panePtr + 0x100 + (idx << 3) );
 			texCoords[0] = u;

@@ -17,7 +17,6 @@ const GlobalObject<const hel::math::Vector3, float> cubeAxes[3] = {
 };
 
 using namespace hel::math;
-typedef scn::roll::Octree< hel::common::List<scn::roll::TriangleWrapper> > TriOctree;
 
 struct RollHeader
 {

@@ -5,7 +5,8 @@ namespace scn
 	{
 		class HUDController
 		{
-			lyt::Layout 
+			lyt::Layout num;
+			Number
 		};
 	}
 }

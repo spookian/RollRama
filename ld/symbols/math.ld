@@ -1,4 +1,8 @@
 "__ct__Q33hel4math7Vector2Fv" = 0x801a6e24;
+"ALL_ONE__Q33hel4math7Vector2" = 0x808c1e98;
+"BASIS_X__Q33hel4math7Vector2" = 0x808c1ea0;
+"BASIS_Y__Q33hel4math7Vector2" = 0x808c1ea8;
+"ZERO__Q33hel4math7Vector2" = 0x808c1e90;
 
 "__ct__Q33hel4math7Vector3Fv"						= 0x80182a78;
 "__ct__Q33hel4math7Vector3Ffff"						= 0x800bdad0;
