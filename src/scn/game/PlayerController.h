@@ -37,6 +37,7 @@ namespace scn
 			
 			void UpdateModel(g3d::Root& root); // updates position. save last.
 			hel::math::Vector3 GetAngularVelocity();
+			hel::math::Vector3 GetLinearVelocity();
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);

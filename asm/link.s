@@ -1,2 +1,2 @@
 .section rtdl, "awx", @progbits
-.incbin "./RTDLBASE.dol"
+.incbin "./RTDLBASE_patched.dol"

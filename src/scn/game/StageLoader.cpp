@@ -7,7 +7,7 @@
 #define ROLL_SIGNATURE 0x524F4C4C
 #define MAX_CUBE_VERTICES 8
 #define MAX_TRIANGLE_VERTICES 3
-#define MAX_TRIANGLES_OCTREE 32
+#define MAX_TRIANGLES_OCTREE 128
 //duh.
 
 const GlobalObject<const hel::math::Vector3, float> cubeAxes[3] = {

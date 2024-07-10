@@ -1,4 +1,4 @@
-#include "scn/game/PointStar.h"
+#include "scn/game/Pickup.h"
 #include "g3d/Model.h"
 #include "scn/Chowder.h"
 #include "math/math.h"
@@ -11,10 +11,11 @@ namespace scn
 {
 	namespace roll
 	{
-		PointStar::PointStar(Chowder& parent, Vector3 position) : SphereCollider(POINTSTAR_RADIUS)
+		PointStar::PointStar(Vector3 position) : Pickup(POINTSTAR_RADIUS)
 		{
+			
 			this->position = position;
-			model = InitResModel(parent.FileRepository, "step/CollectStar");
+			model = InitResModel(engineSingleton->FileRepository, "step/CollectStar");
 		}
 		
 		PointStar::~PointStar()

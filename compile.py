@@ -27,6 +27,11 @@ LD_FLAGS 	= " -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nos
 DKP_PATH 	= DEFAULT_DKP_PATH
 CW_PATH 	= DEFAULT_CW_PATH
 
+def test_program(ERRORCODE):
+    if (ERRORCODE != 0):
+        print("compile.py: Compiliation failed.")
+        sys.exit(0)
+        
 #execution
 def parse_arguments():
 	for n in sys.argv:
@@ -38,11 +43,13 @@ def parse_arguments():
 
 parse_arguments()
 print("Building...\n")
-os.system(CW_PATH + CW_CC + CXX_FILES + CXX_FLAGS)
-os.system(DKP_PATH + DKP_AS + " .\\asm\\link.s -o link.o")
-os.system(DKP_PATH + DKP_AS + " .\\asm\\hook.s -o hook.o")
-os.system(DKP_PATH + DKP_CC + LD_FLAGS + " link.o hook.o" + LD_FILES + " -o .\\build\\main.elf")
-os.system("python .\\tools\\adjust_section_offsets.py .\\build\\main.elf")
-os.system(DKP_PATH + DKP_OBJCOPY + " -O binary .\\build\\main.elf .\\build\\main.dol")
+test_program( os.system("python .\\tools\\dolphin_patch_parser.py") )
+test_program( os.system(CW_PATH + CW_CC + CXX_FILES + CXX_FLAGS) )
+test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\link.s -o link.o") )
+test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\hook.s -o hook.o") )
+test_program( os.system(DKP_PATH + DKP_CC + LD_FLAGS + " link.o hook.o" + LD_FILES + " -o .\\build\\main.elf") )
+test_program( os.system("python .\\tools\\adjust_section_offsets.py .\\build\\main.elf") )
+test_program( os.system(DKP_PATH + DKP_OBJCOPY + " -O binary .\\build\\main.elf .\\build\\main.dol") )
 #cleanup
 os.system("del *.o")
+os.system("del RTDLBASE_patched.dol")

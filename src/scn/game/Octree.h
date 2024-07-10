@@ -1,18 +1,7 @@
 #pragma once 
 #include "math/Vector3.h"
 #include "common/List.h"
-
-const GlobalObject<const hel::math::Vector3, float> aabbMultipliers[8] = {
-	{{-0.5, 0.5, -0.5}},
-	{{0.5, 0.5, -0.5}},
-	{{-0.5, 0.5, 0.5}},
-	{{0.5, 0.5, 0.5}},
-	
-	{{-0.5, -0.5, -0.5}},
-	{{0.5, -0.5, -0.5}},
-	{{-0.5, -0.5, 0.5}},
-	{{0.5, -0.5, 0.5}}
-};
+#include "scn/game/BoxCollider.h"
 
 enum OctreeType
 {
@@ -25,47 +14,7 @@ namespace scn
 {
 	
 	namespace roll
-	{
-		
-		struct AABB
-		{
-			hel::math::Vector3 position;
-			hel::math::Vector3 bounds; // should be used for cubes only in this case;
-			
-			bool Contains(hel::math::Vector3& otherPos)
-			{
-				float halfx = bounds.x / 2.0f;
-				float halfy = bounds.y / 2.0f;
-				float halfz = bounds.z / 2.0f;
-				
-				float lx = position.x - halfx;
-				float hx = position.x + halfx;
-				float ly = position.y - halfy;
-				float hy = position.y + halfy;
-				float lz = position.z - halfz;
-				float hz = position.z + halfz;
-				
-				if (otherPos.x >= lx && otherPos.x < hx)
-				{
-					if (otherPos.y >= ly && otherPos.y < hy)
-					{
-						if (otherPos.z >= lz && otherPos.z < hz) return true;
-					}
-				}
-				return false;
-			}
-			
-			void getVertices(hel::math::Vector3 arr[8]) // requires an array of 8
-			{
-				for (int i = 0; i < 8; i++)
-				{
-					hel::math::Vector3 curMultiplier = aabbMultipliers[i];
-					hel::math::Vector3 add( curMultiplier.x * bounds.x, curMultiplier.y * bounds.y, curMultiplier.z * bounds.z );
-					arr[i] = position + add;
-				}
-			}
-		};
-		
+	{	
 		template <typename T>
 		struct Octree
 		{
@@ -74,6 +23,11 @@ namespace scn
 				int type;
 				OctreeNode *parent;
 				AABB box;
+				
+				virtual ~OctreeNode()
+				{
+					
+				}
 			};
 			
 			struct OctreeBranch : public OctreeNode
@@ -85,7 +39,15 @@ namespace scn
 					type = OCTREE_BRANCH;
 					for (int i = 0; i < 8; i++)
 					{
-						branches[i] = (OctreeNode*)0;
+						branches[i] = 0;
+					}
+				}
+				
+				~OctreeBranch()
+				{
+					for (int i = 0; i < 8; i++)
+					{
+						if (branches[i]) delete branches[i];
 					}
 				}
 				
@@ -112,6 +74,19 @@ namespace scn
 			};
 			
 			OctreeNode *startBranch;
+			
+			Octree()
+			{
+				startBranch = 0;
+			}
+			
+			~Octree()
+			{
+				if (startBranch)
+				{
+					delete startBranch;
+				}
+			}
 			
 			// idk if this function is even needed
 			OctreeNode* TraverseOctree(hel::math::Vector3& position)

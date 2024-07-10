@@ -16,8 +16,7 @@ namespace scn
 	
 	SceneStart::SceneStart()
 	{
-		// initialize root object
-		demo = new Chowder();
+		engineSingleton = new Chowder();
 		return;
 	}
 	
@@ -28,8 +27,8 @@ namespace scn
 	
 	void SceneStart::updateMain()
 	{
-		demo->updateMain();
-		demo->preDraw();
+		engineSingleton->updateMain();
+		engineSingleton->preDraw();
 		return;
 	}
 	
@@ -45,7 +44,7 @@ namespace scn
 	
 	void SceneStart::draw(const DrawReqInfo& info)
 	{
-		demo->draw();
+		engineSingleton->draw();
 		return;
 	}
 	

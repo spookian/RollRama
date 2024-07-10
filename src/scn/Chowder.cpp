@@ -1,6 +1,7 @@
 #include "math/math.h"
 #include "gfx/gfx.h"
 #include "hid/hid.h"
+#include "common/Color.h"
 #include "common/ExplicitSingleton.h"
 #include "g3d/Model.h"
 #include "scn/Chowder.h"
@@ -8,10 +9,7 @@
 #include "mem/Memory.h"
 #include "file/FileAccessor.h"
 
-// split this poor fucking file into multiple
-_GXColor red = {255, 0, 0, 255};
-_GXColor blue = {0, 0, 255, 255};
-_GXColor green = {0, 255, 0, 255};
+Chowder *engineSingleton;
 
 // turn into method function
 void adjustScreen(g3d::CameraAccessor& camera)
@@ -56,7 +54,7 @@ Chowder::Chowder()
 	adjustScreen(cam);
 	this->stage = new scn::roll::StageController(*this);
 	//debugAddTriangles(*stage);
-	file::FileAccessor file("gcn/TEST.roll", false);
+	file::FileAccessor file("gcn/STAGE2.roll", false);
 	if (file.isLoaded()) 
 	{
 		file::FileData stage_data = file.block();
@@ -82,7 +80,7 @@ void Chowder::updateMain() // update physics and setup drawing
 {
 	modelRoot->sceneClear();
 	
-	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
+	RotationResult rotation = obtainWiimoteRotation(0.35f); // magic number
 	short flick_update = flick.Update(rotation.accelX, rotation.accelY);
 	if (flick_update)
 	{
@@ -146,7 +144,7 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 		Vector3& v1 = *(triangle.v1);
 		Vector3& v2 = *(triangle.v2);
 		
-		gfx::EasyRender3D::SetColor(blue);
+		gfx::EasyRender3D::SetColor(hel::common::Color::BLUE);
 		gfx::EasyRender3D::DrawTriangleWireframe(finalMatrix, v0, v1, v2);
 	}
 }
@@ -156,7 +154,7 @@ void Chowder::drawDebug()
 	using namespace hel::math;
 	
 	SetupEasyRender3D();
-	stage->player->DebugDrawOctreeBlock();
+	//stage->player->DebugDrawOctreeBlock();
 }
 
 void Chowder::preDraw()

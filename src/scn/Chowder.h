@@ -4,11 +4,10 @@
 #include "math/Vector3.h"
 #include "scn/game/rollgame.h"
 #include "common/List.h"
-#include "scn/game/PointStar.h"
 #include "lyt/lyt.h"
 #include "gfx/FakeWriter.h"
 
-#define DELTATILT_MIN 13
+#define DELTATILT_MIN 20
 #define MAX_FRAME 2
 
 enum FlickType
@@ -68,18 +67,16 @@ struct FlickTimer
 
 class Chowder
 {
-	g3d::Root *modelRoot;
-	
-	scn::roll::StageController *stage;
-	
-	FlickTimer flick;
-	
-	unsigned long score;
-	unsigned long lives;
-	unsigned char stars;
-	
 public:
 
+	int score;
+	int time;
+	int health;
+
+	g3d::Root *modelRoot;
+	scn::roll::StageController *stage;
+	FlickTimer flick;
+	
 	Chowder();
 	void SetupEasyRender3D();
 	void updateMain();
@@ -87,9 +84,8 @@ public:
 	void preDraw();
 	void draw();
 	
-	void addScore(unsigned long offset);
-	void addLives(signed int offset);
-	void addStars(unsigned long offset);
 	
 	g3d::ResFileRepository FileRepository;
 };
+
+extern Chowder *engineSingleton;

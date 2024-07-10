@@ -1,6 +1,6 @@
 #include "scn/game/PhysicsConstants.h"
 #include "scn/game/rollgame.h"
-#include "scn/game/PointStar.h"
+#include "scn/game/Pickup.h"
 #include "scn/game/PlayerController.h"
 #include "scn/Chowder.h"
 #include "g3d/Model.h"
@@ -29,6 +29,8 @@ namespace scn
 		{
 			this->model = InitResModel(component.FileRepository, "step/RollChar");
 			this->currentOctreeNode = 0;
+			position.y = 144.896;
+			position.z = -9628.0f;
 		}
 		
 		PlayerController::~PlayerController()

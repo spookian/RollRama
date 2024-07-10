@@ -161,6 +161,11 @@ namespace scn
 			return result;
 		}
 		
+		Vector3 SimpleRigidbody::GetLinearVelocity()
+		{
+			return linear_velocity;
+		}
+		
 		Vector3 SimpleRigidbody::GetAngularVelocity()
 		{
 			return angular_velocity;

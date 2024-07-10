@@ -5,7 +5,7 @@
 #include "file/FileAccessor.h"
 
 #include "common/List.h"
-#include "scn/game/PointStar.h"
+#include "scn/game/Pickup.h"
 #include "scn/game/Octree.h"
 
 class Chowder;

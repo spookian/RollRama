@@ -25,11 +25,11 @@ namespace scn
 	{
 		StageController::StageController(Chowder& parent)
 		{
-			stageModel = InitResModel(parent.FileRepository, "step/TestStage");
+			stageModel = InitResModel(parent.FileRepository, "step/Stage2");
 			
-			PointStar* p = new PointStar(parent, star1);
+			PointStar* p = new PointStar(star1);
 			pstarList.append(p);
-			p = new PointStar(parent, star2);
+			p = new PointStar(star2);
 			pstarList.append(p);
 			
 			player = new PlayerController(parent);
@@ -72,7 +72,7 @@ namespace scn
 			
 			Matrix34 stageTranslation = Matrix34::CreateTrans(stagePos);
 			
-			stageModel->setModelRTMtx(worldRotation * stageTranslation);
+			stageModel->setModelRTMtx(worldRotation);
 			stageModel->updateWorldMtx();
 			stageModel->registerToRoot(root);
 			
@@ -144,6 +144,7 @@ namespace scn
 			return result;
 		}
 		
+		// shamelessly stolen from the book
 		bool TriangleWrapper::CheckPointInTriangle(const Vector3& point) const
 		{
 			unsigned long largestProj = checkProjectionTriangle(*this);
