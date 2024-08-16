@@ -5,12 +5,9 @@
 
 namespace g3d
 {
-	class ResFileAccessor
+	struct ResFileAccessor
 	{
-	private:
 		nw4r::g3d::ResFile* data;
-		
-	public:
 		inline ResFileAccessor(nw4r::g3d::ResFile* file)
 		{
 			data = file;

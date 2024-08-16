@@ -6,9 +6,12 @@
 #include "common/List.h"
 #include "lyt/lyt.h"
 #include "gfx/FakeWriter.h"
+#include "hid/hid.h"
 
 #define DELTATILT_MIN 20
 #define MAX_FRAME 2
+#define PHYSICS_CONSTANT 1.0f
+#define VISUAL_CONSTANT 0.25f
 
 enum FlickType
 {
@@ -17,15 +20,20 @@ enum FlickType
 	FLICK_BACK
 };
 
-struct FlickTimer
+struct ControllerManager
 {
 	signed short prevAccelX;
 	signed short prevAccelY;
 	
 	unsigned char timerX;
-	unsigned char timerY;
-
 	unsigned short buttons;
+	unsigned short flick;
+	
+	hel::math::Vector3 tilt;
+	hel::math::Matrix34 visualRotation;
+	hel::math::Matrix34 physicsRotation;
+	
+	ControllerManager();
 	
 	inline signed short sabs(signed short i)
 	{
@@ -34,22 +42,27 @@ struct FlickTimer
 	}
 	
 	// very rudimentary
-	short Update(signed short accelX, signed short accelY)
+	void Update(const RotationResult& origin)
 	{
-		signed short deltaX = accelX - prevAccelX;
-		signed short deltaY = accelY - prevAccelY;
+		using namespace hel::math;
+		
+		tilt = origin.vector;
+		buttons = origin.buttons;
+		flick = FLICK_NONE;
+		
+		signed short deltaX = origin.accelX - prevAccelX;
+		signed short deltaY = origin.accelY - prevAccelY;
 		if (sabs(deltaX) >= DELTATILT_MIN) timerX++;
 		else timerX = 0;
 		
-		prevAccelX = accelX;
-		prevAccelY = accelY;
+		prevAccelX = origin.accelX;
+		prevAccelY = origin.accelY;
 		
 		if (timerX > MAX_FRAME)
 		{
 			timerX = 0;
-			timerY = 0;
-			if (deltaX > 0) return FLICK_FORWARD;
-			return FLICK_BACK;
+			if (deltaX > 0) flick = FLICK_FORWARD;
+			else flick = FLICK_BACK;
 			// i can't test on my computer rn but just trust me okay
 		}
 		/*
@@ -61,21 +74,24 @@ struct FlickTimer
 			return FLICK_LEFT;
 		}*/
 		
-		return FLICK_NONE;
+		Vector3 accel( asin(tilt.x), 0.0f, asin(tilt.z) );
+		physicsRotation = Matrix34::CreateRotXYZRad(accel * PHYSICS_CONSTANT); // multiply by some arbitrary const whenever i fine tune physics
+		visualRotation = Matrix34::CreateRotXYZRad(accel * VISUAL_CONSTANT);
+		
+		return;
 	}
 };
 
 class Chowder
 {
 public:
-
 	int score;
 	int time;
 	int health;
 
 	g3d::Root *modelRoot;
 	scn::roll::StageController *stage;
-	FlickTimer flick;
+	ControllerManager input;
 	
 	Chowder();
 	void SetupEasyRender3D();
@@ -83,7 +99,6 @@ public:
 	void drawDebug();
 	void preDraw();
 	void draw();
-	
 	
 	g3d::ResFileRepository FileRepository;
 };

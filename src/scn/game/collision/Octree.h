@@ -1,7 +1,7 @@
 #pragma once 
 #include "math/Vector3.h"
 #include "common/List.h"
-#include "scn/game/BoxCollider.h"
+#include "scn/game/collision/BoxCollider.h"
 
 enum OctreeType
 {

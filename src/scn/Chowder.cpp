@@ -10,6 +10,12 @@
 #include "file/FileAccessor.h"
 
 Chowder *engineSingleton;
+const GlobalObject<const hel::math::Vector3, float> rectangle[4] = {
+	{{ -300.0, -150.0, 0.0 }},
+	{{ 300.0, -150.0, 0.0 }},
+	{{ 300.0, 150.0, 0.0 }},
+	{{ -300.0, 150.0, 0.0 }}
+};
 
 // turn into method function
 void adjustScreen(g3d::CameraAccessor& camera)
@@ -42,11 +48,20 @@ void debugAddTriangles(scn::roll::StageController& stage)
 	return;
 }
 
+ControllerManager::ControllerManager()
+{
+	prevAccelX = 0;
+	prevAccelY = 0;
+	timerX = 0;
+	buttons = 0;
+	flick = FLICK_NONE;
+}
+
 Chowder::Chowder()
 {
+	engineSingleton = this;
 	// create root
-	mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
-	g3d::RootContext rootContext(*defAllocator, 32, 64, 8, 1);
+	g3d::RootContext rootContext( *g3d::ModelContext::DefaultAllocator(), 32, 64, 8, 1 );
 	modelRoot = new g3d::Root(rootContext);
 	g3d::CameraAccessor cam = modelRoot->currentCamera();
 	
@@ -68,10 +83,6 @@ Chowder::Chowder()
 	lightSet.enableAmbientLightObj(0);
 	lightSet.enableLightObj(0, 0);
 	
-	RotationResult rotation = obtainWiimoteRotation(0.25f); // magic number
-	flick.prevAccelX = rotation.accelX;
-	flick.prevAccelY = rotation.accelY;
-	
 	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
 	lightSet.setAmbientLightObj(ambColor);
 }
@@ -79,23 +90,10 @@ Chowder::Chowder()
 void Chowder::updateMain() // update physics and setup drawing
 {
 	modelRoot->sceneClear();
+	input.Update( obtainWiimoteRotation(0.25f) );
 	
-	RotationResult rotation = obtainWiimoteRotation(0.35f); // magic number
-	short flick_update = flick.Update(rotation.accelX, rotation.accelY);
-	if (flick_update)
-	{
-		// move to stage?
-		// additionally:: transform flicktimer into an input class
-		if (stage->player->IsOnGround())
-		{			
-			stage->player->ZeroVelocity();
-			stage->player->AddImpulse(scn::roll::PlayerController::jumpLinearImpulses[flick_update - 1]);
-			stage->player->AddAngularImpulse(scn::roll::PlayerController::jumpAngularImpulses[flick_update - 1]);
-		}
-	}
-	
-	stage->gameRotation = rotation.actual;
-	stage->visualRotation = rotation.visual;
+	stage->gameRotation = input.physicsRotation;
+	stage->visualRotation = input.visualRotation;
 	stage->Update();
 	
 	return;
@@ -144,32 +142,44 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 		Vector3& v1 = *(triangle.v1);
 		Vector3& v2 = *(triangle.v2);
 		
-		gfx::EasyRender3D::SetColor(hel::common::Color::BLUE);
 		gfx::EasyRender3D::DrawTriangleWireframe(finalMatrix, v0, v1, v2);
 	}
 }
 
 void Chowder::drawDebug()
 {
-	using namespace hel::math;
-	
-	SetupEasyRender3D();
+	//SetupEasyRender3D();
 	//stage->player->DebugDrawOctreeBlock();
+	/*float hwidth = lyt::Utility::ScreenHalfWidth();
+	float hheight = lyt::Utility::ScreenHalfHeight();
+	
+	Matrix44 ortho = Matrix44::CreateOrtho(hheight, -hheight, -hwidth, hwidth, 0.1, 200.0);
+	
+	gfx::EasyRender3D::SetupGX(ortho, true);
+	// ignores z buffer*/
+	
+	Matrix34 identity;
+	Matrix34 viewMtx = lyt::Utility::ViewMtx();
+	lyt::Utility::SetupGX();
+	GXSetZMode(0, 1, 0); 
+	gfx::EasyRender3D::SetViewMtx(viewMtx);
+	gfx::EasyRender3D::SetColor(hel::common::Color::BLUE);
+	gfx::EasyRender3D::DrawQuadFill(identity, rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
+	GXSetZMode(1, 3, 1);
 }
 
 void Chowder::preDraw()
 {
 	stage->preDraw(*modelRoot);
 	
-		// create lightset
+	// create lightset
 	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
-	_GXColor white = {255, 255, 255, 255};
 	
 	nw4r::g3d::LightObj lobj;
 	lobj.Clear();
 	// curiously, the light won't render unless 0x3 is 5
 	// this phenomenon can be seen in base rtdl as well. strange!
-	lobj.InitLightColor(white);
+	lobj.InitLightColor(hel::common::Color::WHITE);
 	lobj.InitLightPos(0.0f, 700.0f, 300.0f);
 	lobj.InitLightDir(-1.0f, 0.0f, 0.0f);
 	lobj.InitLightAttnA(1.0f, 0.0f, 0.0f);

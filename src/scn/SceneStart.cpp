@@ -16,12 +16,13 @@ namespace scn
 	
 	SceneStart::SceneStart()
 	{
-		engineSingleton = new Chowder();
+		Chowder *p = new Chowder(); // don't worry it'll place itself into a global pointer
 		return;
 	}
 	
 	SceneStart::~SceneStart()
 	{
+		delete engineSingleton;
 		return;
 	}
 	

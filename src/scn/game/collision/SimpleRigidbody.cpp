@@ -175,5 +175,23 @@ namespace scn
 		{
 			return grounded;
 		}
+		
+		void SimpleRigidbody::AddImpulse(const hel::math::Vector3& impulse)
+		{
+			linear_velocity += impulse;
+			return;
+		}
+		
+		void SimpleRigidbody::AddAngularImpulse(const hel::math::Vector3& ang_impulse)
+		{
+			angular_velocity += ang_impulse;
+			return;
+		}
+		
+		void SimpleRigidbody::ZeroVelocity()
+		{
+			linear_velocity = Vector3::ZERO;
+			angular_velocity = Vector3::ZERO;
+		}
 	}
 }

@@ -10,6 +10,7 @@
 
 const GlobalObject<const hel::math::Vector3, float> averageShift = {{ 34.0, 0.0, 0.0 }};
 
+// review code; something's happening that's causing it to crash
 namespace scn
 {
 	namespace roll

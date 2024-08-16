@@ -6,6 +6,7 @@
 
 "GXSetZMode" = 0x80038940;
 "GXSetCopyClear" = 0x80035a00;
+"GXSetBlendMode" = 0x80038850;
 
 "CurrentGameWidth__Q23gfx7UtilityFv" 	= 0x8019f4ac;
 "CurrentGameHeight__Q23gfx7UtilityFv" 	= 0x8019f4d8;

@@ -29,6 +29,10 @@
 "updateWorldMtx__Q23g3d10CharaModelFv" 						= 0x801949c0;
 "setModelRTMtx__Q23g3d10CharaModelFRCQ33hel4math8Matrix34" 	= 0x801949ec;
 "setModelScale__Q23g3d10CharaModelFRCQ33hel4math7Vector3"	= 0x80194a24;
+"resModel__Q23g3d10CharaModelCFv" = 0x801949b8;
+"setAnim__Q23g3d10CharaModelFUlRCQ23g3d15ResFileAccessorPCc" = 0x80194b38;
+"anim__Q23g3d10CharaModelFUl"								= 0x80194e6c;
+"model__Q23g3d10CharaModelFv"								= 0x8019496c;
 
 "__ct__Q23g3d17ResFileRepositoryFv"							= 0x8019b178;
 "get__Q23g3d17ResFileRepositoryFPCcb"						= 0x8019b2f0;
@@ -36,3 +40,12 @@
 "__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
+
+"nodeByName__Q23g3d13ModelAccessorCFPCc" = 0x801980d0;
+
+"setVisibility__Q23g3d12NodeAccessorCFb" = 0x8019aa94;
+"worldTrans__Q23g3d12NodeAccessorCFv" = 0x8019a83c;
+"worldRotate__Q23g3d12NodeAccessorCFv" = 0x8019a880;
+
+"start__Q23g3d17ModelAnimAccessorCFb" = 0x80199640;
+"stop__Q23g3d17ModelAnimAccessorCFv" = 0x80199648;

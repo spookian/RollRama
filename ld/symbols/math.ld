@@ -32,11 +32,13 @@
 
 "__ct__Q33hel4math8Matrix44Fv" = 0x801a64bc;
 "CreatePerspective__Q33hel4math8Matrix44Fffff" = 0x801a6444;
+"CreateOrtho__Q33hel4math8Matrix44Fffffff" = 0x801a6480;
 
 "ZERO__Q33hel4math7Vector3" = 0x8088a760;
 "BASIS_X__Q33hel4math7Vector3" = 0x8088a778;
 "BASIS_Y__Q33hel4math7Vector3" = 0x8088a784;
 "BASIS_Z__Q33hel4math7Vector3" = 0x8088a790;
+"ALL_ONE__Q33hel4math7Vector3" = 0x8088a76c;
 
 "AbsF32__Q33hel4math4MathFf" 	= 0x80387a58;
 "CosDegF__Q33hel4math4MathFf" 	= 0x80274620;

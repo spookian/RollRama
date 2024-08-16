@@ -2,9 +2,10 @@
 
 #include "math/math.h"
 #include "g3d/Model.h"
-#include "scn/game/Collision.h"
+#include "scn/game/collision/Collision.h"
+#include "scn/game/collision/Octree.h"
 #include "scn/game/rollgame.h"
-#include "scn/game/Octree.h"
+#include "scn/game/PlayerStates.h"
 
 class Chowder;
 // messy class prototype 
@@ -13,6 +14,9 @@ namespace scn
 {
 	namespace roll
 	{
+		struct StateNormal;
+		struct StateFloat;
+		
 		class SimpleRigidbody : public SphereCollider
 		// This is a simple spherical rigidbody.
 		{
@@ -38,6 +42,9 @@ namespace scn
 			void UpdateModel(g3d::Root& root); // updates position. save last.
 			hel::math::Vector3 GetAngularVelocity();
 			hel::math::Vector3 GetLinearVelocity();
+			void AddImpulse(const hel::math::Vector3& impulse);
+			void AddAngularImpulse(const hel::math::Vector3& impulse);
+			void ZeroVelocity();
 			
 			void SetRadius(float new_radius);
 			void SetMass(float new_mass);
@@ -49,20 +56,23 @@ namespace scn
 			g3d::CharaModel *model;
 			hel::math::Matrix34 rotation;
 			TriOctree::OctreeNode *currentOctreeNode;
+			PlayerState *state;
+			
 		public:
 			static GlobalObject<const hel::math::Vector3, float> jumpLinearImpulses[2];
 			static GlobalObject<const hel::math::Vector3, float> jumpAngularImpulses[2];
 
-			PlayerController(Chowder& parent);
+			PlayerController();
 			~PlayerController();
-			
-			void AddImpulse(const hel::math::Vector3& impulse);
-			void AddAngularImpulse(const hel::math::Vector3& impulse);
+
 			void Update(StageController* stage);
 			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
-			void ZeroVelocity();
+			void Powerup(bool); // i wrote myself into a corner, okay? don't judge me
 			
 			void DebugDrawOctreeBlock();
+			
+			friend class StateNormal;
+			friend class StateFloat;
 		};
 	}
 }

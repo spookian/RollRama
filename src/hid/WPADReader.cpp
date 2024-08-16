@@ -25,14 +25,10 @@ RotationResult obtainWiimoteRotation(float size)
 		
 		float accelX = convertAccel(-wpad_data.accelX);
 		float accelY = convertAccel(wpad_data.accelY);
-		Vector3 accel;
+		Vector3 resultVec(accelX, 0.0f, accelY);
 		
-		accel.x = asin(accelX);
-		accel.z = asin(accelY);
-		
-		result.actual = Matrix34::CreateRotXYZRad(accel);
-		accel = accel * size;
-		result.visual = Matrix34::CreateRotXYZRad(accel);
+		result.vector = resultVec;
+		result.buttons = wpad_data.buttons;
 		result.accelX = wpad_data.accelX;
 		result.accelY = wpad_data.accelY;
 	}

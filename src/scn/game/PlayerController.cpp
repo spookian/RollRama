@@ -1,14 +1,25 @@
 #include "scn/game/PhysicsConstants.h"
 #include "scn/game/rollgame.h"
-#include "scn/game/Pickup.h"
+#include "scn/game/entities/Pickup.h"
 #include "scn/game/PlayerController.h"
+#include "scn/game/PlayerStates.h"
 #include "scn/Chowder.h"
 #include "g3d/Model.h"
 
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
 #include "math/math.h"
-#include "g3d/ResFileHelper.h"
+
+enum PlayerStates
+{
+	PLAYER_NORMAL,
+	PLAYER_DEAD,
+	PLAYER_BOSSFIGHT,
+	PLAYER_FLOAT,
+	PLAYER_CAPTURE,
+	PLAYER_START,
+	PLAYER_WIN
+};
 
 GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
 GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpLinearImpulses[2] = {
@@ -20,22 +31,34 @@ GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpA
 	{{3.0f/PLAYER_RADIUS, 0.0f, 0.0f}}
 };
 
+GlobalObject<const hel::math::Vector3, float> rtdlModelTransOffset = {
+	{0, -25.0f, 0}
+};
+
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
-		PlayerController::PlayerController(Chowder& component) : SimpleRigidbody(1.0f, PLAYER_RADIUS)
+		PlayerController::PlayerController() : SimpleRigidbody(1.0f, PLAYER_RADIUS)
 		{
-			this->model = InitResModel(component.FileRepository, "step/RollChar");
+			g3d::ResFileAccessor mFile( engineSingleton->FileRepository.get("step/chara/hero/kirby/base/Pink", false) );
+			g3d::ResModelContext mResContext(mFile, "Model");
+			g3d::ModelBufferOption mOptions = g3d::ModelContext::DefaultModelBufferOption();
+			hel::common::FixedString<32> mString("MdlAnm");
+			g3d::CharaModelContext mContext(mResContext, mOptions, 4, 2, 2, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
+			this->model = new g3d::CharaModel(mContext);
+			//this->model = InitResModel(engineSingleton->FileRepository, "step/chara/hero/kirby/base/Pink");
 			this->currentOctreeNode = 0;
-			position.y = 144.896;
-			position.z = -9628.0f;
+			//position.y = 144.896;
+			//position.z = -9628.0f;
+			state = new StateNormal(*this);
 		}
 		
 		PlayerController::~PlayerController()
 		{
 			delete model;
+			delete state;
 		}
 		
 		struct OctreeInfo
@@ -83,19 +106,8 @@ namespace scn
 				if (info.current) currentOctreeNode = info.current;
 				else currentOctreeNode = info.prev;
 			}
-			// if if if if if 
 			
-			PhysicsUpdate(stage, currentOctreeNode);
-			for (int i = 0; i < stage->pstarList.getSize(); i++)
-			{
-				PointStar* cur_star = stage->pstarList[i];
-				if (isCollide(*cur_star))
-				{
-					//stage->parent->addScore(); not implemented yet
-					delete cur_star;
-					stage->pstarList.remove(i);
-				}
-			}
+			state->Update();
 		}
 
 		void PlayerController::UpdateModel(g3d::Root& root, Matrix34& worldRotation)
@@ -108,30 +120,13 @@ namespace scn
 			PSMTXQuat(rotation.mtx, &final);
 			
 			Matrix34 translation = Matrix34::CreateTrans(position);
+			Matrix34 rtdlOffset = Matrix34::CreateTrans(rtdlModelTransOffset);
 			
-			model->setModelRTMtx(translation * (worldRotation * rotation));
+			model->setModelRTMtx(translation * (worldRotation * rotation * rtdlOffset));
 			model->updateWorldMtx();
 			
 			model->setModelScale(playerScale);
 			model->registerToRoot(root);
-		}
-		
-		void PlayerController::AddImpulse(const hel::math::Vector3& impulse)
-		{
-			linear_velocity += impulse;
-			return;
-		}
-		
-		void PlayerController::AddAngularImpulse(const hel::math::Vector3& ang_impulse)
-		{
-			angular_velocity += ang_impulse;
-			return;
-		}
-		
-		void PlayerController::ZeroVelocity()
-		{
-			linear_velocity = Vector3::ZERO;
-			angular_velocity = Vector3::ZERO;
 		}
 		
 		void PlayerController::DebugDrawOctreeBlock()
@@ -146,6 +141,12 @@ namespace scn
 			gfx::EasyRender3D::DrawQuadFill(mtx, list[1], list[3], list[5], list[7]);
 			gfx::EasyRender3D::DrawQuadFill(mtx, list[2], list[3], list[7], list[6]);
 			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[2], list[6], list[4]);
+		}
+		
+		void PlayerController::Powerup(bool isBoss)
+		{
+			delete state;
+			state = new StateNormal(*this);
 		}
 	}
 }

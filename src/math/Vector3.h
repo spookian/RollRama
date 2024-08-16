@@ -29,6 +29,7 @@ namespace hel
 			static const Vector3 BASIS_X;
 			static const Vector3 BASIS_Y;
 			static const Vector3 BASIS_Z;
+			static const Vector3 ALL_ONE;
 		}; // include functions later
 		
 	}

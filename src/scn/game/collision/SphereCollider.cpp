@@ -1,4 +1,4 @@
-#include "scn/game/Collision.h"
+#include "scn/game/collision/Collision.h"
 
 namespace scn
 {

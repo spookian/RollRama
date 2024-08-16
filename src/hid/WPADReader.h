@@ -25,11 +25,10 @@ extern "C"
 
 struct RotationResult
 {
-	hel::math::Matrix34 visual;
-	hel::math::Matrix34 actual;
-	
+	hel::math::Vector3 vector;
 	unsigned short accelX;
 	unsigned short accelY;
+	unsigned short buttons;
 };
 
 //https://wiiubrew.org/wiki/Padscore.rpl

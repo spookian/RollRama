@@ -24,16 +24,15 @@ namespace scn
 	namespace roll
 	{
 		StageController::StageController(Chowder& parent)
-		{
-			stageModel = InitResModel(parent.FileRepository, "step/Stage2");
-			
+		{	
 			PointStar* p = new PointStar(star1);
-			pstarList.append(p);
+			pickupList.append(p);
 			p = new PointStar(star2);
-			pstarList.append(p);
+			pickupList.append(p);
 			
-			player = new PlayerController(parent);
+			player = new PlayerController();
 			
+			stageModel = InitResModel(parent.FileRepository, "step/Stage1");
 			this->parent = &parent;
 		}
 		
@@ -41,21 +40,26 @@ namespace scn
 		{
 			delete player;
 			// destroy all triangle wrappers
-			for (int j = 0; j < pstarList.getSize(); j++)
+			for (int j = 0; j < pickupList.getSize(); j++)
 			{
-				delete pstarList[j];
+				delete pickupList[j];
 			};
-			
-			// delete model
-			if (stageModel != NULL)
-			{
-				delete stageModel; // remind me to add dl
-			}
+			delete stageModel; // remind me to add dl
 		}
 		
 		void StageController::Update()
 		{
 			player->Update(this);
+			for (int i = 0; i < pickupList.getSize(); i++)
+			{
+				Pickup* cur = pickupList[i];
+				if (cur->active) cur->Update();
+				else
+				{
+					delete cur;
+					pickupList.remove(i);
+				}
+			}
 		}
 		
 		void StageController::preDraw(g3d::Root& root)
@@ -77,9 +81,9 @@ namespace scn
 			stageModel->registerToRoot(root);
 			
 			player->UpdateModel(root, visualRotation);
-			for (int i = 0; i < pstarList.getSize(); i++)
+			for (int i = 0; i < pickupList.getSize(); i++)
 			{
-				pstarList[i]->UpdateModel(root, worldRotation);
+				pickupList[i]->UpdateModel(root, worldRotation);
 			}
 			return;
 		}

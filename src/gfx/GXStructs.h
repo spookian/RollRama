@@ -104,4 +104,4 @@ extern "C"
 		GX_SP_RING2
 	} GXSpotFn;
 }
-// all stolen (donated) from doldecomp.github.io
+// all donated (stolen) from doldecomp.github.io

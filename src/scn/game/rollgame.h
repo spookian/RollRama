@@ -5,8 +5,8 @@
 #include "file/FileAccessor.h"
 
 #include "common/List.h"
-#include "scn/game/Pickup.h"
-#include "scn/game/Octree.h"
+#include "scn/game/entities/Pickup.h"
+#include "scn/game/collision/Octree.h"
 
 class Chowder;
 
@@ -71,7 +71,7 @@ namespace scn
 			~StageController(); // clean up triangle list and model
 			
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
-			hel::common::List<scn::roll::PointStar*> pstarList;
+			hel::common::List<scn::roll::Pickup*> pickupList;
 			scn::roll::Octree< hel::common::List<scn::roll::TriangleWrapper> > collisionData;
 			
 			Chowder *parent;

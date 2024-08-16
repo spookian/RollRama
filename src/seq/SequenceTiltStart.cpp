@@ -3,7 +3,6 @@
 
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
-#include "scn/SceneFakeout.h"
 #include "scn/SceneTitle.h"
 
 #include "std/auto_ptr.h"
@@ -42,7 +41,7 @@ namespace seq
 		switch(mode)
 		{
 			case FAKE_START:
-			scene = new scn::SceneFakeout();
+			break;
 			
 			case MENU:
 			scene = new scn::SceneTitle();

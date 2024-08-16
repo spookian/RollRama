@@ -11,7 +11,7 @@ namespace hel
 			Matrix44();
 			
 			static Matrix44 CreatePerspective(float fov, float aspect, float near, float far);
-			static Matrix44 CreateOrtho(float a, float b, float c, float d, float e, float f);
+			static Matrix44 CreateOrtho(float top, float bottom, float left, float right, float near, float far);
 		};
 	}
 }

@@ -2,7 +2,7 @@
 #include "scn/IScene.h"
 #include "lyt/lyt.h"
 #include "snd/SERequestor.h"
-#include "scn/hud/NumberDisplay.h"
+#include "scn/game/hud/NumberDisplay.h"
 
 namespace scn
 {
@@ -28,7 +28,7 @@ namespace scn
 		lyt::Layout nintendoDisclaimer;
 		lyt::Layout number;
 		
-		roll::NumberDisplay num;
+		roll::NumberDisplay *num;
 
 		bool isEnd;
 	public:

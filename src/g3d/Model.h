@@ -111,16 +111,44 @@ namespace g3d
 		*/
 	};
 	
+	class ModelAnimAccessor
+	{
+		unsigned long unk0;
+		unsigned long unk1;
+	public:
+		void start(bool unk) const;
+		void stop() const;
+	};
+	
+	class NodeAccessor
+	{
+		SET_OBJECT_SIZE(0x14);
+	public:
+		void setVisibility(bool visible) const;
+		hel::math::Vector3 worldTrans() const;
+		hel::math::Matrix34 worldRotate() const;
+	};
+	
+	class ModelAccessor
+	{
+		SET_OBJECT_SIZE(0x14);
+	public:
+		NodeAccessor nodeByName(const char *name) const;
+	};
+	
 	class CharaModel
 	{
-		SET_OBJECT_SIZE(356); //
+		SET_OBJECT_SIZE(0x164); //
 		
 	public:
 		CharaModel(const CharaModelContext& context);
-		
 		void setModelRTMtx(const hel::math::Matrix34& mtx);
 		void setModelScale(const hel::math::Vector3& scale);
 		void registerToRoot(Root& root);
 		void updateWorldMtx();
+		
+		void setAnim(unsigned long idx, const ResFileAccessor& animFile, const char *animName);
+		ModelAnimAccessor anim(unsigned long idx);
+		ModelAccessor model();
 	};
 }

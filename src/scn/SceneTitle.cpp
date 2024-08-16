@@ -21,7 +21,7 @@ namespace scn
 		return;
 	}
 	
-	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen")), number(lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number")), num(number)
+	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen")), number(lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number"))
 	{
 		state = TITLE_BLACK;
 		timer = 0;
@@ -33,11 +33,13 @@ namespace scn
 		titleScreen.paneByName("StartGroup").setAlpha(0);
 		nintendoDisclaimer.paneByName("NintenGroup").setAlpha(0);
 		nintendoDisclaimer.updateMatrix();
+		
+		num = new roll::NumberDisplay(number);
 	}
 	
 	SceneTitle::~SceneTitle()
 	{
-
+		delete num;
 	}
 	
 	void SceneTitle::updateMain()
@@ -155,8 +157,8 @@ namespace scn
 	{
 		lyt::Utility::SetupGX();
 		titleScreen.draw();
-		num.draw(0, hel::math::Vector3::ZERO, hel::math::Vector2::ALL_ONE, hel::common::Color::WHITE, hel::common::Color::WHITE);
-		num.draw(0, averageShift, hel::math::Vector2::ALL_ONE, hel::common::Color::BLUE, hel::common::Color::WHITE);
+		num->draw(0, hel::math::Vector3::ZERO, hel::math::Vector2::ALL_ONE, hel::common::Color::WHITE, hel::common::Color::WHITE);
+		num->draw(1, averageShift, hel::math::Vector2::ALL_ONE, hel::common::Color::BLUE, hel::common::Color::WHITE);
 		warningScreen.draw();
 		nintendoDisclaimer.draw();
 	}

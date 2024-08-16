@@ -18,4 +18,7 @@
 "setAlpha__Q23lyt12PaneAccessorCFUc" = 0x801b9a98;
 "show__Q23lyt12PaneAccessorCFv" = 0x801b1b80;
 
-"SetupGX__Q23lyt7UtilityFv" = 0x801bcf14;
+"SetupGX__Q23lyt7UtilityFv" 			= 0x801bcf14;
+"ScreenHalfWidth__Q23lyt7UtilityFv" 	= 0x801bcdc0;
+"ScreenHalfHeight__Q23lyt7UtilityFv" 	= 0x801bce00;
+"ViewMtx__Q23lyt7UtilityFv" 			= 0x801bce58;

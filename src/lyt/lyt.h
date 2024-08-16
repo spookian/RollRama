@@ -103,5 +103,8 @@ namespace lyt
 	{
 	public:
 		static void SetupGX(); 
+		static float ScreenHalfWidth();
+		static float ScreenHalfHeight();
+		static hel::math::Matrix34 ViewMtx();
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "math/math.h"
-#include "scn/game/Collision.h"
+#include "scn/game/collision/Collision.h"
 
 const GlobalObject<const hel::math::Vector3, float> aabbMultipliers[8] = {
 	{{-0.5, 0.5, -0.5}},

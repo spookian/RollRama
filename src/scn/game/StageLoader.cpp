@@ -2,7 +2,7 @@
 #include "file/FileAccessor.h"
 
 #include "common/List.h"
-#include "scn/game/Octree.h"
+#include "scn/game/collision/Octree.h"
 
 #define ROLL_SIGNATURE 0x524F4C4C
 #define MAX_CUBE_VERTICES 8
