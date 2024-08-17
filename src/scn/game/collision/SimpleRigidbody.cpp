@@ -29,7 +29,7 @@ namespace scn
 		{
 			grounded = false;
 			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
-			AddForce(weight);
+			addForce(weight);
 			
 			IntegrateForces();
 			if (octBlock->type == OCTREE_LEAF)
@@ -73,7 +73,7 @@ namespace scn
 					
 					position += collisionData.displacement;
 					linear_velocity += collisionData.impulse;
-					AddForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
+					addForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
 				}
 			}
 			
@@ -90,7 +90,7 @@ namespace scn
 			return segA + (segment * t);
 		}
 
-		void SimpleRigidbody::AddForce(const hel::math::Vector3& force)
+		void SimpleRigidbody::addForce(const hel::math::Vector3& force)
 		{
 			this->linear_velocity += (force * DELTATIME) / this->mass;
 			this->net_force += force;
@@ -161,34 +161,40 @@ namespace scn
 			return result;
 		}
 		
-		Vector3 SimpleRigidbody::GetLinearVelocity()
+		Vector3 SimpleRigidbody::getLinearVelocity()
 		{
 			return linear_velocity;
 		}
 		
-		Vector3 SimpleRigidbody::GetAngularVelocity()
+		Vector3 SimpleRigidbody::getAngularVelocity()
 		{
 			return angular_velocity;
 		}
 		
-		bool SimpleRigidbody::IsOnGround()
+		bool SimpleRigidbody::isOnGround()
 		{
 			return grounded;
 		}
 		
-		void SimpleRigidbody::AddImpulse(const hel::math::Vector3& impulse)
+		void SimpleRigidbody::addImpulse(const hel::math::Vector3& impulse)
 		{
 			linear_velocity += impulse;
 			return;
 		}
 		
-		void SimpleRigidbody::AddAngularImpulse(const hel::math::Vector3& ang_impulse)
+		void SimpleRigidbody::addDisplacement(const hel::math::Vector3& displacement)
+		{
+			position += displacement;
+			return;
+		}
+		
+		void SimpleRigidbody::addAngularImpulse(const hel::math::Vector3& ang_impulse)
 		{
 			angular_velocity += ang_impulse;
 			return;
 		}
 		
-		void SimpleRigidbody::ZeroVelocity()
+		void SimpleRigidbody::zeroVelocity()
 		{
 			linear_velocity = Vector3::ZERO;
 			angular_velocity = Vector3::ZERO;

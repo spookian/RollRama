@@ -15,8 +15,8 @@ namespace scn
 		public:
 			SphereCollider(float _radius);
 			bool isCollide(SphereCollider& other);
-			hel::math::Vector3 GetPosition();
-			float GetRadius();
+			hel::math::Vector3 getPosition();
+			float getRadius();
 		};
 	}
 }

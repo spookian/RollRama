@@ -12,10 +12,10 @@ namespace scn
 		bool SphereCollider::isCollide(SphereCollider& other)
 		{
 			using namespace hel::math;
-			Vector3 ray = other.GetPosition() - this->position;
+			Vector3 ray = other.getPosition() - this->position;
 			
 			float length = ray.length();
-			if (length <= radius + other.GetRadius())
+			if (length <= radius + other.getRadius())
 			{
 				return true;
 			}
@@ -23,12 +23,12 @@ namespace scn
 			return false;
 		}
 		
-		hel::math::Vector3 SphereCollider::GetPosition()
+		hel::math::Vector3 SphereCollider::getPosition()
 		{
 			return position;
 		}
 		
-		float SphereCollider::GetRadius()
+		float SphereCollider::getRadius()
 		{
 			return radius;
 		}

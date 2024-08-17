@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include "common/List.h"
 
-using hel::math;
+using namespace hel::math;
 namespace scn
 {
 	namespace roll
@@ -39,9 +39,9 @@ namespace scn
 			
 			void Update()
 			{
-				if (curIndex == path.size())
+				if (curIndex == nodeList.getSize())
 				{
-					if (!repeat || path.size() == 0) return;
+					if (!repeat || nodeList.getSize() == 0) return;
 					curIndex = 0;
 					currentRotation = Matrix34::CreateRotXYZRad( nodeList[curIndex]->rotation );
 					timer = 0;
@@ -70,9 +70,9 @@ namespace scn
 				return a + (c * t);
 			}
 			
-			void Append(const PathNode *node)
+			void Append(PathNode *node)
 			{
-				if (nodeList.size() == 0) prevNode = node;
+				if (nodeList.getSize() == 0) prevNode = node;
 				nodeList.append(node);
 			}
 		};

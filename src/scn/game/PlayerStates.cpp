@@ -32,7 +32,7 @@ namespace scn
 		void StateNormal::Update()
 		{
 			unsigned short checkFlick = engineSingleton->input.flick;
-			if (checkFlick && player->IsOnGround())
+			if (checkFlick && player->isOnGround())
 			{
 				player->linear_velocity = PlayerController::jumpLinearImpulses[checkFlick - 1];
 				player->angular_velocity = PlayerController::jumpAngularImpulses[checkFlick - 1];

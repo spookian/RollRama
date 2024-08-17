@@ -69,7 +69,7 @@ Chowder::Chowder()
 	adjustScreen(cam);
 	this->stage = new scn::roll::StageController(*this);
 	//debugAddTriangles(*stage);
-	file::FileAccessor file("gcn/STAGE2.roll", false);
+	file::FileAccessor file("gcn/TEST.roll", false);
 	if (file.isLoaded()) 
 	{
 		file::FileData stage_data = file.block();

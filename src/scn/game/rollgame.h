@@ -6,6 +6,7 @@
 
 #include "common/List.h"
 #include "scn/game/entities/Pickup.h"
+#include "scn/game/entities/Enemy.h"
 #include "scn/game/collision/Octree.h"
 
 class Chowder;
@@ -72,6 +73,7 @@ namespace scn
 			
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::Pickup*> pickupList;
+			hel::common::List<scn::roll::Enemy*> enemyList;
 			scn::roll::Octree< hel::common::List<scn::roll::TriangleWrapper> > collisionData;
 			
 			Chowder *parent;

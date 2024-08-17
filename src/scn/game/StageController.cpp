@@ -2,6 +2,7 @@
 #include "scn/game/rollgame.h"
 #include "g3d/Model.h"
 #include "scn/game/PlayerController.h"
+#include "scn/game/entities/Enemy.h"
 
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
@@ -15,7 +16,10 @@
 
 const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -15.0f, -20.0f} };
 const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -15.0f, 30.0f} };
-const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 141.0f} };
+
+const GlobalObject<const hel::math::Vector3, float> enemy1 = { {50.0f, -40.0f, 50.0f} };
+
+const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 0.0f} };
 const GlobalObject<const hel::math::Vector3, float> viewMtxOffset = { {0.0f, 250.0f, 225.0f} };
 
 using namespace hel::math;
@@ -32,7 +36,10 @@ namespace scn
 			
 			player = new PlayerController();
 			
-			stageModel = InitResModel(parent.FileRepository, "step/Stage1");
+			Enemy* e = new Dee(enemy1);
+			enemyList.append(e);
+			
+			stageModel = InitResModel(parent.FileRepository, "step/TestStage");
 			this->parent = &parent;
 		}
 		
@@ -60,18 +67,23 @@ namespace scn
 					pickupList.remove(i);
 				}
 			}
+			
+			for (int i = 0; i < enemyList.getSize(); i++)
+			{
+				enemyList[i]->Update();
+			}
 		}
 		
 		void StageController::preDraw(g3d::Root& root)
 		{
 			// setup worldRotation
-			Vector3 translation = -player->GetPosition();
+			Vector3 translation = -player->getPosition();
 			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
 			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
 			Matrix34 worldRotation = reverseMatrix * (visualRotation * focalMatrix);
 			
 			g3d::CameraAccessor camera = root.currentCamera();
-			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->GetPosition() + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->GetPosition() );
+			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->getPosition() + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->getPosition() );
 			camera.setViewMtx(viewMatrix);
 			
 			Matrix34 stageTranslation = Matrix34::CreateTrans(stagePos);
@@ -84,6 +96,10 @@ namespace scn
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
 				pickupList[i]->UpdateModel(root, worldRotation);
+			}
+			for (int i = 0; i < enemyList.getSize(); i++)
+			{
+				enemyList[i]->UpdateModel(root, worldRotation);
 			}
 			return;
 		}

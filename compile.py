@@ -14,12 +14,12 @@ DKP_OBJCOPY     = "\\devkitPPC\\bin\\powerpc-eabi-objcopy"
 
 CXX_FILES 	= " src\\seq\\SequenceTiltStart.cpp src\\scn\\SceneStart.cpp src\\scn\\Chowder.cpp src\\scn\\game\\PlayerController.cpp src\\scn\\game\\StageController.cpp "\
 "src\\scn\\game\\collision\\SimpleRigidbody.cpp src\\g3d\\ResFileHelper.cpp src\\scn\\game\\collision\\SphereCollider.cpp src\\scn\\game\\entities\\PointStar.cpp "\
-"src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp src\\scn\\game\\PlayerStates.cpp src\\scn\\SceneTitle.cpp"
+"src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp src\\scn\\game\\PlayerStates.cpp src\\scn\\SceneTitle.cpp src\\scn\\game\\entities\\Enemy.cpp src\\scn\\game\\entities\\Dee.cpp "
 
 CXX_FLAGS 	= " -i .\\src -RTTI off -Cpp_exceptions off -enum int -O1 -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -align mac68k4byte -c"
 
 LD_FILES 	= " SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o "\
-"PointStar.o WPADReader.o StageLoader.o SceneTitle.o PlayerStates.o"
+"PointStar.o WPADReader.o StageLoader.o SceneTitle.o PlayerStates.o Enemy.o Dee.o"
 
 LD_FLAGS 	= " -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld\\main.ld -I .\\"
 
@@ -42,6 +42,8 @@ def parse_arguments():
 
 parse_arguments()
 print("Building...\n")
+if (os.path.exists("./build") == False):
+    os.mkdir("./build")
 test_program( os.system("python .\\tools\\dolphin_patch_parser.py") )
 test_program( os.system(CW_PATH + CW_CC + CXX_FILES + CXX_FLAGS) )
 test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\link.s -o link.o") )
