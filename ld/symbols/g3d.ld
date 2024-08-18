@@ -33,11 +33,15 @@
 "setAnim__Q23g3d10CharaModelFUlRCQ23g3d15ResFileAccessorPCc" = 0x80194b38;
 "anim__Q23g3d10CharaModelFUl"								= 0x80194e6c;
 "model__Q23g3d10CharaModelFv"								= 0x8019496c;
+"interpolationStart__Q23g3d10CharaModelFf"					= 0x80194ec0;
+"interpolationReset__Q23g3d10CharaModelFv"					= 0x80194eb8;
+"updateFrame__Q23g3d10CharaModelFv"							= 0x80194acc;
 
 "__ct__Q23g3d17ResFileRepositoryFv"							= 0x8019b178;
 "get__Q23g3d17ResFileRepositoryFPCcb"						= 0x8019b2f0;
 
 "__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
+"bind__Q23g3d15ResFileAccessorCFRCQ23g3d15ResFileAccessorb" = 0x8019ae50;
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
 
@@ -49,3 +53,4 @@
 
 "start__Q23g3d17ModelAnimAccessorCFb" = 0x80199640;
 "stop__Q23g3d17ModelAnimAccessorCFv" = 0x80199648;
+"setFrameRate__Q23g3d17ModelAnimAccessorCFf" = 0x801997a8;

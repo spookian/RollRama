@@ -23,10 +23,12 @@ namespace scn
 			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
 			
-			g3d::ResFileAccessor animFile(engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", false));
-			player.model->setAnim( 0, animFile, "Copy" );
+			player.model->interpolationReset();
+			g3d::ResFileAccessor animFile(engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true));
+			player.model->setAnim( 0, animFile, "Drink" );
 			g3d::ModelAnimAccessor animation = player.model->anim(0);
-			animation.start(false);
+			animation.start(true); // bool is loop
+			//animation.setFrameRate(1.0);
 		}
 		
 		void StateNormal::Update()
@@ -38,6 +40,7 @@ namespace scn
 				player->angular_velocity = PlayerController::jumpAngularImpulses[checkFlick - 1];
 			}
 			player->PhysicsUpdate(engineSingleton->stage, player->currentOctreeNode);
+			player->model->updateFrame();
 		}
 		
 		StateFloat::StateFloat(PlayerController& player)

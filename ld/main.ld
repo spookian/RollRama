@@ -53,6 +53,10 @@ SECTIONS
 		KEEP(*(.rodata .rodata.*))
 		KEEP(*(.data .data.*)) 
 		KEEP(*(.sdata .sdata.* ))
+		KEEP(*(.sdata2 .sdata2.*))
+		KEEP(*(.bss .bss.*))
+		KEEP(*(.sbss2 .sbss2.*))
+		KEEP(*(.sbss .sbss.*))
 	}
 	
 	. = 0x806f9e2c;

@@ -14,7 +14,7 @@ namespace g3d
 		}
 		// i actually suspect this constructor to exist except it's an inline
 		
-		void bind(const ResFileAccessor& other, bool unk) const;
+		void bind(const ResFileAccessor&, bool) const;
 	};
 	
 	class ResFileRepository

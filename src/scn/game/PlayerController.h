@@ -45,7 +45,7 @@ namespace scn
 			void addImpulse(const hel::math::Vector3& impulse);
 			void addAngularImpulse(const hel::math::Vector3& impulse);
 			void addDisplacement(const hel::math::Vector3& displacement);
-			void zeroVelocity();
+			void zeroVelocity(); // convenience function
 			
 			void setRadius(float new_radius);
 			void setMass(float new_mass);

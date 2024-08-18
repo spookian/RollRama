@@ -116,8 +116,9 @@ namespace g3d
 		unsigned long unk0;
 		unsigned long unk1;
 	public:
-		void start(bool unk) const;
+		void start(bool) const;
 		void stop() const;
+		void setFrameRate(float) const;
 	};
 	
 	class NodeAccessor
@@ -133,7 +134,7 @@ namespace g3d
 	{
 		SET_OBJECT_SIZE(0x14);
 	public:
-		NodeAccessor nodeByName(const char *name) const;
+		NodeAccessor nodeByName(const char*) const;
 	};
 	
 	class CharaModel
@@ -147,6 +148,9 @@ namespace g3d
 		void registerToRoot(Root& root);
 		void updateWorldMtx();
 		
+		void interpolationReset();
+		void interpolationStart(float);
+		void updateFrame();
 		void setAnim(unsigned long idx, const ResFileAccessor& animFile, const char *animName);
 		ModelAnimAccessor anim(unsigned long idx);
 		ModelAccessor model();

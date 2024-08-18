@@ -43,10 +43,13 @@ namespace scn
 		PlayerController::PlayerController() : SimpleRigidbody(1.0f, PLAYER_RADIUS)
 		{
 			g3d::ResFileAccessor mFile( engineSingleton->FileRepository.get("step/chara/hero/kirby/base/Pink", false) );
+			//g3d::ResFileAccessor playerMotion( engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true) );
+			//playerMotion.bind(mFile, false);
+			
 			g3d::ResModelContext mResContext(mFile, "Model");
 			g3d::ModelBufferOption mOptions = g3d::ModelContext::DefaultModelBufferOption();
-			hel::common::FixedString<32> mString("MdlAnm");
-			g3d::CharaModelContext mContext(mResContext, mOptions, 4, 2, 2, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
+			hel::common::FixedString<32> mString("Model");
+			g3d::CharaModelContext mContext(mResContext, mOptions, 8, 2, 4, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
 			this->model = new g3d::CharaModel(mContext);
 			//this->model = InitResModel(engineSingleton->FileRepository, "step/chara/hero/kirby/base/Pink");
 			this->currentOctreeNode = 0;
@@ -107,6 +110,7 @@ namespace scn
 				else currentOctreeNode = info.prev;
 			}
 			
+			// check for player death in engine singleton, then change state
 			state->Update();
 		}
 

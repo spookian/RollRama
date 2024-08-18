@@ -5,6 +5,8 @@
 #include "scn/game/PlayerController.h"
 #include "scn/Chowder.h"
 
+#define FLICK_RADIUS 200.0f
+
 namespace scn
 {
 	namespace roll
@@ -31,7 +33,7 @@ namespace scn
 			return;
 		}
 		
-		void Enemy::SearchAndHurtPlayer()
+		void Enemy::searchAndHurtPlayer()
 		{
 			PlayerController* pl = engineSingleton->stage->player;
 			if ( pl->isCollide( *this ) )
@@ -49,7 +51,7 @@ namespace scn
 				
 				Vector3 impulseNormal = plPosition - emPosition;
 				impulseNormal.normalize();
-				Vector3 impulse = impulseNormal * 3;
+				Vector3 impulse = impulseNormal * 4;
 				// give the impulse a y component
 				impulse.y = 3;
 				
@@ -59,14 +61,30 @@ namespace scn
 				penetrationNormal.normalize();
 				
 				pl->addDisplacement(penetrationNormal * penetrationDepth);
-				pl->addImpulse( -pl->getLinearVelocity() );
+				pl->zeroVelocity();
 				pl->addImpulse(impulse);
+				
+				Vector3 angularImpulse(impulse.z / pl->getRadius(), 0.0, -impulse.x / pl->getRadius()); // angular velocity = linear velocity / radius
+				pl->addAngularImpulse(angularImpulse);
 				playerOverlap = true;
 			}
 			else
 			{
 				playerOverlap = false;
 			}
+		}
+		
+		bool Enemy::checkFlickRadius()
+		{
+			if (engineSingleton->input.flick)
+			{
+				float radiusToPlayer = (engineSingleton->stage->player->getPosition() - position).length();
+				if (radiusToPlayer <= FLICK_RADIUS)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

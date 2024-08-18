@@ -16,10 +16,8 @@
 
 const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -15.0f, -20.0f} };
 const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -15.0f, 30.0f} };
-
 const GlobalObject<const hel::math::Vector3, float> enemy1 = { {50.0f, -40.0f, 50.0f} };
-
-const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 0.0f} };
+const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 150.0f} };
 const GlobalObject<const hel::math::Vector3, float> viewMtxOffset = { {0.0f, 250.0f, 225.0f} };
 
 using namespace hel::math;
@@ -70,7 +68,13 @@ namespace scn
 			
 			for (int i = 0; i < enemyList.getSize(); i++)
 			{
-				enemyList[i]->Update();
+				Enemy* enm = enemyList[i];
+				if (enm->active) enm->Update();
+				else
+				{
+					delete enm;
+					enemyList.remove(i);
+				}
 			}
 		}
 		

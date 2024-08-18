@@ -14,13 +14,16 @@ namespace scn
 			g3d::CharaModel *model;
 			bool playerOverlap;
 		public:
+			bool active;
 			Path pathSystem;
 			
 			Enemy();
 			virtual ~Enemy();
 			virtual void Update();
 			virtual void UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
-			void SearchAndHurtPlayer();
+			
+			void searchAndHurtPlayer();
+			bool checkFlickRadius(); // checks if the player flicked the wiimote and if the enemy is close enough to the player
 		};
 		
 		class Gordo : public Enemy
@@ -30,7 +33,9 @@ namespace scn
 		
 		class Dee : public Enemy
 		{
-			
+			unsigned long state;
+			unsigned long timer;
+			float oldHeight;
 		public:
 			Dee(hel::math::Vector3 pos);
 			virtual ~Dee();

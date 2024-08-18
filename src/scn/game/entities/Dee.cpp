@@ -8,6 +8,8 @@ const GlobalObject<const hel::math::Vector3, float> deeScale = {
 	{50.0, 50.0, 50.0}
 };
 
+const int airTime = 70;
+
 using namespace hel::math;
 namespace scn
 {
@@ -26,6 +28,9 @@ namespace scn
 		
 		Dee::Dee(Vector3 pos)
 		{
+			active = true;
+			timer = 0;
+			state = 0;
 			position = pos;
 			model = new g3d::CharaModel(getWaddleDeeContext());
 		}
@@ -37,7 +42,39 @@ namespace scn
 		
 		void Dee::Update()
 		{
-			SearchAndHurtPlayer();
+			switch(state)
+			{
+				case 0:
+				searchAndHurtPlayer();
+				if (checkFlickRadius())
+				{
+					state = 1;
+					oldHeight = position.y;
+				}
+				break;
+				
+				case 1:
+				{
+				// have waddle dee get flicked up and then down
+					timer++;
+					float floatTimer = (float)timer / 7.0f;
+					position.y = oldHeight + (0.5 * -10.0f * floatTimer * floatTimer) + (70.0f * floatTimer);
+					
+					if (timer >= airTime)
+					{
+						state = 2;
+					}
+					break;
+				}
+				
+				case 2:
+				active = false;
+				PointStar *newStar = new PointStar(position);
+				engineSingleton->stage->pickupList.append(newStar);
+				break;
+				
+			}
+			model->updateFrame();
 			return;
 		}
 		
