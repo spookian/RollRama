@@ -3,6 +3,7 @@
 #include "math/Matrix34.h"
 #include "math/Matrix44.h"
 #include "gfx/GXStructs.h"
+#include "gfx/TexBuffer.h"
 
 extern "C"
 {
@@ -19,17 +20,7 @@ namespace gfx
 		static void SetViewMtx(const hel::math::Matrix34& viewmtx);
 		static void SetupGX(const hel::math::Matrix44& perspective, bool unk); // unk is usually true?
 		static void SetColor(const _GXColor& color);
-		
-		static void DrawTriangleWireframe(const hel::math::Matrix34 tfMatrix, const hel::math::Vector3& v0, const hel::math::Vector3& v1, const hel::math::Vector3& v2)
-		{
-			GXSetZMode(0, 1, 0); // ignore z buffer LMFAAAAO
-			
-			gfx::EasyRender3D::DrawLine(tfMatrix, v0, v1, 3.0f);
-			gfx::EasyRender3D::DrawLine(tfMatrix, v1, v2, 3.0f);
-			gfx::EasyRender3D::DrawLine(tfMatrix, v2, v0, 3.0f);
-			
-			GXSetZMode(1, 3, 1); // restore z comparisons
-			return;
-		}
+		static void DrawTriangleWireframe(const hel::math::Matrix34 tfMatrix, const hel::math::Vector3& v0, const hel::math::Vector3& v1, const hel::math::Vector3& v2);
+		static void DrawTexturedQuad(const hel::math::Matrix34&, const hel::math::Vector3&, const hel::math::Vector3&, const hel::math::Vector3&, const hel::math::Vector3&, const GXTexObj&);
 	};
 }

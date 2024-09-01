@@ -44,7 +44,7 @@ namespace scn
 				}
 				
 				// confine both vectors to xz plane
-				Vector3 plPosition = pl->getPosition();
+				Vector3 plPosition = pl->position;
 				plPosition.y = 0;
 				Vector3 emPosition = position;
 				emPosition.y = 0;
@@ -56,16 +56,15 @@ namespace scn
 				impulse.y = 3;
 				
 				// take initial vectors so player doesn't just teleport to enemy's side when landing on top
-				Vector3 penetrationNormal = position - pl->getPosition();
-				float penetrationDepth = penetrationNormal.length() - (radius + pl->getRadius()) + 0.01;
+				Vector3 penetrationNormal = position - pl->position;
+				float penetrationDepth = penetrationNormal.length() - (radius + pl->radius) + 0.01;
 				penetrationNormal.normalize();
 				
-				pl->addDisplacement(penetrationNormal * penetrationDepth);
-				pl->zeroVelocity();
-				pl->addImpulse(impulse);
+				pl->position += (penetrationNormal * penetrationDepth);
+				pl->linear_velocity = impulse;
 				
-				Vector3 angularImpulse(impulse.z / pl->getRadius(), 0.0, -impulse.x / pl->getRadius()); // angular velocity = linear velocity / radius
-				pl->addAngularImpulse(angularImpulse);
+				Vector3 angularImpulse(impulse.z / pl->radius, 0.0, -impulse.x / pl->radius); // angular velocity = linear velocity / radius
+				pl->angular_velocity = angularImpulse;
 				playerOverlap = true;
 			}
 			else
@@ -78,7 +77,7 @@ namespace scn
 		{
 			if (engineSingleton->input.flick)
 			{
-				float radiusToPlayer = (engineSingleton->stage->player->getPosition() - position).length();
+				float radiusToPlayer = (engineSingleton->stage->player->position - position).length();
 				if (radiusToPlayer <= FLICK_RADIUS)
 				{
 					return true;

@@ -1,7 +1,7 @@
 #include "scn/game/PhysicsConstants.h"
 #include "scn/game/rollgame.h"
 #include "scn/game/PlayerController.h"
-
+#include "scn/Chowder.h"
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
 #include "math/math.h"
@@ -19,23 +19,23 @@ namespace scn
 			grounded = false;
 		}
 
-		void SimpleRigidbody::IntegrateForces()
+		void SimpleRigidbody::integrateForces()
 		{
 			this->position += this->linear_velocity;
 			this->net_force = Vector3::ZERO;
 		}
 
-		void SimpleRigidbody::PhysicsUpdate(StageController* stage, TriOctree::OctreeNode *octBlock)
+		void SimpleRigidbody::physicsUpdate()
 		{
 			grounded = false;
 			Vector3 weight(0.0, -GRAVITY * mass, 0.0);
 			addForce(weight);
 			
-			IntegrateForces();
-			if (octBlock->type == OCTREE_LEAF)
+			integrateForces();
+			if (currentOctreeNode->type == OCTREE_LEAF)
 			{
-				TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)octBlock;
-				if (ResolveAllCollisions(stage, leaf->obj))
+				TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)currentOctreeNode;
+				if (resolveAllCollisions(engineSingleton->stage, leaf->obj))
 				{
 					//friction
 					Vector3 friction = linear_velocity;
@@ -58,13 +58,13 @@ namespace scn
 			}
 		}
 
-		bool SimpleRigidbody::ResolveAllCollisions(StageController* stage, TriangleList& triangleList)
+		bool SimpleRigidbody::resolveAllCollisions(StageController* stage, TriangleList& triangleList)
 		{
 			bool result = false;
 			for (int i = 0; i < triangleList.getSize(); i++)
 			{
 				TriangleWrapper tri = triangleList[i]; // optimize?
-				CollisionResult collisionData = ResolveCollision( tri );
+				CollisionResult collisionData = resolveCollision( tri );
 				result = result || collisionData.collided;
 				
 				if (collisionData.collided)
@@ -83,8 +83,8 @@ namespace scn
 		Vector3 closestPointOnLineSegment(Vector3& pt, Vector3& segA, Vector3& segB)
 		{
 			Vector3 segment = segB - segA;
-			float t = (pt - segA).dot(segment) / (segment.dot(segment));
-			if (t < 0.0f) t = 0.0f;
+			float t = (pt - segA).dot(segment) / (segment.dot(segment)); // scal (segA->pt) = length(segA->pt)*length(segment) * cos theta / length(segment)^2
+			if (t < 0.0f) t = 0.0f; // clamp
 			if (t > 1.0f) t = 1.0f;
 			
 			return segA + (segment * t);
@@ -96,7 +96,7 @@ namespace scn
 			this->net_force += force;
 		}
 		
-		CollisionResult SimpleRigidbody::ResolveCollision(TriangleWrapper& plane) // returns position offset
+		CollisionResult SimpleRigidbody::resolveCollision(TriangleWrapper& plane) // returns position offset
 		{
 			CollisionResult result;
 			Vector3 closestPoint = plane.ClosestPointOnPlane(position);
@@ -160,44 +160,10 @@ namespace scn
 			
 			return result;
 		}
-		
-		Vector3 SimpleRigidbody::getLinearVelocity()
-		{
-			return linear_velocity;
-		}
-		
-		Vector3 SimpleRigidbody::getAngularVelocity()
-		{
-			return angular_velocity;
-		}
-		
+
 		bool SimpleRigidbody::isOnGround()
 		{
 			return grounded;
-		}
-		
-		void SimpleRigidbody::addImpulse(const hel::math::Vector3& impulse)
-		{
-			linear_velocity += impulse;
-			return;
-		}
-		
-		void SimpleRigidbody::addDisplacement(const hel::math::Vector3& displacement)
-		{
-			position += displacement;
-			return;
-		}
-		
-		void SimpleRigidbody::addAngularImpulse(const hel::math::Vector3& ang_impulse)
-		{
-			angular_velocity += ang_impulse;
-			return;
-		}
-		
-		void SimpleRigidbody::zeroVelocity()
-		{
-			linear_velocity = Vector3::ZERO;
-			angular_velocity = Vector3::ZERO;
 		}
 	}
 }

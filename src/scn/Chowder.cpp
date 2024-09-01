@@ -52,6 +52,7 @@ ControllerManager::ControllerManager()
 {
 	prevAccelX = 0;
 	prevAccelY = 0;
+	forgiveness = 0;
 	timerX = 0;
 	buttons = 0;
 	flick = FLICK_NONE;
@@ -67,6 +68,7 @@ Chowder::Chowder()
 	
 	// get rmode or enable progressive at start?
 	adjustScreen(cam);
+	
 	this->stage = new scn::roll::StageController(*this);
 	//debugAddTriangles(*stage);
 	file::FileAccessor file("gcn/TEST.roll", false);
@@ -148,24 +150,18 @@ void drawStageController(scn::roll::StageController& stage, hel::math::Vector3& 
 
 void Chowder::drawDebug()
 {
-	//SetupEasyRender3D();
-	//stage->player->DebugDrawOctreeBlock();
-	/*float hwidth = lyt::Utility::ScreenHalfWidth();
-	float hheight = lyt::Utility::ScreenHalfHeight();
-	
-	Matrix44 ortho = Matrix44::CreateOrtho(hheight, -hheight, -hwidth, hwidth, 0.1, 200.0);
-	
-	gfx::EasyRender3D::SetupGX(ortho, true);
-	// ignores z buffer*/
-	
+	SetupEasyRender3D();
+	GXSetZMode(0, 1, 0);
+	Vector3 playPos = stage->player->position;
+	Vector3 endPos(playPos.x, playPos.y + 20.0f, playPos.z);
 	Matrix34 identity;
-	Matrix34 viewMtx = lyt::Utility::ViewMtx();
-	lyt::Utility::SetupGX();
-	GXSetZMode(0, 1, 0); 
-	gfx::EasyRender3D::SetViewMtx(viewMtx);
-	gfx::EasyRender3D::SetColor(hel::common::Color::BLUE);
-	gfx::EasyRender3D::DrawQuadFill(identity, rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
-	GXSetZMode(1, 3, 1);
+	
+	if ((input.deltaAccel / 20) > 0) gfx::EasyRender3D::SetColor(hel::common::Color::RED);
+	else if ((input.deltaAccel / 20) < 0) gfx::EasyRender3D::SetColor(hel::common::Color::GREEN);
+	else gfx::EasyRender3D::SetColor(hel::common::Color::BLUE);
+	
+	gfx::EasyRender3D::DrawLine(input.visualRotation, playPos, endPos, 3.0f);
+	GXSetZMode(1, 3, 1);	
 }
 
 void Chowder::preDraw()
@@ -193,6 +189,6 @@ void Chowder::draw()
 {
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
-
+	fStar.updateAndDraw(*modelRoot);
 	drawDebug();
 }

@@ -15,36 +15,23 @@ namespace scn
 {
 	namespace roll
 	{
-		class NumberDisplay
+		struct NumberDisplay
 		{
 			lyt::Layout *numberLayout;
+			hel::math::Vector2 scale;
 			
-		public:
+			_GXColor top;
+			_GXColor bottom;
 		
 			NumberDisplay(lyt::Layout& nLyt)
 			{
 				this->numberLayout = &nLyt;
+				nLyt.adjustFor4b3();
 			}
 			
-			void draw(int idx, const hel::math::Vector3& pos, const hel::math::Vector2& scale, const _GXColor& top, const _GXColor& bottom)
-			{
-				lyt::PaneAccessor numberPane = numberLayout->paneByName("P_pict");
-				numberPane.setScale(scale);
-				numberPane.setTrans(pos);
-				numberPane.setVertexColor(top, UPPER_LEFT);
-				numberPane.setVertexColor(top, UPPER_RIGHT);
-				numberPane.setVertexColor(bottom, LOWER_LEFT);
-				numberPane.setVertexColor(bottom, LOWER_RIGHT);
-				
-				float shift = NUMBER_TEXCOORD_SHIFT * idx;
-				numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + shift, 0.0, UPPER_LEFT );
-				numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + shift, 0.0, UPPER_RIGHT );
-				numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + shift, 1.0, LOWER_LEFT );
-				numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + shift, 1.0, LOWER_RIGHT );
-				
-				numberLayout->updateMatrix();
-				numberLayout->draw();
-			}
+			void setTopColor(_GXColor& col);
+			void setBottomColor(_GXColor& col);
+			void draw(int idx, const hel::math::Vector2& pos);
 		};
 	}
 }

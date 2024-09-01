@@ -9,7 +9,6 @@ namespace hel
 		class Color
 		{
 		public:
-		
 			static const _GXColor BLACK;
 			static const _GXColor GRAY;
 			static const _GXColor WHITE;

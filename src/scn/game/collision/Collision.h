@@ -6,17 +6,13 @@ namespace scn
 {
 	namespace roll
 	{
-		class SphereCollider
+		struct SphereCollider
 		{
-		protected:
 			float radius;
 			hel::math::Vector3 position;
-		
-		public:
+			
 			SphereCollider(float _radius);
 			bool isCollide(SphereCollider& other);
-			hel::math::Vector3 getPosition();
-			float getRadius();
 		};
 	}
 }

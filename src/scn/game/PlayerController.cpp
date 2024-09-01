@@ -23,8 +23,8 @@ enum PlayerStates
 
 GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
 GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpLinearImpulses[2] = {
-	{{0.0f, 5.0f, -3.0f}},
-	{{0.0f, 5.0f, 3.0f}}
+	{{0.0f, 7.0f, -4.0f}},
+	{{0.0f, 7.0f, 4.0f}}
 };
 GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpAngularImpulses[2] = {
 	{{-3.0f/PLAYER_RADIUS, 0.0f, 0.0f}},
@@ -56,6 +56,7 @@ namespace scn
 			//position.y = 144.896;
 			//position.z = -9628.0f;
 			state = new StateNormal(*this);
+			captured = false;
 		}
 		
 		PlayerController::~PlayerController()
@@ -70,7 +71,7 @@ namespace scn
 			TriOctree::OctreeNode *current;
 		};
 		
-		// this function
+		// move octree crap to simplerigidbody
 		OctreeInfo TraverseOctree(hel::math::Vector3& position, TriOctree::OctreeNode *node)
 		{
 			OctreeInfo result;
@@ -96,7 +97,7 @@ namespace scn
 			return result;
 		}
 		
-		void PlayerController::Update(StageController* stage)
+		void PlayerController::update(StageController* stage)
 		{
 			if (currentOctreeNode == 0) currentOctreeNode = stage->collisionData.startBranch;
 			if (!currentOctreeNode->box.Contains(position))
@@ -114,7 +115,7 @@ namespace scn
 			state->Update();
 		}
 
-		void PlayerController::UpdateModel(g3d::Root& root, Matrix34& worldRotation)
+		void PlayerController::updateModel(g3d::Root& root, Matrix34& worldRotation)
 		{	
 			// use quaternions to multiply matrices
 			Quaternion r, ang, final;
@@ -133,7 +134,7 @@ namespace scn
 			model->registerToRoot(root);
 		}
 		
-		void PlayerController::DebugDrawOctreeBlock()
+		void PlayerController::debugDrawOctreeBlock()
 		{
 			if (currentOctreeNode == 0) return;
 			
@@ -147,7 +148,7 @@ namespace scn
 			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[2], list[6], list[4]);
 		}
 		
-		void PlayerController::Powerup(bool isBoss)
+		void PlayerController::powerUp(bool isBoss)
 		{
 			delete state;
 			state = new StateNormal(*this);

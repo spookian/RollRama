@@ -15,6 +15,20 @@ namespace mem
 		
 	public:
 		IAllocator& sceneHeap();
-		
+		IAllocator& mem2FixHeap();
+		IAllocator& externalHeap();
+	};
+	
+	struct MemoryBlock
+	{
+		unsigned long size;
+		void *ptr;
+	};
+	
+	class DataBlock
+	{
+		SET_OBJECT_SIZE(12);
+	public:
+		MemoryBlock block() const;
 	};
 }

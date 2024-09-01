@@ -1,5 +1,5 @@
 #include "gfx/GXStructs.h"
-#include "gfx/GXReimplementation.h"
+#include "gfx/GX.h"
 
 extern "C"
 {

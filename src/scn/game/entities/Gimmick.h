@@ -16,25 +16,17 @@ namespace scn
 		class Gimmick
 		{
 		protected:
-			Vector3 position;
 			g3d::CharaModel *model;
 			
 		public:
-			virtual void update()
-			{
-				
-			}
-			
 			virtual void updateModel(g3d::Root& root)
 			{
-				Matrix34 translate = Matrix34::CreateTrans(position);
-				model->setModelRTMtx( translate );
 				model->updateWorldMtx();
 				model->registerToRoot(root);
 			}
 		};
 		
-		class Bumper : Gimmick
+		class SphereBumper : Gimmick
 		{
 			SphereCollider hitbox;
 			bool check; // used to make sure Update() doesn't update player more than once
@@ -60,15 +52,6 @@ namespace scn
 				{
 					if (!check)
 					{
-						Vector3 newDir = (player.GetPosition() - this->position);
-						newDir.y = 0.0f;
-						newDir.normalize();
-						newDir.y = 0.25f;
-						
-						player.ZeroVelocity();
-						player.AddImpulse(newDir * bumperStrength);
-						animationPlaying = true;
-						timer = -1;
 					}
 					check = true;
 				}
@@ -109,7 +92,7 @@ namespace scn
 			float verticalLaunchSpeed;
 			float horizontalLaunchSpeed;
 		public:
-			virtual Vector3 getPosition();
+			virtual void update();
 		};
 		
 		class JumpHole : public Capturable
@@ -127,10 +110,11 @@ namespace scn
 		
 		class Cloud : public Capturable
 		{
+			Vector3 initialPosition;
 		public:
 			Path pathSystem;
 			
-			Cloud();
+			Cloud(Vector3 position);
 			void update();
 		};
 	}

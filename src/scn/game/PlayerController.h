@@ -7,73 +7,55 @@
 #include "scn/game/rollgame.h"
 #include "scn/game/PlayerStates.h"
 
-class Chowder;
-// messy class prototype 
-
 namespace scn
 {
 	namespace roll
 	{
-		struct StateNormal;
-		struct StateFloat;
-		
 		class SimpleRigidbody : public SphereCollider
 		// This is a simple spherical rigidbody.
 		{
 		protected:
 			// physics settings
 			float mass;	
-			hel::math::Vector3 linear_velocity;
-			hel::math::Vector3 angular_velocity;
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			bool grounded;
+			TriOctree::OctreeNode *currentOctreeNode;
+			
+			CollisionResult resolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
+			bool resolveAllCollisions(StageController* stage, TriangleList& triangleList);		
+			void integrateForces();
 			
 		public:
+			hel::math::Vector3 linear_velocity;
+			hel::math::Vector3 angular_velocity;
+			hel::math::Matrix34 rotation;
+			
 			SimpleRigidbody(float _mass, float _radius);
-			void PhysicsUpdate(StageController* stage, TriOctree::OctreeNode *octBlock);
+			void physicsUpdate();
 			void addForce(const hel::math::Vector3& force); // velocity += force*dt / m 
 			void addTorque(const hel::math::Vector3& torque); // euler
-			
-			CollisionResult ResolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
-			bool ResolveAllCollisions(StageController* stage, TriangleList& triangleList);
-			
-			void IntegrateForces();
-			
-			void UpdateModel(g3d::Root& root); // updates position. save last.
-			hel::math::Vector3 getAngularVelocity();
-			hel::math::Vector3 getLinearVelocity();
-			void addImpulse(const hel::math::Vector3& impulse);
-			void addAngularImpulse(const hel::math::Vector3& impulse);
-			void addDisplacement(const hel::math::Vector3& displacement);
-			void zeroVelocity(); // convenience function
-			
-			void setRadius(float new_radius);
-			void setMass(float new_mass);
 			bool isOnGround();
 		};
 		
 		class PlayerController : public SimpleRigidbody// we're making a pseudo physics simulation because i came to the realization that the inclined plane problem solves itself if you have the normal vector of a plane
 		{
-			g3d::CharaModel *model;
-			hel::math::Matrix34 rotation;
-			TriOctree::OctreeNode *currentOctreeNode;
 			PlayerState *state;
 			
 		public:
+			g3d::CharaModel *model;
+			bool captured;
+			
 			static GlobalObject<const hel::math::Vector3, float> jumpLinearImpulses[2];
 			static GlobalObject<const hel::math::Vector3, float> jumpAngularImpulses[2];
 
 			PlayerController();
 			~PlayerController();
 
-			void Update(StageController* stage);
-			void UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
-			void Powerup(bool); // i wrote myself into a corner, okay? don't judge me
+			void update(StageController* stage);
+			void updateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
+			void powerUp(bool); // i wrote myself into a corner, okay? don't judge me
 			
-			void DebugDrawOctreeBlock();
-			
-			friend class StateNormal;
-			friend class StateFloat;
+			void debugDrawOctreeBlock();
 		};
 	}
 }

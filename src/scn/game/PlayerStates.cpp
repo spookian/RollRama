@@ -28,7 +28,7 @@ namespace scn
 			player.model->setAnim( 0, animFile, "Drink" );
 			g3d::ModelAnimAccessor animation = player.model->anim(0);
 			animation.start(true); // bool is loop
-			//animation.setFrameRate(1.0);
+			animation.setFrameRate(1.0);
 		}
 		
 		void StateNormal::Update()
@@ -39,7 +39,7 @@ namespace scn
 				player->linear_velocity = PlayerController::jumpLinearImpulses[checkFlick - 1];
 				player->angular_velocity = PlayerController::jumpAngularImpulses[checkFlick - 1];
 			}
-			player->PhysicsUpdate(engineSingleton->stage, player->currentOctreeNode);
+			player->physicsUpdate();
 			player->model->updateFrame();
 		}
 		

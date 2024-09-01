@@ -26,8 +26,8 @@ extern "C"
 struct RotationResult
 {
 	hel::math::Vector3 vector;
-	unsigned short accelX;
-	unsigned short accelY;
+	signed short accelX;
+	signed short accelY;
 	unsigned short buttons;
 };
 

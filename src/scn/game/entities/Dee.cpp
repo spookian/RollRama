@@ -2,6 +2,7 @@
 #include "math/math.h"
 #include "g3d/Model.h"
 #include "scn/game/collision/Path.h"
+#include "scn/game/PhysicsConstants.h"
 #include "scn/Chowder.h"
 
 const GlobalObject<const hel::math::Vector3, float> deeScale = {
@@ -22,7 +23,7 @@ namespace scn
 			g3d::ModelBufferOption mOptions = g3d::ModelContext::DefaultModelBufferOption();
 			hel::common::FixedString<32> mString("MdlAnm");
 			
-			g3d::CharaModelContext modelCntxt(mResContext, mOptions, 4, 2, 2, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
+			g3d::CharaModelContext modelCntxt(mResContext, mOptions, 4, 2, 4, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
 			return modelCntxt;
 		}
 		
@@ -33,6 +34,11 @@ namespace scn
 			state = 0;
 			position = pos;
 			model = new g3d::CharaModel(getWaddleDeeContext());
+			
+			g3d::ResFileAccessor deeAnim( engineSingleton->FileRepository.get("step/chara/enemy/Dee", false) );
+			model->setAnim(0, deeAnim, "Wait2");
+			g3d::ModelAnimAccessor animation = model->anim(0);
+			animation.start(true);
 		}
 		
 		Dee::~Dee()
@@ -50,6 +56,12 @@ namespace scn
 				{
 					state = 1;
 					oldHeight = position.y;
+					
+					g3d::ResFileAccessor deeAnim( engineSingleton->FileRepository.get("step/chara/enemy/Dee", false) );
+					model->setAnim(0, deeAnim, "DamageEtc");
+					g3d::ModelAnimAccessor animation = model->anim(0);
+					animation.start(true);
+					
 				}
 				break;
 				
@@ -58,7 +70,7 @@ namespace scn
 				// have waddle dee get flicked up and then down
 					timer++;
 					float floatTimer = (float)timer / 7.0f;
-					position.y = oldHeight + (0.5 * -10.0f * floatTimer * floatTimer) + (70.0f * floatTimer);
+					position.y = oldHeight + (0.5f * -GRAVITY * floatTimer * floatTimer) + (70.0f * floatTimer);
 					
 					if (timer >= airTime)
 					{

@@ -54,7 +54,7 @@ namespace scn
 		
 		void StageController::Update()
 		{
-			player->Update(this);
+			player->update(this);
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
 				Pickup* cur = pickupList[i];
@@ -81,13 +81,13 @@ namespace scn
 		void StageController::preDraw(g3d::Root& root)
 		{
 			// setup worldRotation
-			Vector3 translation = -player->getPosition();
+			Vector3 translation = -player->position;
 			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
 			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
 			Matrix34 worldRotation = reverseMatrix * (visualRotation * focalMatrix);
 			
 			g3d::CameraAccessor camera = root.currentCamera();
-			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->getPosition() + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->getPosition() );
+			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->position + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->position );
 			camera.setViewMtx(viewMatrix);
 			
 			Matrix34 stageTranslation = Matrix34::CreateTrans(stagePos);
@@ -96,7 +96,7 @@ namespace scn
 			stageModel->updateWorldMtx();
 			stageModel->registerToRoot(root);
 			
-			player->UpdateModel(root, visualRotation);
+			player->updateModel(root, visualRotation);
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
 				pickupList[i]->UpdateModel(root, worldRotation);

@@ -1,0 +1,44 @@
+#include "scn/game/hud/NumberDisplay.h"
+
+using namespace hel::math;
+namespace scn
+{
+	namespace roll
+	{
+		NumberDisplay::NumberDisplay(lyt::Layout& nLyt)
+		{
+			this->numberLayout = &nLyt;
+		}
+		
+		inline void NumberDisplay::setTopColor(_GXColor& col)
+		{
+			*reinterpret_cast<unsigned long*>(&top) = *reinterpret_cast<unsigned long*>(&col);
+		}
+		
+		inline void NumberDisplay::setBottomColor(_GXColor& col)
+		{
+			*reinterpret_cast<unsigned long*>(&bottom) = *reinterpret_cast<unsigned long*>(&col);
+		}
+		
+		void NumberDisplay::draw(const Vector2 pos)
+		{
+			Vector3 position(pos.x, pos.y, 0.0f);
+			lyt::PaneAccessor numberPane = numberLayout->paneByName("P_pict");
+			numberPane.setScale(scale);
+			numberPane.setTrans(position);
+			numberPane.setVertexColor(top, UPPER_LEFT);
+			numberPane.setVertexColor(top, UPPER_RIGHT);
+			numberPane.setVertexColor(bottom, LOWER_LEFT);
+			numberPane.setVertexColor(bottom, LOWER_RIGHT);
+			
+			float shift = NUMBER_TEXCOORD_SHIFT * idx;
+			numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + shift, 0.0, UPPER_LEFT );
+			numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + shift, 0.0, UPPER_RIGHT );
+			numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINLEFT + shift, 1.0, LOWER_LEFT );
+			numberPane.setTexCoords( NUMBER_TEXCOORD_ORIGINRIGHT + shift, 1.0, LOWER_RIGHT );
+			
+			numberLayout->updateMatrix();
+			numberLayout->draw();
+		}
+	}
+}

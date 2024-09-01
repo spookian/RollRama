@@ -1,5 +1,5 @@
 #pragma once
-#include "math/Vector3.h"
+#include "gfx/TexBuffer.h"
 #include "hid/hid.h"
 
 namespace app
@@ -8,5 +8,6 @@ namespace app
 	{
 	public:
 		hid::HIDManager* hidManager();
+		gfx::TexBuffer& fullScreenTexBuffer();
 	};
 }

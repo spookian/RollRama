@@ -13,6 +13,7 @@ INCLUDE ./ld/symbols/lyt.ld
 INCLUDE ./ld/symbols/snd.ld
 INCLUDE ./ld/symbols/runtime.ld
 INCLUDE ./ld/symbols/common.ld
+INCLUDE ./ld/symbols/singleton.ld
 
 "__start" = 0x80006310;
 ENTRY(__start)
