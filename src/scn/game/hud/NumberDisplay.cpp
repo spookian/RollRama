@@ -5,9 +5,15 @@ namespace scn
 {
 	namespace roll
 	{
-		NumberDisplay::NumberDisplay(lyt::Layout& nLyt)
+		NumberDisplay::NumberDisplay()
 		{
-			this->numberLayout = &nLyt;
+			numberLayout = new lyt::Layout( lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number") );
+			numberLayout->adjustFor4b3();
+		}
+		
+		NumberDisplay::~NumberDisplay()
+		{
+			delete numberLayout;
 		}
 		
 		inline void NumberDisplay::setTopColor(_GXColor& col)
@@ -20,7 +26,7 @@ namespace scn
 			*reinterpret_cast<unsigned long*>(&bottom) = *reinterpret_cast<unsigned long*>(&col);
 		}
 		
-		void NumberDisplay::draw(const Vector2 pos)
+		void NumberDisplay::draw(unsigned long idx, const Vector2& pos)
 		{
 			Vector3 position(pos.x, pos.y, 0.0f);
 			lyt::PaneAccessor numberPane = numberLayout->paneByName("P_pict");

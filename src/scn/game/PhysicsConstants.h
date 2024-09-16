@@ -1,6 +1,6 @@
 #pragma once
 
-const float GRAVITY = 10.0f;
+const float GRAVITY = 12.0f;
 const float FRICTION = 0.015f;
 const float DELTATIME = (1.0f/60.0f);
 

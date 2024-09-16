@@ -13,6 +13,7 @@ namespace scn
 {
 	namespace roll
 	{	
+		const float bounceLimit = 2.0f;
 		SimpleRigidbody::SimpleRigidbody(float _mass, float _radius) :  SphereCollider(_radius)
 		{
 			mass = _mass;
@@ -103,16 +104,20 @@ namespace scn
 			Vector3 edgeVector = closestPoint - position;
 			
 			if (edgeVector.length() > radius) return result; 
-			if (plane.CheckPointInTriangle(closestPoint))
+			if (plane.CheckPointInTriangle(closestPoint)) // triangle collision
 			{		
 				result.displacement = edgeVector + (*(plane.normal) * radius);
 				result.collided = true;
 				result.surface_normal = *plane.normal;
 				
 				float impulse_length = linear_velocity.dot(*plane.normal);
+				if (impulse_length < -5.0)
+				{
+					impulse_length *= 3.0;
+				}
 				result.impulse = *plane.normal * -impulse_length;
 			}
-			else
+			else // edge collision
 			{
 				// check all edges of triangle, if there's a close point on the edge then push the 
 				Vector3 closestPt = closestPointOnLineSegment(position, *plane.v0, *plane.v1);

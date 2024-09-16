@@ -1,10 +1,7 @@
-#include "math/math.h"
+#include "scn/Chowder.h"
 #include "gfx/gfx.h"
-#include "hid/hid.h"
 #include "common/Color.h"
 #include "common/ExplicitSingleton.h"
-#include "g3d/Model.h"
-#include "scn/Chowder.h"
 #include "scn/game/PlayerController.h"
 #include "mem/Memory.h"
 #include "file/FileAccessor.h"
@@ -189,6 +186,22 @@ void Chowder::draw()
 {
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
-	fStar.updateAndDraw(*modelRoot);
+	//fStar.updateAndDraw(*modelRoot);
+	drawHUD();
 	drawDebug();
+}
+
+void Chowder::drawHUD()
+{
+	// draw score
+	// for loop; add
+	for (int i = 0; i < SCORE_LIMIT; i++)
+	{
+		//Vector2 originPoint(SCORE_X_STANDARD);
+	}
+	
+	
+	// draw stars
+	// draw health
+	return;
 }

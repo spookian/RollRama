@@ -51,7 +51,7 @@ namespace scn
 			switch(state)
 			{
 				case 0:
-				searchAndHurtPlayer();
+				searchAndHurtPlayer(true);
 				if (checkFlickRadius())
 				{
 					state = 1;

@@ -11,6 +11,7 @@
 const GlobalObject<const hel::math::Vector3, float> averageShift = {{ 34.0, 0.0, 0.0 }};
 
 // review code; something's happening that's causing it to crash
+using namespace hel::math;
 namespace scn
 {
 	namespace roll
@@ -23,15 +24,12 @@ namespace scn
 			_GXColor top;
 			_GXColor bottom;
 		
-			NumberDisplay(lyt::Layout& nLyt)
-			{
-				this->numberLayout = &nLyt;
-				nLyt.adjustFor4b3();
-			}
+			NumberDisplay();
+			~NumberDisplay();
 			
 			void setTopColor(_GXColor& col);
 			void setBottomColor(_GXColor& col);
-			void draw(int idx, const hel::math::Vector2& pos);
+			void draw(unsigned long idx, const Vector2& pos);
 		};
 	}
 }

@@ -33,14 +33,14 @@ namespace scn
 			return;
 		}
 		
-		void Enemy::searchAndHurtPlayer()
+		bool Enemy::searchAndHurtPlayer(bool hurtPlayer)
 		{
 			PlayerController* pl = engineSingleton->stage->player;
 			if ( pl->isCollide( *this ) )
 			{
 				if (playerOverlap)
 				{
-					return;
+					return false;
 				}
 				
 				// confine both vectors to xz plane
@@ -66,11 +66,13 @@ namespace scn
 				Vector3 angularImpulse(impulse.z / pl->radius, 0.0, -impulse.x / pl->radius); // angular velocity = linear velocity / radius
 				pl->angular_velocity = angularImpulse;
 				playerOverlap = true;
+				return true;
 			}
 			else
 			{
 				playerOverlap = false;
 			}
+			return false;
 		}
 		
 		bool Enemy::checkFlickRadius()

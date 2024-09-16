@@ -3,6 +3,7 @@
 #include "g3d/Model.h"
 #include "scn/game/collision/Collision.h"
 #include "scn/game/collision/Path.h"
+#include "scn/game/collision/BoxCollider.h"
 
 namespace scn
 {
@@ -13,6 +14,7 @@ namespace scn
 		protected:
 			g3d::CharaModel *model;
 			bool playerOverlap;
+			
 		public:
 			bool active;
 			Path pathSystem;
@@ -22,7 +24,7 @@ namespace scn
 			virtual void Update();
 			virtual void UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
 			
-			void searchAndHurtPlayer();
+			bool searchAndHurtPlayer(bool);
 			bool checkFlickRadius(); // checks if the player flicked the wiimote and if the enemy is close enough to the player
 		};
 		
@@ -36,11 +38,30 @@ namespace scn
 			unsigned long state;
 			unsigned long timer;
 			float oldHeight;
+			
 		public:
 			Dee(hel::math::Vector3 pos);
 			virtual ~Dee();
 			void Update();
 			void UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
+		};
+		
+		class Bumper : public Enemy
+		{
+			bool animationPlaying;
+			int timer;
+			
+		public:
+			Bumper(const hel::math::Vector3& position);
+			void update();
+			void updateModel(g3d::Root& root);
+		};
+		
+		class EndZone : public Enemy
+		{
+			
+		public:
+			void update();
 		};
 	}
 }

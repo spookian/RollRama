@@ -1,17 +1,23 @@
 #pragma once
 
 #include "g3d/Model.h"
-#include "math/Vector3.h"
+#include "math/Math.h"
 #include "scn/game/rollgame.h"
 #include "common/List.h"
 #include "lyt/lyt.h"
 #include "hid/hid.h"
 #include "scn/game/hud/FadeStar.h"
+#include "scn/game/hud/NumberDisplay.h"
 
 #define MAX_FORGIVENESS 5
 #define MAX_FRAME 3
 #define PHYSICS_CONSTANT 1.3f
 #define VISUAL_CONSTANT 0.25f
+
+#define SCORE_LIMIT 6
+#define SCORE_START_X_STANDARD 100.0f
+#define SCORE_START_X_WIDESCR 300.0f
+#define SCORE_START_Y 100.0f
 
 enum FlickType
 {
@@ -99,6 +105,7 @@ struct Chowder
 	scn::roll::StageController *stage;
 	ControllerManager input;
 	scn::roll::FadeStar fStar;
+	scn::roll::NumberDisplay num;
 	
 	Chowder();
 	void SetupEasyRender3D();
@@ -106,6 +113,7 @@ struct Chowder
 	void drawDebug();
 	void preDraw();
 	void draw();
+	void drawHUD();
 	
 	g3d::ResFileRepository FileRepository;
 };

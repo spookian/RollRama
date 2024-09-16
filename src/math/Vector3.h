@@ -23,6 +23,7 @@ namespace hel
 			Vector3 operator-(const Vector3& other) const;
 			Vector3 operator-() const;
 			Vector3 operator*(float scalar) const;
+			Vector3 operator*=(float);
 			Vector3 operator/(float scalar) const;
 			
 			static const Vector3 ZERO;

@@ -26,15 +26,16 @@ namespace scn
 		lyt::Layout warningScreen;
 		lyt::Layout titleScreen;
 		lyt::Layout nintendoDisclaimer;
-		lyt::Layout number;
-		
-		roll::NumberDisplay *num;
-
+		WPADStatus wpad_data;
 		bool isEnd;
 	public:
 		void rtti();
 		SceneTitle();
 		~SceneTitle();
+		
+		void updateTitle();
+		void adjustTitleForTime();
+		
 		void updateMain();
 		void updateUseGPU();
 		void updateDebug();

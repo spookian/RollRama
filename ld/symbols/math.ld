@@ -8,6 +8,7 @@
 "__ct__Q33hel4math7Vector3Ffff"						= 0x800bdad0;
 "__as__Q33hel4math7Vector3FRCQ33hel4math7Vector3"	= 0x80182ad0;
 "__apl__Q33hel4math7Vector3FRCQ33hel4math7Vector3"	= 0x8018938c;
+"__amu__Q33hel4math7Vector3Ff"						= 0x801a70d8;
 "__pl__Q33hel4math7Vector3CFRCQ33hel4math7Vector3"	= 0x8019cf3c;
 "__mi__Q33hel4math7Vector3CFv"						= 0x801a76f4;
 "__mi__Q33hel4math7Vector3CFRCQ33hel4math7Vector3"	= 0x80182dd0;

@@ -1,15 +1,10 @@
 #include "allocate.h"
-#include "scn/IScene.h"
 #include "scn/SceneTitle.h"
 #include "math/math.h"
 #include "hid/hid.h"
 #include "common/Color.h"
 
 #define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
-#define NUMBER_UV_SCALE (60.0f/64.0f)
-#define NUMBER_TEXCOORD_SHIFT (34.0f / 352.0f)
-#define NUMBER_TEXCOORD_ORIGINLEFT (4.0f / 352.0f)
-#define NUMBER_TEXCOORD_ORIGINRIGHT (36.0f / 352.0f)
 
 _GXColor sky = {0x75, 0xF3, 0xFF, 0xFF};
 _GXColor lime = {0x78, 0xFF, 0x78, 0xFF};
@@ -21,7 +16,7 @@ namespace scn
 		return;
 	}
 	
-	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen")), number(lyt::LayoutContext::quickContext("gcnstep/HUDNumber", "Number"))
+	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen"))
 	{
 		state = TITLE_BLACK;
 		timer = 0;
@@ -33,20 +28,28 @@ namespace scn
 		titleScreen.paneByName("StartGroup").setAlpha(0);
 		nintendoDisclaimer.paneByName("NintenGroup").setAlpha(0);
 		nintendoDisclaimer.updateMatrix();
-		
-		num = new roll::NumberDisplay(number);
 	}
 	
 	SceneTitle::~SceneTitle()
 	{
-		delete num;
+		return;
+	}
+	
+	void SceneTitle::updateTitle()
+	{
+		if (wpad_data.buttons & WPAD_BUTTON_PLUS)
+		{
+			timer = -1;
+			state = TITLE_MENUFADE;
+		}
+		
+		// have dedede float by?
+		return;
 	}
 	
 	void SceneTitle::updateMain()
 	{
-		WPADStatus wpad_data;
 		WPADRead(0, (void*)&wpad_data);
-		
 		switch (state)
 		{
 			case TITLE_BLACK:
@@ -112,11 +115,7 @@ namespace scn
 			
 			case TITLE_MENU:
 			{
-				if (wpad_data.buttons & WPAD_BUTTON_PLUS)
-				{
-					timer = -1;
-					state = TITLE_MENUFADE;
-				}
+				updateTitle();
 				
 				float wiener = -hel::math::Math::CosFIdx((float)timer * PI / 60.0f) * 127.5 + 127.5;
 				titleScreen.paneByName("StartGroup").setAlpha((unsigned char)wiener);
@@ -157,8 +156,6 @@ namespace scn
 	{
 		lyt::Utility::SetupGX();
 		titleScreen.draw();
-		num->draw(0, hel::math::Vector3::ZERO, hel::math::Vector2::ALL_ONE, hel::common::Color::WHITE, hel::common::Color::WHITE);
-		num->draw(1, averageShift, hel::math::Vector2::ALL_ONE, hel::common::Color::BLUE, hel::common::Color::WHITE);
 		warningScreen.draw();
 		nintendoDisclaimer.draw();
 	}
