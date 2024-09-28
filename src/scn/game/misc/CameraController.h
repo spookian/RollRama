@@ -14,7 +14,7 @@ namespace scn
 			CAMERA_FINISH
 		};
 		
-		class CameraController
+		class CameraController // the camera will always lag one frame behind
 		{
 			int timer;
 		public:

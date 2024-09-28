@@ -70,6 +70,7 @@ namespace lyt
 		}
 		
 		void show() const;
+		void hide() const;
 	};
 	
 	class Layout

@@ -186,9 +186,10 @@ void Chowder::draw()
 {
 	modelRoot->sceneCalcOnDraw();
 	modelRoot->sceneDrawOpa();
-	//fStar.updateAndDraw(*modelRoot);
+	fStar.updateAndDraw(*modelRoot);
 	drawHUD();
 	drawDebug();
+	pause.draw();
 }
 
 void Chowder::drawHUD()

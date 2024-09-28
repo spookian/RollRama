@@ -8,6 +8,7 @@
 #include "hid/hid.h"
 #include "scn/game/hud/FadeStar.h"
 #include "scn/game/hud/NumberDisplay.h"
+#include "scn/game/misc/PauseScreen.h"
 
 #define MAX_FORGIVENESS 5
 #define MAX_FRAME 3
@@ -106,6 +107,7 @@ struct Chowder
 	ControllerManager input;
 	scn::roll::FadeStar fStar;
 	scn::roll::NumberDisplay num;
+	scn::roll::PauseScreen pause;
 	
 	Chowder();
 	void SetupEasyRender3D();

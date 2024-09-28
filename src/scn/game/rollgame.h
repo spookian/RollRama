@@ -57,6 +57,7 @@ namespace scn
 			inline CollisionResult()
 			{
 				collided = false;
+				bounce = false;
 			}
 			
 			hel::math::Vector3 displacement;
@@ -64,6 +65,7 @@ namespace scn
 			hel::math::Vector3 surface_normal;
 			
 			bool collided; 
+			bool bounce;
 		};
 		
 		struct StageController

@@ -10,7 +10,6 @@ namespace scn
 		class FadeStar
 		{
 			unsigned long timer;
-			gfx::TexBuffer tex;
 		public:
 			FadeStar();
 			void updateAndDraw(g3d::Root&);

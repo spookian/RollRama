@@ -17,6 +17,7 @@
 "setSize__Q23lyt12PaneAccessorCFRCQ33hel4math7Vector2" = 0x801b9adc;
 "setAlpha__Q23lyt12PaneAccessorCFUc" = 0x801b9a98;
 "show__Q23lyt12PaneAccessorCFv" = 0x801b1b80;
+"hide__Q23lyt12PaneAccessorCFv" = 0x801b19d8;
 
 "SetupGX__Q23lyt7UtilityFv" 			= 0x801bcf14;
 "ScreenHalfWidth__Q23lyt7UtilityFv" 	= 0x801bcdc0;

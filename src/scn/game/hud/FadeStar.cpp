@@ -13,7 +13,7 @@ namespace scn
 {
 	namespace roll
 	{
-		FadeStar::FadeStar() : tex(hel::common::ExplicitSingleton<mem::Memory>::object->sceneHeap(), 640, 456, GX_TF_I4) 
+		FadeStar::FadeStar()
 		{
 			timer = 0;
 		}
@@ -131,9 +131,10 @@ namespace scn
 		
 		void FadeStar::updateAndDraw(g3d::Root& root)
 		{
+			gfx::TexBuffer& tex = hel::common::ExplicitSingleton<app::Application>::object->fullScreenTexBuffer();
 			sfx::Utility::CaptureEFB(tex, (_GXTexFmt)tex.fmt, true);
 			GXPixModeSync();
-			GXTexModeSync();
+			GXTexModeSync(); // wait for gx to do its thing
 			GXTexObj efbCopy = tex.textureObj();
 			
 			setupDrawMode();
