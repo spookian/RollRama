@@ -1,10 +1,7 @@
 #include "scn/game/hud/FadeStar.h"
 #include "math/Math.h"
-#include "gfx/gfx.h"
 #include "common/Color.h"
-
-#include "common/ExplicitSingleton.h"
-#include "app/app.h"
+#include "gfx/FullScreenDrawer.h"
 
 #define FADE_SIZE 0.5f
 
@@ -112,38 +109,17 @@ namespace scn
 				}
 				return;
 			}
-			
-			void setupGXTextured(GXTexObj& tex)
-			{
-				GXLoadTexObj(&tex, GX_TEXMAP0);
-				
-				GXSetNumTexGens(1);
-				GXSetNumTevStages(1);
-				
-				GXSetTevOrder(0, 0, 0, 255);
-				GXSetTevOp(0, 3);
-				GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
-				GXSetTevSwapMode(0, 0, 0);
-				GXSetTevSwapModeTable(0, 0, 1, 2, 3);
-				GXSetNumChans(0);
-			}
 		}
 		
 		void FadeStar::updateAndDraw(g3d::Root& root)
 		{
-			gfx::TexBuffer& tex = hel::common::ExplicitSingleton<app::Application>::object->fullScreenTexBuffer();
-			sfx::Utility::CaptureEFB(tex, (_GXTexFmt)tex.fmt, true);
-			GXPixModeSync();
-			GXTexModeSync(); // wait for gx to do its thing
-			GXTexObj efbCopy = tex.textureObj();
-			
+			gfx::FullScreenDrawer::Capture();
 			setupDrawMode();
 			gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
 			drawFadeMesh();
 			
 			GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
-			setupGXTextured(efbCopy);
-			sfx::Utility::FullScreenPlateDraw(true);
+			gfx::FullScreenDrawer::Draw();
 		}
 	}
 }

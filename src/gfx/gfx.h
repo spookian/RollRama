@@ -7,3 +7,5 @@
 #include "gfx/EasyRender3D.h"
 #include "gfx/GXTev.h"
 #include "gfx/GXTexture.h"
+#include "gfx/TexBuffer.h"
+#include "gfx/FullScreenDrawer.h"

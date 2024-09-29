@@ -84,16 +84,35 @@ Chowder::Chowder()
 	
 	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
 	lightSet.setAmbientLightObj(ambColor);
+	paused = false;
+	can_pause = true;
+	held_start = false;
+}
+
+void Chowder::checkPause()
+{
+	if ((input.buttons & WPAD_BUTTON_PLUS & ~(input.buttons_held)) && can_pause)
+	{
+		paused = true;
+		pause.activate();
+	}
+	return;
 }
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	modelRoot->sceneClear();
 	input.Update( obtainWiimoteRotation(0.25f) );
-	
-	stage->gameRotation = input.physicsRotation;
-	stage->visualRotation = input.visualRotation;
-	stage->Update();
+	if ( (input.buttons & WPAD_BUTTON_PLUS) == 0) held_start = false;
+	if (!paused)
+	{
+		modelRoot->sceneClear();
+		
+		stage->gameRotation = input.physicsRotation;
+		stage->visualRotation = input.visualRotation;
+		stage->Update();
+		checkPause();
+	}
+	else pause.update();
 	
 	return;
 }
@@ -184,12 +203,15 @@ void Chowder::preDraw()
 
 void Chowder::draw()
 {
-	modelRoot->sceneCalcOnDraw();
-	modelRoot->sceneDrawOpa();
-	fStar.updateAndDraw(*modelRoot);
-	drawHUD();
-	drawDebug();
-	pause.draw();
+	if (!paused)
+	{
+		modelRoot->sceneCalcOnDraw();
+		modelRoot->sceneDrawOpa();
+		//fStar.updateAndDraw(*modelRoot);
+		drawHUD();
+		//drawDebug();
+	}
+	else pause.draw();
 }
 
 void Chowder::drawHUD()

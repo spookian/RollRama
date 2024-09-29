@@ -1,6 +1,7 @@
 #include "scn/game/misc/PauseScreen.h"
-
-
+#include "gfx/FullScreenDrawer.h"
+#include "scn/Chowder.h"
+#include "hid/hid.h"
 
 using namespace lyt;
 namespace scn
@@ -10,14 +11,19 @@ namespace scn
 		PauseScreen::PauseScreen() : layout( LayoutContext::quickContext("gcnstep/PauseScreen", "PauseScreen") )
 		{
 			evenTimer = 0;
-			oddTimer = 0;
+			fadeTimer = 0;
+			fading = false;
 			option = 0;
 			layout.adjustFor4b3();
 		}
 		
 		void PauseScreen::update()
 		{
-			
+			if ( (!engineSingleton->held_start) && (engineSingleton->input.buttons & WPAD_BUTTON_PLUS) )
+			{
+				engineSingleton->paused = false;
+				engineSingleton->held_start = true;
+			}
 			// do option selection n stuff
 		}
 		
@@ -76,6 +82,17 @@ namespace scn
 			drawBackStars(backStar);
 			drawNormal(layout, foreGroup);
 			//drawSelectStars();
+			return;
+		}
+		
+		void PauseScreen::activate()
+		{
+			evenTimer = 0;
+			fadeTimer = 0;
+			fading = true;
+			gfx::FullScreenDrawer::Capture();
+			
+			engineSingleton->held_start = true;
 			return;
 		}
 	}

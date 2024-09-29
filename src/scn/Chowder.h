@@ -36,6 +36,7 @@ struct ControllerManager
 	
 	unsigned char timerX;
 	unsigned short buttons;
+	unsigned short buttons_held;
 	unsigned short flick;
 	
 	hel::math::Vector3 tilt;
@@ -56,6 +57,7 @@ struct ControllerManager
 		using namespace hel::math;
 		
 		tilt = origin.vector;
+		buttons_held = buttons;
 		buttons = origin.buttons;
 		flick = FLICK_NONE;
 		
@@ -74,7 +76,6 @@ struct ControllerManager
 				timerX = 0;
 			}
 		}
-		
 		
 		prevAccelX = origin.accelX;
 		prevAccelY = origin.accelY;
@@ -101,7 +102,11 @@ struct Chowder
 	int score;
 	int time;
 	int health;
-
+	
+	bool held_start;
+	bool paused;
+	bool can_pause;
+	
 	g3d::Root *modelRoot;
 	scn::roll::StageController *stage;
 	ControllerManager input;
@@ -116,6 +121,7 @@ struct Chowder
 	void preDraw();
 	void draw();
 	void drawHUD();
+	void checkPause();
 	
 	g3d::ResFileRepository FileRepository;
 };

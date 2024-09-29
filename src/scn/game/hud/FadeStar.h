@@ -1,7 +1,6 @@
 #pragma once
-#include "math/Vector3.h"
 #include "g3d/Model.h"
-#include "gfx/TexBuffer.h"
+#include "gfx/gfx.h"
 
 namespace scn
 {
