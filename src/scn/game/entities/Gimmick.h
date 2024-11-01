@@ -35,13 +35,22 @@ namespace scn
 		};
 		
 		class JumpHole : public Capturable
-		{
+		{ /* let a be the gravity constant, and b be the launch speed of kirby.
+			if the formula for gravity distance is -0.5at^2 + bt assuming you start at ground level, then
+			t(-0.5at + b) = 0
+			-0.5at = -b
+			t = b/0.5a
+			or t = 2b/a, being the formula for air time
+			
+			next, we can get horizontal speed by getting our wanted distance and simply dividing it by air time.
+			launch speed and horizontal distance are independent variables, but horizontal speed is dependent
+		*/
 		protected:
 			float verticalLaunchSpeed;
 			float horizontalLaunchSpeed;
 			
 		public:
-			JumpHole(const hel::math::Vector3& position);
+			JumpHole(const hel::math::Vector3& position, float horizontalDistance, float startingVerticalSpeed);
 			void update();
 		};
 		

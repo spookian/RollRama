@@ -26,6 +26,8 @@ namespace scn
 			
 			bool searchAndHurtPlayer(bool);
 			bool checkFlickRadius(); // checks if the player flicked the wiimote and if the enemy is close enough to the player
+			void moveAlongPath(); // moves along path
+			bool searchAndCapturePlayer(); // for capturable enemies
 		};
 		
 		class Gordo : public Enemy
@@ -59,7 +61,15 @@ namespace scn
 		
 		class EndZone : public Enemy
 		{
-			
+			/*
+				quick collision with cylinder and aabb cube
+				aabb cube:
+					get xyz depth penetration by comparing kirby position with cube center
+					select the dimension that has the lowest penetration and push kirby out that way
+					
+				cylinder:
+					
+			*/
 		public:
 			void update();
 		};
