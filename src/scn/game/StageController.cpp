@@ -58,7 +58,7 @@ namespace scn
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
 				Pickup* cur = pickupList[i];
-				if (cur->active) cur->Update();
+				if (cur->active) cur->update();
 				else
 				{
 					delete cur;
@@ -69,7 +69,7 @@ namespace scn
 			for (int i = 0; i < enemyList.getSize(); i++)
 			{
 				Enemy* enm = enemyList[i];
-				if (enm->active) enm->Update();
+				if (enm->active) enm->update();
 				else
 				{
 					delete enm;
@@ -99,11 +99,11 @@ namespace scn
 			player->updateModel(root, visualRotation);
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
-				pickupList[i]->UpdateModel(root, worldRotation);
+				pickupList[i]->updateModel(root, worldRotation);
 			}
 			for (int i = 0; i < enemyList.getSize(); i++)
 			{
-				enemyList[i]->UpdateModel(root, worldRotation);
+				enemyList[i]->updateModel(root, worldRotation);
 			}
 			return;
 		}

@@ -11,11 +11,24 @@ namespace scn
 {
 	namespace roll
 	{
-		StateNormal::StateNormal(PlayerController& player)
+		PlayerState::PlayerState()
+		{
+			this->player = engineSingleton->stage->player;
+		}
+		
+		void PlayerState::update()
+		{
+			return;
+		}
+		void PlayerState::updateModel(g3d::Root& root)
+		{
+			return;
+		}
+		
+		StateNormal::StateNormal() : PlayerState()
 		{
 			// idk setup nodes n gears n shizz
-			this->player = &player;
-			g3d::ModelAccessor playerModel = player.model->model();
+			g3d::ModelAccessor playerModel = player->model->model();
 			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyBlowM").setVisibility(false);
@@ -23,15 +36,15 @@ namespace scn
 			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
 			
-			player.model->interpolationReset();
+			player->model->interpolationReset();
 			g3d::ResFileAccessor animFile(engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true));
-			player.model->setAnim( 0, animFile, "Drink" );
-			g3d::ModelAnimAccessor animation = player.model->anim(0);
+			player->model->setAnim( 0, animFile, "Drink" );
+			g3d::ModelAnimAccessor animation = player->model->anim(0);
 			animation.start(true); // bool is loop
 			animation.setFrameRate(1.0);
 		}
 		
-		void StateNormal::Update()
+		void StateNormal::update() 
 		{
 			unsigned short checkFlick = engineSingleton->input.flick;
 			if (checkFlick && player->isOnGround())
@@ -43,21 +56,26 @@ namespace scn
 			player->model->updateFrame();
 		}
 		
-		StateFloat::StateFloat(PlayerController& player)
+		StateFloat::StateFloat() : PlayerState()
 		{
 			Matrix34 identity;
-			this->player = &player;
-			player.rotation = identity;
+			player->rotation = identity;
 			
-			player.linear_velocity = Vector3::ZERO;
-			player.angular_velocity = Vector3::ZERO;
+			player->linear_velocity = Vector3::ZERO;
+			player->angular_velocity = Vector3::ZERO;
 		}
 		
-		void StateFloat::Update()
+		void StateFloat::update()
 		{
 			Vector3 displacement(-engineSingleton->input.tilt.z, 0, engineSingleton->input.tilt.x);
 			displacement = displacement * FLOAT_MOVEMENT_MULTIPLIER;
 			player->position += displacement;
+		}
+		
+		StateCapture::StateCapture() : PlayerState()
+		{
+			player->linear_velocity = Vector3::ZERO;
+			player->angular_velocity = Vector3::ZERO;
 		}
 	}
 }

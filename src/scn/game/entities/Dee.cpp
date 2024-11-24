@@ -46,7 +46,7 @@ namespace scn
 			return;
 		}
 		
-		void Dee::Update()
+		void Dee::update()
 		{
 			switch(state)
 			{
@@ -90,12 +90,12 @@ namespace scn
 			return;
 		}
 		
-		void Dee::UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation)
+		void Dee::updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation)
 		{
 			Matrix34 translation = Matrix34::CreateTrans(position);
 			model->setModelRTMtx( worldRotation * translation );
 			model->setModelScale(deeScale);
-			Enemy::UpdateModel(root, worldRotation);
+			Enemy::updateModel(root, worldRotation);
 		}
 	}
 }

@@ -7,6 +7,17 @@
 #include "scn/game/rollgame.h"
 #include "scn/game/PlayerStates.h"
 
+enum PlayerStates
+{
+	PLAYER_NORMAL,
+	PLAYER_DEAD,
+	PLAYER_BOSSFIGHT,
+	PLAYER_FLOAT,
+	PLAYER_CAPTURE,
+	PLAYER_START,
+	PLAYER_WIN
+};
+
 namespace scn
 {
 	namespace roll
@@ -53,7 +64,7 @@ namespace scn
 
 			void update(StageController* stage);
 			void updateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
-			void powerUp(bool); // i wrote myself into a corner, okay? don't judge me
+			void setState(PlayerStates states);
 			
 			void debugDrawOctreeBlock();
 		};

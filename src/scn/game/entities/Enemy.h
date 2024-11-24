@@ -14,6 +14,7 @@ namespace scn
 		protected:
 			g3d::CharaModel *model;
 			bool playerOverlap;
+			unsigned long state;
 			
 		public:
 			bool active;
@@ -21,8 +22,8 @@ namespace scn
 			
 			Enemy();
 			virtual ~Enemy();
-			virtual void Update();
-			virtual void UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
+			virtual void update();
+			virtual void updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
 			
 			bool searchAndHurtPlayer(bool);
 			bool checkFlickRadius(); // checks if the player flicked the wiimote and if the enemy is close enough to the player
@@ -37,24 +38,23 @@ namespace scn
 		
 		class Dee : public Enemy
 		{
-			unsigned long state;
 			unsigned long timer;
 			float oldHeight;
 			
 		public:
 			Dee(hel::math::Vector3 pos);
 			virtual ~Dee();
-			void Update();
-			void UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
+			void update();
+			void updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
 		};
 		
-		class Bumper : public Enemy
+		class CircleBumper : public Enemy
 		{
 			bool animationPlaying;
 			int timer;
 			
 		public:
-			Bumper(const hel::math::Vector3& position);
+			CircleBumper(const hel::math::Vector3& position);
 			void update();
 			void updateModel(g3d::Root& root);
 		};
@@ -71,7 +71,31 @@ namespace scn
 					
 			*/
 		public:
+			void updateUpper();
+			void updateLower();
+			
 			void update();
+		};
+		
+		class JumpHole : public Enemy
+		{
+			float direction;
+			
+			float verticalLaunchSpeed;
+			float horizontalDistance;
+			g3d::CharaModel *arrowModel;
+			
+		public:
+			static const float arrowDistance;
+		
+			JumpHole(const hel::math::Vector3&, float, float);
+			void update();
+			void updateModel(g3d::Root&, hel::math::Matrix34);
+		};
+		
+		class Cloud : public Enemy
+		{
+			
 		};
 	}
 }

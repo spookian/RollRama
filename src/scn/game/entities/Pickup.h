@@ -23,8 +23,8 @@ namespace scn
 				active = true;
 			}
 			
-			virtual void Update() {}
-			virtual void UpdateModel(g3d::Root& root, Matrix34& worldRotation) {}
+			virtual void update() {}
+			virtual void updateModel(g3d::Root& root, Matrix34& worldRotation) {}
 		};
 		
 		class Balloon : public Pickup
@@ -36,8 +36,8 @@ namespace scn
 			Balloon(const Vector3& position, bool __bossFight);
 			~Balloon();
 			
-			void Update(); // only updates itself
-			void UpdateModel(g3d::Root& root, Matrix34& worldRotation);
+			void update(); // only updates itself
+			void updateModel(g3d::Root& root, Matrix34& worldRotation);
 		};
 		
 		class PointStar : public Pickup
@@ -48,8 +48,8 @@ namespace scn
 			PointStar(const Vector3& position); // kills itself once it detects the player
 			~PointStar();
 			
-			void Update();
-			void UpdateModel(g3d::Root& root, Matrix34& worldRotation);
+			void update();
+			void updateModel(g3d::Root& root, Matrix34& worldRotation);
 		};
 		
 		class Clock : public Pickup

@@ -54,6 +54,7 @@ namespace lyt
 		void setUV(float scaleX, float scaleY, float rotation, float transX, float transY) const 
 		{
 			float* UVs = reinterpret_cast<float*>(panePtr + 0x1d8);
+			
 			UVs[0] = transX;
 			UVs[1] = transY;
 			UVs[2] = rotation;

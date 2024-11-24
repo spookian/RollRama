@@ -10,17 +10,6 @@
 #include "math/Matrix34.h"
 #include "math/math.h"
 
-enum PlayerStates
-{
-	PLAYER_NORMAL,
-	PLAYER_DEAD,
-	PLAYER_BOSSFIGHT,
-	PLAYER_FLOAT,
-	PLAYER_CAPTURE,
-	PLAYER_START,
-	PLAYER_WIN
-};
-
 GlobalObject<const hel::math::Vector3, float> playerScale = {{50.0f, 50.0f, 50.0f}};
 GlobalObject<const hel::math::Vector3, float> scn::roll::PlayerController::jumpLinearImpulses[2] = {
 	{{0.0f, 7.0f, -4.0f}},
@@ -55,7 +44,7 @@ namespace scn
 			this->currentOctreeNode = 0;
 			//position.y = 144.896;
 			//position.z = -9628.0f;
-			state = new StateNormal(*this);
+			state = new StateNormal();
 			captured = false;
 		}
 		
@@ -112,7 +101,7 @@ namespace scn
 			}
 			
 			// check for player death in engine singleton, then change state
-			state->Update();
+			state->update();
 		}
 
 		void PlayerController::updateModel(g3d::Root& root, Matrix34& worldRotation)
@@ -148,10 +137,20 @@ namespace scn
 			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[2], list[6], list[4]);
 		}
 		
-		void PlayerController::powerUp(bool isBoss)
+		void PlayerController::setState(PlayerStates states)
 		{
 			delete state;
-			state = new StateNormal(*this);
+			switch (states)
+			{
+				default:
+				state = new StateNormal();
+				break;
+				
+				case PLAYER_CAPTURE:
+				state = new StateCapture();
+				break;
+			}
+			return;
 		}
 	}
 }

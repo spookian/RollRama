@@ -15,6 +15,7 @@ namespace scn
 {
 	namespace roll
 	{	
+
 		class PlayerController;
 		struct TriangleData
 		{
@@ -52,6 +53,9 @@ namespace scn
 			TriangleWrapper();
 		};
 		
+		typedef hel::common::List<TriangleWrapper> TriangleList;
+		typedef scn::roll::Octree< TriangleList > TriOctree;
+		
 		struct CollisionResult
 		{
 			inline CollisionResult()
@@ -76,7 +80,7 @@ namespace scn
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::Pickup*> pickupList;
 			hel::common::List<scn::roll::Enemy*> enemyList;
-			scn::roll::Octree< hel::common::List<scn::roll::TriangleWrapper> > collisionData;
+			TriOctree collisionData;
 			
 			Chowder *parent;
 			
@@ -89,9 +93,7 @@ namespace scn
 			void Update();
 			void preDraw(g3d::Root& root);
 		};
-		
-		typedef hel::common::List<TriangleWrapper> TriangleList;
-		typedef scn::roll::Octree< TriangleList > TriOctree;
+
 		/*
 			stage_position = -player_position; use for translation matrix since the stage will always be centered at 0,0,0
 		*/

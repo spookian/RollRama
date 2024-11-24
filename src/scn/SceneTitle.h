@@ -2,7 +2,7 @@
 #include "scn/IScene.h"
 #include "lyt/lyt.h"
 #include "snd/SERequestor.h"
-#include "scn/game/hud/NumberDisplay.h"
+#include "scn/title/Particle.h"
 
 namespace scn
 {
@@ -27,7 +27,11 @@ namespace scn
 		lyt::Layout titleScreen;
 		lyt::Layout nintendoDisclaimer;
 		WPADStatus wpad_data;
+		
+		rolltitle::ParticleManager ptclManager;
 		bool isEnd;
+		
+		
 	public:
 		void rtti();
 		SceneTitle();

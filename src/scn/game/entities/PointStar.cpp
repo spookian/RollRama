@@ -25,7 +25,7 @@ namespace scn
 			delete model;
 		}
 		
-		void PointStar::Update()
+		void PointStar::update()
 		{
 			if ( isCollide( *(SphereCollider*)engineSingleton->stage->player ) )
 			{
@@ -35,7 +35,7 @@ namespace scn
 			}
 		}
 		
-		void PointStar::UpdateModel(g3d::Root& root, hel::math::Matrix34& worldRotation)
+		void PointStar::updateModel(g3d::Root& root, hel::math::Matrix34& worldRotation)
 		{
 			// note to self: start using constants soon
 			rotation += deltaRot;

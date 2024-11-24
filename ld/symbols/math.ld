@@ -53,3 +53,5 @@
 "PSMTXQuat" 		= 0x80030e20;
 "C_QUATRotAxisRad"	= 0x800319b0;
 "C_QUATMtx"			= 0x80031a50;
+
+"Atan2FIdx__Q24nw4r4mathFff" = 0x800fe300;

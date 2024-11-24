@@ -7,6 +7,7 @@
 
 #define FLICK_RADIUS 200.0f
 
+using namespace hel::math;
 namespace scn
 {
 	namespace roll
@@ -21,12 +22,12 @@ namespace scn
 			delete model; // don't ever create a base Enemy object; this is purely an interface kinda class
 		}
 		
-		void Enemy::Update()
+		void Enemy::update()
 		{
 			return;
 		}
 		
-		void Enemy::UpdateModel(g3d::Root& root, hel::math::Matrix34 worldRotation)
+		void Enemy::updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation)
 		{
 			model->updateWorldMtx();
 			model->registerToRoot(root);
@@ -71,6 +72,20 @@ namespace scn
 			else
 			{
 				playerOverlap = false;
+			}
+			return false;
+		}
+		
+		bool Enemy::searchAndCapturePlayer()
+		{
+			PlayerController* pl = engineSingleton->stage->player;
+			if ( pl->isCollide(*this) )
+			{
+				pl->setState(PLAYER_CAPTURE);
+				Vector3 correctPosition(position.x, pl->position.y, position.z);
+				pl->position = correctPosition;
+				
+				return true;
 			}
 			return false;
 		}

@@ -10,21 +10,43 @@ namespace scn
 		struct PlayerState
 		{
 			PlayerController* player;
-			virtual void Update() {}
-			virtual void UpdateModel(g3d::Root& root) {}
+			
+			PlayerState();
+			virtual void update();
+			virtual void updateModel(g3d::Root& root);
 		};
 		
 		struct StateNormal : public PlayerState
 		{
-			StateNormal(PlayerController& player);
-			void Update();
+			StateNormal();
+			void update();
 		};
 		
 		struct StateFloat : public PlayerState
 		{
 			unsigned long timer;
-			StateFloat(PlayerController& player);
-			void Update();
+			StateFloat();
+			void update();
+		};
+		
+		struct StateCapture : public PlayerState
+		{
+			StateCapture();
+		};
+		
+		struct StateIntro : public PlayerState
+		{
+			unsigned long phase; // state.
+			unsigned long timer;
+			
+			StateIntro();
+			void update();
+		};
+		
+		struct StateFinish : public PlayerState
+		{
+			StateFinish();
+			void update();
 		};
 	}
 }
