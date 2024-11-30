@@ -10,6 +10,9 @@ namespace scn
 {
 	namespace roll
 	{
+		const float fadeMax = 80.0f;
+		const float fadeMultiplier = 3.0f;
+		
 		FadeStar::FadeStar()
 		{
 			timer = 0;
@@ -90,8 +93,9 @@ namespace scn
 				return;
 			}
 			
-			void drawFadeMesh()
+			void drawFadeMesh(int timer)
 			{
+				float multiplier = (timer / fadeMax) * fadeMultiplier;
 				Matrix34 lookAt;
 				
 				gfx::EasyRender3D::SetColor(hel::common::Color::BLACK);
@@ -105,7 +109,7 @@ namespace scn
 					Vector3 v1(vv1->x, vv1->y, 0.0f);
 					Vector3 v2(vv2->x, vv2->y, 0.0f);
 					
-					gfx::EasyRender3D::DrawQuadFill(lookAt, v0, v1, v2, v2);
+					gfx::EasyRender3D::DrawQuadFill(lookAt, v0 * multiplier, v1 * multiplier, v2 * multiplier, v2 * multiplier);
 				}
 				return;
 			}
@@ -116,10 +120,11 @@ namespace scn
 			gfx::FullScreenDrawer::Capture();
 			setupDrawMode();
 			gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
-			drawFadeMesh();
+			drawFadeMesh(timer);
 			
 			GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
 			gfx::FullScreenDrawer::Draw();
+			timer++;
 		}
 	}
 }

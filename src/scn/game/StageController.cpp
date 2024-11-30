@@ -37,7 +37,7 @@ namespace scn
 			Enemy* e = new Dee(enemy1);
 			enemyList.append(e);
 			
-			stageModel = InitResModel(parent.FileRepository, "step/TestStage");
+			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
 			this->parent = &parent;
 		}
 		

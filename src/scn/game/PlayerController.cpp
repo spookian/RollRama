@@ -41,10 +41,9 @@ namespace scn
 			g3d::CharaModelContext mContext(mResContext, mOptions, 8, 2, 4, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
 			this->model = new g3d::CharaModel(mContext);
 			//this->model = InitResModel(engineSingleton->FileRepository, "step/chara/hero/kirby/base/Pink");
-			this->currentOctreeNode = 0;
 			//position.y = 144.896;
 			//position.z = -9628.0f;
-			state = new StateNormal();
+			state = new StateNormal(this);
 			captured = false;
 		}
 		
@@ -54,52 +53,8 @@ namespace scn
 			delete state;
 		}
 		
-		struct OctreeInfo
-		{
-			TriOctree::OctreeNode *prev;
-			TriOctree::OctreeNode *current;
-		};
-		
-		// move octree crap to simplerigidbody
-		OctreeInfo TraverseOctree(hel::math::Vector3& position, TriOctree::OctreeNode *node)
-		{
-			OctreeInfo result;
-			TriOctree::OctreeNode *check = node;
-			TriOctree::OctreeNode *cur = node;
-			
-			while (check && check->type != OCTREE_LEAF)
-			{
-				cur = check;
-				if (cur->box.Contains(position))
-				{
-					TriOctree::OctreeBranch *branch = (TriOctree::OctreeBranch*)cur;
-					check = branch->GetSector(position);
-				}
-				else
-				{
-					check = cur->parent;
-				}
-			}
-			
-			result.prev = cur;
-			result.current = check;
-			return result;
-		}
-		
 		void PlayerController::update(StageController* stage)
 		{
-			if (currentOctreeNode == 0) currentOctreeNode = stage->collisionData.startBranch;
-			if (!currentOctreeNode->box.Contains(position))
-			{
-				if (currentOctreeNode->parent != 0) currentOctreeNode = currentOctreeNode->parent;
-			}
-			if (currentOctreeNode->type != OCTREE_LEAF)
-			{
-				OctreeInfo info = TraverseOctree(position, currentOctreeNode);
-				if (info.current) currentOctreeNode = info.current;
-				else currentOctreeNode = info.prev;
-			}
-			
 			// check for player death in engine singleton, then change state
 			state->update();
 		}
@@ -123,31 +78,17 @@ namespace scn
 			model->registerToRoot(root);
 		}
 		
-		void PlayerController::debugDrawOctreeBlock()
-		{
-			if (currentOctreeNode == 0) return;
-			
-			hel::math::Matrix34 mtx;
-			hel::math::Vector3 list[8];
-			currentOctreeNode->box.getVertices(list);
-			
-			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[1], list[5], list[4]);
-			gfx::EasyRender3D::DrawQuadFill(mtx, list[1], list[3], list[5], list[7]);
-			gfx::EasyRender3D::DrawQuadFill(mtx, list[2], list[3], list[7], list[6]);
-			gfx::EasyRender3D::DrawQuadFill(mtx, list[0], list[2], list[6], list[4]);
-		}
-		
 		void PlayerController::setState(PlayerStates states)
 		{
 			delete state;
 			switch (states)
 			{
 				default:
-				state = new StateNormal();
+				state = new StateNormal(this);
 				break;
 				
 				case PLAYER_CAPTURE:
-				state = new StateCapture();
+				state = new StateCapture(this);
 				break;
 			}
 			return;

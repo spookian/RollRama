@@ -22,8 +22,8 @@ namespace scn
 			hel::common::List<Particle> ptclList;
 			
 		public:
-			update(); // NOTE: linked list implementation is very much a possible memory leak. if stuff happens, IMMEDIATELY disable the title screen particles
-			draw();
+			void update(); // NOTE: linked list implementation is very much a possible memory leak. if stuff happens, IMMEDIATELY disable the title screen particles
+			void draw();
 		};
 	}
 }

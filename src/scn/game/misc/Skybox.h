@@ -7,6 +7,7 @@ namespace scn
 	{
 		class Skybox
 		{
+			int timer;
 		public:
 			Skybox();
 			~Skybox();

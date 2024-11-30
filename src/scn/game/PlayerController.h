@@ -3,7 +3,6 @@
 #include "math/math.h"
 #include "g3d/Model.h"
 #include "scn/game/collision/Collision.h"
-#include "scn/game/collision/Octree.h"
 #include "scn/game/rollgame.h"
 #include "scn/game/PlayerStates.h"
 
@@ -30,10 +29,9 @@ namespace scn
 			float mass;	
 			hel::math::Vector3 net_force; // gets flushed every frame; representation of net force upon object that isn't actually used in velocity or position calculations
 			bool grounded;
-			TriOctree::OctreeNode *currentOctreeNode;
 			
 			CollisionResult resolveCollision(TriangleWrapper& plane); // returns a position offset after colliding with a triangle; if the algorithm breaks early, Vector3.Zero is returned
-			bool resolveAllCollisions(StageController* stage, TriangleList& triangleList);		
+			bool resolveAllCollisions(TriangleList& triangleList);		
 			void integrateForces();
 			
 		public:
@@ -65,8 +63,6 @@ namespace scn
 			void update(StageController* stage);
 			void updateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
 			void setState(PlayerStates states);
-			
-			void debugDrawOctreeBlock();
 		};
 	}
 }

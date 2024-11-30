@@ -68,7 +68,7 @@ Chowder::Chowder()
 	
 	this->stage = new scn::roll::StageController(*this);
 	//debugAddTriangles(*stage);
-	file::FileAccessor file("gcn/TEST.roll", false);
+	file::FileAccessor file("gcn/MAIN.roll", false);
 	if (file.isLoaded()) 
 	{
 		file::FileData stage_data = file.block();
@@ -207,8 +207,8 @@ void Chowder::draw()
 	{
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
-		//fStar.updateAndDraw(*modelRoot);
-		drawHUD();
+		fStar.updateAndDraw(*modelRoot);
+		//drawHUD();
 		//drawDebug();
 	}
 	else pause.draw();

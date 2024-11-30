@@ -28,7 +28,7 @@ namespace scn
 		lyt::Layout nintendoDisclaimer;
 		WPADStatus wpad_data;
 		
-		rolltitle::ParticleManager ptclManager;
+		//rolltitle::ParticleManager ptclManager;
 		bool isEnd;
 		
 		

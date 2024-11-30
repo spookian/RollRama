@@ -11,9 +11,9 @@ namespace scn
 {
 	namespace roll
 	{
-		PlayerState::PlayerState()
+		PlayerState::PlayerState(PlayerController *player)
 		{
-			this->player = engineSingleton->stage->player;
+			this->player = player;
 		}
 		
 		void PlayerState::update()
@@ -25,7 +25,7 @@ namespace scn
 			return;
 		}
 		
-		StateNormal::StateNormal() : PlayerState()
+		StateNormal::StateNormal(PlayerController *player) : PlayerState(player)
 		{
 			// idk setup nodes n gears n shizz
 			g3d::ModelAccessor playerModel = player->model->model();
@@ -56,7 +56,7 @@ namespace scn
 			player->model->updateFrame();
 		}
 		
-		StateFloat::StateFloat() : PlayerState()
+		StateFloat::StateFloat(PlayerController *player) : PlayerState(player)
 		{
 			Matrix34 identity;
 			player->rotation = identity;
@@ -72,7 +72,7 @@ namespace scn
 			player->position += displacement;
 		}
 		
-		StateCapture::StateCapture() : PlayerState()
+		StateCapture::StateCapture(PlayerController *player) : PlayerState(player)
 		{
 			player->linear_velocity = Vector3::ZERO;
 			player->angular_velocity = Vector3::ZERO;

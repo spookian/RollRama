@@ -33,33 +33,30 @@ namespace scn
 			addForce(weight);
 			
 			integrateForces();
-			if (currentOctreeNode->type == OCTREE_LEAF)
+			if (resolveAllCollisions(engineSingleton->stage->triangleList))
 			{
-				TriOctree::OctreeLeaf *leaf = (TriOctree::OctreeLeaf*)currentOctreeNode;
-				if (resolveAllCollisions(engineSingleton->stage, leaf->obj))
+				//friction
+				Vector3 friction = linear_velocity;
+				friction.normalize();
+				friction = friction * -FRICTION_CONST;
+				
+				if ((linear_velocity + friction).length() < 0.12)
 				{
-					//friction
-					Vector3 friction = linear_velocity;
-					friction.normalize();
-					friction = friction * -FRICTION_CONST;
-					
-					if ((linear_velocity + friction).length() < 0.12)
-					{
-						linear_velocity = Vector3::ZERO;
-					}
-					else
-					{
-						linear_velocity += friction;
-					}
-					
-					//rotation 
-					Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
-					angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
+					linear_velocity = Vector3::ZERO;
 				}
+				else
+				{
+					linear_velocity += friction;
+				}
+				
+				//rotation 
+				Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
+				angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
 			}
+			
 		}
 
-		bool SimpleRigidbody::resolveAllCollisions(StageController* stage, TriangleList& triangleList)
+		bool SimpleRigidbody::resolveAllCollisions(TriangleList& triangleList)
 		{
 			bool result = false;
 			for (int i = 0; i < triangleList.getSize(); i++)
@@ -74,7 +71,7 @@ namespace scn
 					
 					position += collisionData.displacement;
 					linear_velocity += collisionData.impulse;
-					addForce(stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
+					addForce(engineSingleton->stage->gameRotation.mul(collisionData.surface_normal) * GRAVITY * mass );
 				}
 			}
 			

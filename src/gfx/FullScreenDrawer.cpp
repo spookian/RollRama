@@ -17,11 +17,6 @@ namespace gfx
 	
 	void setupGXTextured(GXTexObj& tex)
 	{
-		Matrix44 perspectiveMtx = Matrix44::CreateOrtho(1.0, -1.0, -1.0, 1.0, 0.0, 1.0);
-		Matrix34 identity;
-		gfx::EasyRender3D::SetupGX(perspectiveMtx, false);
-		gfx::EasyRender3D::SetViewMtx(identity);
-		
 		GXSetZMode(0, 1, 0);
 		GXSetCullMode(0);
 		

@@ -4,7 +4,7 @@ import os
 import struct
 
 METERS_TO_CENTIMETERS = 100
-FILE_PATH = "C:/C++ projects/RollRama/datastuff/STAGE.roll"
+FILE_PATH = "C:/C++ projects/RollRama/assets/gcn/"
 HEADER_SIZE = 16 + 12 + 12
 
 triangle_file_data = bytes()
@@ -46,6 +46,16 @@ def check_if_all_triangles(obj):
         
     return True
 
+def get_file_name():
+    name = input("Type in the stage's file name: ")
+    name_ext  = name[-5:]
+    print(name_ext)
+    
+    if (name_ext != ".roll" and name_ext != ".ROLL"):
+        name = name + ".roll"
+    return FILE_PATH + name
+
+
 x = bpy.data.objects.get('Stage')
 bound_center = mathutils.Vector()
 bound_center.resize_3d()
@@ -59,6 +69,8 @@ print(bound_center)
 if x:
     if check_if_all_triangles(x):
         print("Triangle check finished...")
+        new_path = get_file_name()
+        
         for vert in x.data.vertices:
             #store all vertex data
             vertex_file_data = vertex_file_data + create_vert_data(vert)
@@ -75,7 +87,7 @@ if x:
         header += struct.pack(">ffffff", bound_center.x, bound_center.z, bound_center.y, dimensions.x, dimensions.z, dimensions.y)
         
         
-        f = open(FILE_PATH, mode="wb")
+        f = open(new_path, mode="wb")
         f.write(header + vertex_file_data + triangle_file_data)
         f.close()
         print("File written!\n\n")
