@@ -30,6 +30,7 @@ namespace scn
 			if ( isCollide( *(SphereCollider*)engineSingleton->stage->player ) )
 			{
 				engineSingleton->score += STAR_POINTS;
+				engineSingleton->stars++;
 				// function to create particles when i have the time to implement
 				active = false;
 			}

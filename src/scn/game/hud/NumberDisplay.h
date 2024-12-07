@@ -27,8 +27,8 @@ namespace scn
 			NumberDisplay();
 			~NumberDisplay();
 			
-			void setTopColor(_GXColor& col);
-			void setBottomColor(_GXColor& col);
+			void setTopColor(const _GXColor& col);
+			void setBottomColor(const _GXColor& col);
 			void draw(unsigned long idx, const Vector2& pos);
 		};
 	}

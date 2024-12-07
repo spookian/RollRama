@@ -9,6 +9,7 @@
 #include "scn/game/hud/FadeStar.h"
 #include "scn/game/hud/NumberDisplay.h"
 #include "scn/game/misc/PauseScreen.h"
+#include "scn/game/hud/HUDController.h"
 
 #define MAX_FORGIVENESS 5
 #define MAX_FRAME 3
@@ -102,6 +103,7 @@ struct Chowder
 	int score;
 	int time;
 	int health;
+	char stars;
 	
 	bool held_start;
 	bool paused;
@@ -111,7 +113,7 @@ struct Chowder
 	scn::roll::StageController *stage;
 	ControllerManager input;
 	scn::roll::FadeStar fStar;
-	scn::roll::NumberDisplay num;
+	scn::roll::HUDController hud;
 	scn::roll::PauseScreen pause;
 	
 	Chowder();
@@ -120,7 +122,6 @@ struct Chowder
 	void drawDebug();
 	void preDraw();
 	void draw();
-	void drawHUD();
 	void checkPause();
 	
 	g3d::ResFileRepository FileRepository;

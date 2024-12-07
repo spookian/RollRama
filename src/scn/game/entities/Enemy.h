@@ -88,7 +88,7 @@ namespace scn
 		public:
 			static const float arrowDistance;
 		
-			JumpHole(const hel::math::Vector3&, float, float);
+			JumpHole(float, float);
 			void update();
 			void updateModel(g3d::Root&, hel::math::Matrix34);
 		};

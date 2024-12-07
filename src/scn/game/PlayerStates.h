@@ -18,6 +18,7 @@ namespace scn
 		struct StateNormal : public PlayerState
 		{
 			StateNormal(PlayerController *player);
+			~StateNormal();
 			void update();
 		};
 		

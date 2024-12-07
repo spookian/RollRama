@@ -53,6 +53,10 @@ namespace scn
 				Vector3 rotAxis(linear_velocity.z, 0.0f, -linear_velocity.x);
 				angular_velocity = rotAxis / radius; // linear velocity = angular * radius... angular in radians/sec
 			}
+			else
+			{
+				// movement in air
+			}
 			
 		}
 

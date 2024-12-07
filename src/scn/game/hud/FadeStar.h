@@ -9,8 +9,10 @@ namespace scn
 		class FadeStar
 		{
 			unsigned long timer;
+			bool enable;
 		public:
 			FadeStar();
+			void activate();
 			void updateAndDraw(g3d::Root&);
 		};
 	}

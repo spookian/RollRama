@@ -67,6 +67,7 @@ namespace scn
 				Vector3 angularImpulse(impulse.z / pl->radius, 0.0, -impulse.x / pl->radius); // angular velocity = linear velocity / radius
 				pl->angular_velocity = angularImpulse;
 				playerOverlap = true;
+				if (engineSingleton->health) engineSingleton->health--;
 				return true;
 			}
 			else
@@ -81,11 +82,20 @@ namespace scn
 			PlayerController* pl = engineSingleton->stage->player;
 			if ( pl->isCollide(*this) )
 			{
+				if (playerOverlap)
+				{
+					return false;
+				}
+				
 				pl->setState(PLAYER_CAPTURE);
 				Vector3 correctPosition(position.x, pl->position.y, position.z);
 				pl->position = correctPosition;
-				
+				playerOverlap = true;
 				return true;
+			}
+			else
+			{
+				playerOverlap = false;
 			}
 			return false;
 		}

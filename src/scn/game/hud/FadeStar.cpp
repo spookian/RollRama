@@ -16,6 +16,7 @@ namespace scn
 		FadeStar::FadeStar()
 		{
 			timer = 0;
+			enable = true;
 		}
 		
 		namespace 
@@ -115,16 +116,26 @@ namespace scn
 			}
 		}
 		
+		void FadeStar::activate()
+		{
+			enable = true;
+			return;
+		}
+		
 		void FadeStar::updateAndDraw(g3d::Root& root)
 		{
-			gfx::FullScreenDrawer::Capture();
-			setupDrawMode();
-			gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
-			drawFadeMesh(timer);
-			
-			GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
-			gfx::FullScreenDrawer::Draw();
-			timer++;
+			if (timer == 80) enable = false;
+			if (enable)
+			{
+				gfx::FullScreenDrawer::Capture();
+				setupDrawMode();
+				gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
+				drawFadeMesh(timer);
+				
+				GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
+				gfx::FullScreenDrawer::Draw();
+				timer++;
+			}
 		}
 	}
 }

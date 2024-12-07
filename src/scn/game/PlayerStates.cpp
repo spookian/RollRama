@@ -44,6 +44,12 @@ namespace scn
 			animation.setFrameRate(1.0);
 		}
 		
+		StateNormal::~StateNormal()
+		{
+			g3d::ModelAnimAccessor animation = player->model->anim(0);
+			animation.stop();
+		}
+		
 		void StateNormal::update() 
 		{
 			unsigned short checkFlick = engineSingleton->input.flick;

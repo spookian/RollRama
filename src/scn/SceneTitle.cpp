@@ -4,6 +4,9 @@
 #include "hid/hid.h"
 #include "common/Color.h"
 
+#include "snd/snd.h"
+#include "common/ExplicitSingleton.h"
+
 #define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
 
 _GXColor sky = {0x75, 0xF3, 0xFF, 0xFF};
@@ -28,6 +31,10 @@ namespace scn
 		titleScreen.paneByName("StartGroup").setAlpha(0);
 		nintendoDisclaimer.paneByName("NintenGroup").setAlpha(0);
 		nintendoDisclaimer.updateMatrix();
+		
+		//snd::SoundManager::load(); 
+		// apparently the sound thread is loaded right before the main game loop starts, so don't go playing sounds/songs in constructors
+		
 	}
 	
 	SceneTitle::~SceneTitle()
@@ -108,6 +115,7 @@ namespace scn
 					warningAlpha = 0;
 					timer = -1;
 					state = TITLE_MENU;
+					snd::SoundManager::object()->bgm().start(0x616);
 				}
 				warningScreen.rootPane().setAlpha(warningAlpha);
 				break;

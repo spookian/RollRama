@@ -12,16 +12,16 @@ namespace scn
 {
 	namespace roll
 	{
-		const float JumpHole::arrowDistance = 10.0f;
+		const float JumpHole::arrowDistance = 100.0f;
 		
-		JumpHole::JumpHole(const hel::math::Vector3& _position, float _horizontalDistance, float _verticalLaunchSpeed)
+		JumpHole::JumpHole(float _horizontalDistance, float _verticalLaunchSpeed)
 		{
 			horizontalDistance  =_horizontalDistance;
 			verticalLaunchSpeed = _verticalLaunchSpeed;
-			position = _position;
 			direction = 0.0f;
 			
 			arrowModel = InitResModel(engineSingleton->FileRepository, "step/effect/JumpArrow");
+			state = 0;
 		}
 		
 		float getAirTime(float yVelo)
@@ -56,9 +56,11 @@ namespace scn
 					if ( (engineSingleton->input.buttons & WPAD_BUTTON_2) && !(engineSingleton->input.buttons_held & WPAD_BUTTON_2) )
 					{
 						Vector3 velocity = ( Matrix34::CreateRotAxisDeg(Vector3::BASIS_Y, direction).mul( Vector3::BASIS_Z ) ) * (horizontalDistance / getAirTime(verticalLaunchSpeed));
+						velocity.y = verticalLaunchSpeed;
 						state = 0;
 						// player stops being captured;
 						engineSingleton->stage->player->linear_velocity = velocity;
+						engineSingleton->stage->player->setState(PLAYER_NORMAL);
 					}
 				
 					break;
@@ -74,8 +76,11 @@ namespace scn
 				Vector3 arrowPos = position + (rotationMtx.mul(Vector3::BASIS_Z) * arrowDistance);
 				Matrix34 translationMtx = Matrix34::CreateTrans(arrowPos);
 				//render arrow
-				arrowModel->setModelRTMtx( worldRotation * (translationMtx * rotationMtx) );
+				arrowModel->setModelScale(Vector3::ALL_ONE * 50.0f);
+				arrowModel->setModelRTMtx( translationMtx * (worldRotation * rotationMtx) );
+				//arrowModel->setModelRTMtx( translationMtx );
 				arrowModel->updateWorldMtx();
+				arrowModel->registerToRoot(root);
 			}
 			//Enemy::updateModel(root, worldRotation);
 		}

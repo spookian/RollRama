@@ -36,6 +36,7 @@ namespace scn
 			
 			Enemy* e = new Dee(enemy1);
 			enemyList.append(e);
+			enemyList.append(new JumpHole(0.0f, 3.0f)); // <---- i divided by zero.
 			
 			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
 			this->parent = &parent;

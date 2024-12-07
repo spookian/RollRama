@@ -84,6 +84,12 @@ Chowder::Chowder()
 	
 	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
 	lightSet.setAmbientLightObj(ambColor);
+	
+	score = 0;
+	health = 6;
+	time = 255;
+	stars = 0;
+	
 	paused = false;
 	can_pause = true;
 	held_start = false;
@@ -183,7 +189,7 @@ void Chowder::drawDebug()
 void Chowder::preDraw()
 {
 	stage->preDraw(*modelRoot);
-	
+	Vector3 playerPos = stage->player->position;
 	// create lightset
 	g3d::LightSetAccessor lightSet = modelRoot->lightSet(0);
 	
@@ -192,7 +198,7 @@ void Chowder::preDraw()
 	// curiously, the light won't render unless 0x3 is 5
 	// this phenomenon can be seen in base rtdl as well. strange!
 	lobj.InitLightColor(hel::common::Color::WHITE);
-	lobj.InitLightPos(0.0f, 700.0f, 300.0f);
+	lobj.InitLightPos(0.0f + playerPos.x, 700.0f + playerPos.y, -100.0f + playerPos.z);
 	lobj.InitLightDir(-1.0f, 0.0f, 0.0f);
 	lobj.InitLightAttnA(1.0f, 0.0f, 0.0f);
 	lobj.InitLightAttnK(1.0f, 0.0f, 0.0f);
@@ -208,23 +214,8 @@ void Chowder::draw()
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
 		fStar.updateAndDraw(*modelRoot);
-		//drawHUD();
+		hud.draw();
 		//drawDebug();
 	}
 	else pause.draw();
-}
-
-void Chowder::drawHUD()
-{
-	// draw score
-	// for loop; add
-	for (int i = 0; i < SCORE_LIMIT; i++)
-	{
-		//Vector2 originPoint(SCORE_X_STANDARD);
-	}
-	
-	
-	// draw stars
-	// draw health
-	return;
 }
