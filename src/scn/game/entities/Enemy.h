@@ -42,7 +42,7 @@ namespace scn
 			float oldHeight;
 			
 		public:
-			Dee(hel::math::Vector3 pos);
+			Dee();
 			virtual ~Dee();
 			void update();
 			void updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
@@ -54,7 +54,7 @@ namespace scn
 			int timer;
 			
 		public:
-			CircleBumper(const hel::math::Vector3& position);
+			CircleBumper();
 			void update();
 			void updateModel(g3d::Root& root);
 		};

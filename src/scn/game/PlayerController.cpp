@@ -32,6 +32,9 @@ namespace scn
 		PlayerController::PlayerController() : SimpleRigidbody(1.0f, PLAYER_RADIUS)
 		{
 			g3d::ResFileAccessor mFile( engineSingleton->FileRepository.get("step/chara/hero/kirby/base/Pink", false) );
+			normalAnim = engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true);
+			gcnAnim = engineSingleton->FileRepository.get("step/GCNAnim", true);
+			
 			//g3d::ResFileAccessor playerMotion( engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true) );
 			//playerMotion.bind(mFile, false);
 			
@@ -45,6 +48,8 @@ namespace scn
 			//position.z = -9628.0f;
 			state = new StateNormal(this);
 			captured = false;
+			health = 6;
+			hideModel = false;
 		}
 		
 		PlayerController::~PlayerController()
@@ -62,20 +67,25 @@ namespace scn
 		void PlayerController::updateModel(g3d::Root& root, Matrix34& worldRotation)
 		{	
 			// use quaternions to multiply matrices
-			Quaternion r, ang, final;
-			C_QUATMtx(&r, rotation.mtx);
-			C_QUATMtx(&ang, Matrix34::CreateRotXYZRad(angular_velocity).mtx);
-			PSQUATMultiply(&ang, &r, &final);
-			PSMTXQuat(rotation.mtx, &final);
+			if (!hideModel)
+			{
+				Quaternion r, ang, final;
+				C_QUATMtx(&r, rotation.mtx);
+				C_QUATMtx(&ang, Matrix34::CreateRotXYZRad(angular_velocity).mtx);
+				PSQUATMultiply(&ang, &r, &final);
+				PSMTXQuat(rotation.mtx, &final);
+				
+				Matrix34 translation = Matrix34::CreateTrans(position);
+				Matrix34 rtdlOffset = Matrix34::CreateTrans(rtdlModelTransOffset);
+				
+				model->setModelRTMtx(translation * (worldRotation * rotation * rtdlOffset));
+				model->updateWorldMtx();
+				
+				model->setModelScale(playerScale);
+				model->registerToRoot(root);
+			}
 			
-			Matrix34 translation = Matrix34::CreateTrans(position);
-			Matrix34 rtdlOffset = Matrix34::CreateTrans(rtdlModelTransOffset);
-			
-			model->setModelRTMtx(translation * (worldRotation * rotation * rtdlOffset));
-			model->updateWorldMtx();
-			
-			model->setModelScale(playerScale);
-			model->registerToRoot(root);
+			state->updateModel();
 		}
 		
 		void PlayerController::setState(PlayerStates states)
@@ -92,6 +102,19 @@ namespace scn
 				break;
 			}
 			return;
+		}
+		
+		void PlayerController::getHurt()
+		{
+			health--;
+			if (health == 0) 
+			{
+				delete state;
+				state = new StateDeath(this);
+				
+				engineSingleton->stage->pauseForPlayerObject = true;
+			}
+			// put in some visual bullshit to signify that you got hurt
 		}
 	}
 }

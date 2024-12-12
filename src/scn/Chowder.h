@@ -10,6 +10,7 @@
 #include "scn/game/hud/NumberDisplay.h"
 #include "scn/game/misc/PauseScreen.h"
 #include "scn/game/hud/HUDController.h"
+#include "scn/game/misc/CameraController.h"
 
 #define MAX_FORGIVENESS 5
 #define MAX_FRAME 3
@@ -102,19 +103,22 @@ struct Chowder
 {
 	int score;
 	int time;
-	int health;
 	char stars;
 	
 	bool held_start;
 	bool paused;
 	bool can_pause;
+	bool stopUpdatingInputs; //oops. my taste in case changed over a year
 	
 	g3d::Root *modelRoot;
+	g3d::Root *secondRoot;
+	
 	scn::roll::StageController *stage;
 	ControllerManager input;
 	scn::roll::FadeStar fStar;
 	scn::roll::HUDController hud;
 	scn::roll::PauseScreen pause;
+	scn::roll::CameraController cam;
 	
 	Chowder();
 	void SetupEasyRender3D();

@@ -27,12 +27,11 @@ namespace scn
 			return modelCntxt;
 		}
 		
-		Dee::Dee(Vector3 pos)
+		Dee::Dee()
 		{
 			active = true;
 			timer = 0;
 			state = 0;
-			position = pos;
 			model = new g3d::CharaModel(getWaddleDeeContext());
 			
 			g3d::ResFileAccessor deeAnim( engineSingleton->FileRepository.get("step/chara/enemy/Dee", false) );
@@ -63,6 +62,8 @@ namespace scn
 					animation.start(true);
 					
 				}
+				pathSystem.update();
+				position = pathSystem.currentOffset;
 				break;
 				
 				case 1:

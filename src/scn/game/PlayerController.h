@@ -1,7 +1,10 @@
 #pragma once
 
 #include "math/math.h"
+
 #include "g3d/Model.h"
+#include "nw4r/ResFile.h"
+
 #include "scn/game/collision/Collision.h"
 #include "scn/game/rollgame.h"
 #include "scn/game/PlayerStates.h"
@@ -51,8 +54,13 @@ namespace scn
 			PlayerState *state;
 			
 		public:
+			nw4r::g3d::ResFile* normalAnim;
+			nw4r::g3d::ResFile* gcnAnim;
+		
+			int health;
 			g3d::CharaModel *model;
 			bool captured;
+			bool hideModel;
 			
 			static GlobalObject<const hel::math::Vector3, float> jumpLinearImpulses[2];
 			static GlobalObject<const hel::math::Vector3, float> jumpAngularImpulses[2];
@@ -63,6 +71,7 @@ namespace scn
 			void update(StageController* stage);
 			void updateModel(g3d::Root& root, hel::math::Matrix34& worldRotation); // updates position. save last.
 			void setState(PlayerStates states);
+			void getHurt();
 		};
 	}
 }

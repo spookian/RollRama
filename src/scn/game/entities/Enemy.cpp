@@ -67,7 +67,8 @@ namespace scn
 				Vector3 angularImpulse(impulse.z / pl->radius, 0.0, -impulse.x / pl->radius); // angular velocity = linear velocity / radius
 				pl->angular_velocity = angularImpulse;
 				playerOverlap = true;
-				if (engineSingleton->health) engineSingleton->health--;
+				
+				pl->getHurt();
 				return true;
 			}
 			else

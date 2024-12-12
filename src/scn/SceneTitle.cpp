@@ -9,9 +9,6 @@
 
 #define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
 
-_GXColor sky = {0x75, 0xF3, 0xFF, 0xFF};
-_GXColor lime = {0x78, 0xFF, 0x78, 0xFF};
-
 namespace scn
 {
 	void SceneTitle::rtti()

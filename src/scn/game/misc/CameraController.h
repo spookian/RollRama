@@ -9,20 +9,24 @@ namespace scn
 		enum CameraStates
 		{
 			CAMERA_NORMAL,
-			CAMERA_DEATH,
-			CAMERA_FREELOOK,
-			CAMERA_FINISH
+			CAMERA_FALL,
+			CAMERA_TRANSITION_LOCK,
+			CAMERA_TRANSITION_UNLOCK,
+			CAMERA_LOCK
 		};
 		
 		class CameraController // the camera will always lag one frame behind
 		{
-			int timer;
 		public:
 			int state; // end of stage, death or normal
+			hel::math::Vector3 position;
+			
+			int timer;
+			hel::math::Vector3 oldPosition;
+			hel::math::Vector3 lockPosition;
 			
 			CameraController();
 			void update();
-			hel::math::Matrix34 getViewMtx();
 		};
 	}
 }

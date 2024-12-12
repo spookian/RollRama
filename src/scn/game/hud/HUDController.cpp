@@ -1,4 +1,5 @@
 #include "scn/game/hud/HUDController.h"
+#include "scn/game/PlayerController.h"
 #include "lyt/lyt.h"
 #include "math/Vector2.h"
 #include "math/Vector3.h"
@@ -106,7 +107,8 @@ namespace scn
 			
 			healthPellet.show();
 			emptyOrb.hide();
-			for (int i = 0; i < engineSingleton->health; i++)
+			int health = engineSingleton->stage->player->health;
+			for (int i = 0; i < health; i++)
 			{
 				healthPellet.setTrans(newPos);
 				healthLayout.updateMatrix();
@@ -116,7 +118,7 @@ namespace scn
 			
 			healthPellet.hide();
 			emptyOrb.show();
-			for (int j = 0; j < 6 - engineSingleton->health; j++)
+			for (int j = 0; j < (6 - health); j++)
 			{
 				emptyOrb.setTrans(newPos);
 				healthLayout.updateMatrix();

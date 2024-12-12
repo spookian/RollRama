@@ -3,15 +3,15 @@
 #include "common/Color.h"
 #include "gfx/FullScreenDrawer.h"
 
-#define FADE_SIZE 0.5f
+#define FADE_TIME 120
 
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
-		const float fadeMax = 80.0f;
-		const float fadeMultiplier = 3.0f;
+		const float fadeMax = (float)FADE_TIME;
+		const float fadeMultiplier = 10.0f;
 		
 		FadeStar::FadeStar()
 		{
@@ -119,12 +119,13 @@ namespace scn
 		void FadeStar::activate()
 		{
 			enable = true;
+			timer = 0;
 			return;
 		}
 		
 		void FadeStar::updateAndDraw(g3d::Root& root)
 		{
-			if (timer == 80) enable = false;
+			if (timer == FADE_TIME) enable = false;
 			if (enable)
 			{
 				gfx::FullScreenDrawer::Capture();

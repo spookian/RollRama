@@ -3,6 +3,7 @@
 #include "g3d/Model.h"
 #include "scn/game/PlayerController.h"
 #include "scn/game/entities/Enemy.h"
+#include "scn/game/collision/Path.h"
 
 #include "math/Vector3.h"
 #include "math/Matrix34.h"
@@ -20,6 +21,24 @@ const GlobalObject<const hel::math::Vector3, float> enemy1 = { {50.0f, -40.0f, 5
 const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 150.0f} };
 const GlobalObject<const hel::math::Vector3, float> viewMtxOffset = { {0.0f, 250.0f, 225.0f} };
 
+const scn::roll::PathNode testEnmStart = {
+	{{50.0f, -40.0f, 50.0f}},
+	{{0.0f, 0.0f, 0.0f}},
+	0
+};
+
+const scn::roll::PathNode testEnmStart1 = {
+	{{50.0f, -40.0f, -100.0f}},
+	{{0.0f, 0.0f, 0.0f}},
+	120
+};
+
+const scn::roll::PathNode testEnmStart2 = {
+	{{50.0f, -40.0f, 50.0f}},
+	{{0.0f, 0.0f, 0.0f}},
+	120
+};
+
 using namespace hel::math;
 namespace scn
 {
@@ -34,12 +53,19 @@ namespace scn
 			
 			player = new PlayerController();
 			
-			Enemy* e = new Dee(enemy1);
+			Enemy* e = new Dee();
+			e->pathSystem.append(&testEnmStart);
+			e->pathSystem.append(&testEnmStart1);
+			e->pathSystem.append(&testEnmStart2);
+			e->position = enemy1;
+			
 			enemyList.append(e);
 			enemyList.append(new JumpHole(0.0f, 3.0f)); // <---- i divided by zero.
 			
 			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
 			this->parent = &parent;
+			
+			pauseForPlayerObject = false;
 		}
 		
 		StageController::~StageController()
@@ -56,25 +82,29 @@ namespace scn
 		void StageController::Update()
 		{
 			player->update(this);
-			for (int i = 0; i < pickupList.getSize(); i++)
-			{
-				Pickup* cur = pickupList[i];
-				if (cur->active) cur->update();
-				else
-				{
-					delete cur;
-					pickupList.remove(i);
-				}
-			}
 			
-			for (int i = 0; i < enemyList.getSize(); i++)
+			if (!pauseForPlayerObject)
 			{
-				Enemy* enm = enemyList[i];
-				if (enm->active) enm->update();
-				else
+				for (int i = 0; i < pickupList.getSize(); i++)
 				{
-					delete enm;
-					enemyList.remove(i);
+					Pickup* cur = pickupList[i];
+					if (cur->active) cur->update();
+					else
+					{
+						delete cur;
+						pickupList.remove(i);
+					}
+				}
+				
+				for (int i = 0; i < enemyList.getSize(); i++)
+				{
+					Enemy* enm = enemyList[i];
+					if (enm->active) enm->update();
+					else
+					{
+						delete enm;
+						enemyList.remove(i);
+					}
 				}
 			}
 		}
@@ -86,10 +116,6 @@ namespace scn
 			Matrix34 focalMatrix = Matrix34::CreateTrans(translation); // multiply translation first
 			Matrix34 reverseMatrix = Matrix34::CreateTrans(-translation);
 			Matrix34 worldRotation = reverseMatrix * (visualRotation * focalMatrix);
-			
-			g3d::CameraAccessor camera = root.currentCamera();
-			hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt(player->position + viewMtxOffset, hel::math::Vector3::BASIS_Y, player->position );
-			camera.setViewMtx(viewMatrix);
 			
 			Matrix34 stageTranslation = Matrix34::CreateTrans(stagePos);
 			

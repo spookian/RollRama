@@ -81,6 +81,8 @@ namespace scn
 			
 			Chowder *parent;
 			
+			bool pauseForPlayerObject;
+			
 			PlayerController *player;
 			g3d::CharaModel *stageModel; // i only decompiled one type of model, okay? cut me some slack
 			hel::math::Matrix34 gameRotation;

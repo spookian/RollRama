@@ -1,5 +1,6 @@
 #include "scn/game/PlayerStates.h"
 #include "scn/game/PlayerController.h"
+#include "scn/game/misc/CameraController.h"
 #include "scn/game/rollgame.h"
 #include "scn/Chowder.h"
 #include "hid/hid.h"
@@ -20,7 +21,7 @@ namespace scn
 		{
 			return;
 		}
-		void PlayerState::updateModel(g3d::Root& root)
+		void PlayerState::updateModel()
 		{
 			return;
 		}
@@ -37,8 +38,8 @@ namespace scn
 			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
 			
 			player->model->interpolationReset();
-			g3d::ResFileAccessor animFile(engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true));
-			player->model->setAnim( 0, animFile, "Drink" );
+			g3d::ResFileAccessor animFile( player->gcnAnim );
+			player->model->setAnim( 0, animFile, "Roll" );
 			g3d::ModelAnimAccessor animation = player->model->anim(0);
 			animation.start(true); // bool is loop
 			animation.setFrameRate(1.0);
@@ -82,6 +83,55 @@ namespace scn
 		{
 			player->linear_velocity = Vector3::ZERO;
 			player->angular_velocity = Vector3::ZERO;
+		}
+		
+		StateDeath::StateDeath(PlayerController *player) : PlayerState(player)
+		{
+			timer = 0;
+			
+			Matrix34 id;
+			Vector3 newPos(0.0f, 0.0f, -336.3406f); // calculated average distance from camera
+			player->rotation = id;
+			deathPosition = newPos;
+			player->hideModel = true;
+			
+			engineSingleton->stopUpdatingInputs = true;
+			engineSingleton->cam.state = CAMERA_LOCK;
+			
+			g3d::ModelAccessor playerModel = player->model->model();
+			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyBlowM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyDrawM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
+			
+			player->model->interpolationReset();
+			g3d::ResFileAccessor animFile( player->normalAnim );
+			player->model->setAnim( 0, animFile, "DeadFall" );
+			g3d::ModelAnimAccessor animation = player->model->anim(0);
+			animation.start(true);
+			animation.setFrameRate(1.0);
+			
+			return;
+		}
+		
+		void StateDeath::update()
+		{
+			deathPosition.y = -5 * (timer * timer * 0.0166f) + 300 * (timer * 0.0166f);
+			player->model->updateFrame();
+			timer++;
+			return;
+		}
+		
+		void StateDeath::updateModel()
+		{
+			Matrix34 translation = Matrix34::CreateTrans(deathPosition);
+			player->model->setModelRTMtx(translation * player->rotation);
+			player->model->updateWorldMtx();
+			
+			player->model->registerToRoot( *engineSingleton->secondRoot );
+			return;
 		}
 	}
 }

@@ -27,7 +27,6 @@ void adjustScreen(g3d::CameraAccessor& camera)
 	float fov = camera.getProjFovy();
 	
 	camera.setProjPerspective(fov, aspect_ratio, near, far);
-	
 	return; 
 }
 
@@ -60,7 +59,10 @@ Chowder::Chowder()
 	engineSingleton = this;
 	// create root
 	g3d::RootContext rootContext( *g3d::ModelContext::DefaultAllocator(), 32, 64, 8, 1 );
+	
 	modelRoot = new g3d::Root(rootContext);
+	secondRoot = new g3d::Root(rootContext);
+	
 	g3d::CameraAccessor cam = modelRoot->currentCamera();
 	
 	// get rmode or enable progressive at start?
@@ -86,13 +88,13 @@ Chowder::Chowder()
 	lightSet.setAmbientLightObj(ambColor);
 	
 	score = 0;
-	health = 6;
 	time = 255;
 	stars = 0;
 	
 	paused = false;
 	can_pause = true;
 	held_start = false;
+	stopUpdatingInputs = false;
 }
 
 void Chowder::checkPause()
@@ -107,7 +109,7 @@ void Chowder::checkPause()
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	input.Update( obtainWiimoteRotation(0.25f) );
+	if (!stopUpdatingInputs) input.Update( obtainWiimoteRotation(0.25f) );
 	if ( (input.buttons & WPAD_BUTTON_PLUS) == 0) held_start = false;
 	if (!paused)
 	{
@@ -116,6 +118,7 @@ void Chowder::updateMain() // update physics and setup drawing
 		stage->gameRotation = input.physicsRotation;
 		stage->visualRotation = input.visualRotation;
 		stage->Update();
+		cam.update();
 		checkPause();
 	}
 	else pause.update();
@@ -213,6 +216,10 @@ void Chowder::draw()
 	{
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
+		// erase z buffer
+		secondRoot->sceneCalcOnDraw();
+		secondRoot->sceneDrawOpa();
+		
 		fStar.updateAndDraw(*modelRoot);
 		hud.draw();
 		//drawDebug();

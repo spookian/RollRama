@@ -1,5 +1,6 @@
 #pragma once
 #include "g3d/Model.h"
+#include "math/math.h"
 
 namespace scn
 {
@@ -12,7 +13,7 @@ namespace scn
 			PlayerController *player;
 			PlayerState(PlayerController *player);
 			virtual void update();
-			virtual void updateModel(g3d::Root& root);
+			virtual void updateModel();
 		};
 		
 		struct StateNormal : public PlayerState
@@ -32,6 +33,16 @@ namespace scn
 		struct StateCapture : public PlayerState
 		{
 			StateCapture(PlayerController *player);
+		};
+		
+		struct StateDeath : public PlayerState
+		{
+			int timer;
+			hel::math::Vector3 deathPosition;
+			
+			StateDeath(PlayerController *player);
+			void update();
+			void updateModel();
 		};
 		
 		struct StateIntro : public PlayerState

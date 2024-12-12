@@ -114,7 +114,7 @@ namespace scn
 				float impulse_length = linear_velocity.dot(*plane.normal);
 				if (impulse_length < -5.0)
 				{
-					impulse_length *= 1.75;
+					impulse_length *= 1.5;
 					
 				}
 				result.impulse = *plane.normal * -impulse_length;
