@@ -1,8 +1,16 @@
-"__ct__Q33hel4math7Vector2Fv" = 0x801a6e24;
-"ALL_ONE__Q33hel4math7Vector2" = 0x808c1e98;
-"BASIS_X__Q33hel4math7Vector2" = 0x808c1ea0;
-"BASIS_Y__Q33hel4math7Vector2" = 0x808c1ea8;
-"ZERO__Q33hel4math7Vector2" = 0x808c1e90;
+"__ct__Q33hel4math7Vector2Fv" 						= 0x801a6e24;
+"length__Q33hel4math7Vector2CFv" 					= 0x801a68c8;
+"normalize__Q33hel4math7Vector2Fv" 					= 0x801a698c;
+"__amu__Q33hel4math7Vector2Ff" 						= 0x801a6970;
+"__as__Q33hel4math7Vector2FRCQ33hel4math7Vector2" 	= 0x801a6afc;
+"__pl__Q33hel4math7Vector2CFRCQ33hel4math7Vector2"	= 0x801a8140;
+"__mi__Q33hel4math7Vector2CFRCQ33hel4math7Vector2"	= 0x801a7dac;
+"__mi__Q33hel4math7Vector2CFv"						= 0x801c1334;
+"__ml__Q33hel4math7Vector2CFf"						= 0x801a6d38;
+"ALL_ONE__Q33hel4math7Vector2" 						= 0x808c1e98;
+"BASIS_X__Q33hel4math7Vector2" 						= 0x808c1ea0;
+"BASIS_Y__Q33hel4math7Vector2" 						= 0x808c1ea8;
+"ZERO__Q33hel4math7Vector2" 						= 0x808c1e90;
 
 "__ct__Q33hel4math7Vector3Fv"						= 0x80182a78;
 "__ct__Q33hel4math7Vector3Ffff"						= 0x800bdad0;
@@ -48,6 +56,7 @@
 
 "pow" = 0x800147b0;
 "asin" = 0x800147a0;
+"acos" = 0x8001479c;
 
 "PSQUATMultiply" 	= 0x80031950;
 "PSMTXQuat" 		= 0x80030e20;

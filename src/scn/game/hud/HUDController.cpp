@@ -25,7 +25,7 @@ namespace scn
 		
 		// Offsets
 		const float healthOffset = 18.892f;
-		const float numberOffset = 15.0f;
+		const float numberOffset = 16.0f;
 		
 		const _GXColor starTop = { 0xff, 0xfe, 0xa0, 0xff };
 		const _GXColor starBottom = { 0xff, 0xaa, 0x00, 0xff };

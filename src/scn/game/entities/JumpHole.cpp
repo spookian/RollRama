@@ -21,7 +21,11 @@ namespace scn
 			direction = 0.0f;
 			
 			arrowModel = InitResModel(engineSingleton->FileRepository, "step/effect/JumpArrow");
+			model = InitResModel( engineSingleton->FileRepository, "step/JumpHole" );
+			
 			state = 0;
+			radius = 15.0f;
+			arrowPos = Vector3::BASIS_Z * arrowDistance;
 		}
 		
 		float getAirTime(float yVelo)
@@ -50,19 +54,23 @@ namespace scn
 				case 1:
 				{
 					RotationResult result = obtainWiimoteRotation(0.0f);
-					direction = nw4r::math::Atan2FIdx(result.accelY, result.accelX);
+					Vector3 v(-result.vector.z, 0.0f, result.vector.x);
+					
+					arrowPos = arrowPos + (v * 100);
+					arrowPos.normalize();
 					
 					// poll buttons
 					if ( (engineSingleton->input.buttons & WPAD_BUTTON_2) && !(engineSingleton->input.buttons_held & WPAD_BUTTON_2) )
 					{
-						Vector3 velocity = ( Matrix34::CreateRotAxisDeg(Vector3::BASIS_Y, direction).mul( Vector3::BASIS_Z ) ) * (horizontalDistance / getAirTime(verticalLaunchSpeed));
+						Vector3 velocity = arrowPos * (horizontalDistance / getAirTime(verticalLaunchSpeed) * DELTATIME);
 						velocity.y = verticalLaunchSpeed;
 						state = 0;
 						// player stops being captured;
 						engineSingleton->stage->player->linear_velocity = velocity;
 						engineSingleton->stage->player->setState(PLAYER_NORMAL);
 					}
-				
+					
+					arrowPos = arrowPos * arrowDistance;
 					break;
 				}
 			}
@@ -72,17 +80,22 @@ namespace scn
 		{
 			if (state)
 			{
-				Matrix34 rotationMtx = Matrix34::CreateRotAxisDeg(Vector3::BASIS_Y, direction);
-				Vector3 arrowPos = position + (rotationMtx.mul(Vector3::BASIS_Z) * arrowDistance);
-				Matrix34 translationMtx = Matrix34::CreateTrans(arrowPos);
+				float d = acos( -(arrowPos.dot(Vector3::BASIS_Z) / arrowDistance) );
+				if (arrowPos.x > 0.0f) d = -d;
+				
+				Matrix34 rotationMtx = Matrix34::CreateRotAxisRad(Vector3::BASIS_Y, d);
+				Matrix34 translationMtx = Matrix34::CreateTrans(position + arrowPos);
 				//render arrow
 				arrowModel->setModelScale(Vector3::ALL_ONE * 50.0f);
-				arrowModel->setModelRTMtx( translationMtx * (worldRotation * rotationMtx) );
+				arrowModel->setModelRTMtx( worldRotation * translationMtx * rotationMtx );
 				//arrowModel->setModelRTMtx( translationMtx );
 				arrowModel->updateWorldMtx();
 				arrowModel->registerToRoot(root);
 			}
-			//Enemy::updateModel(root, worldRotation);
+			
+			model->setModelScale(Vector3::ALL_ONE * 30.0f);
+			model->setModelRTMtx( worldRotation * Matrix34::CreateTrans(position) );
+			Enemy::updateModel(root, worldRotation);
 		}
 	}
 }

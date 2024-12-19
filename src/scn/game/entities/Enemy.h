@@ -80,9 +80,11 @@ namespace scn
 		class JumpHole : public Enemy
 		{
 			float direction;
+			hel::math::Vector3 arrowPos;
 			
 			float verticalLaunchSpeed;
 			float horizontalDistance;
+			
 			g3d::CharaModel *arrowModel;
 			
 		public:

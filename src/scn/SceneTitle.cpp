@@ -133,8 +133,9 @@ namespace scn
 				if (blackScreen > 255)
 				{
 					blackScreen = 255;
-					isEnd = true;
 				}
+				
+				if (timer > 90) isEnd = true;
 				
 				nintendoDisclaimer.paneByName("Back").setAlpha(blackScreen);
 				break;

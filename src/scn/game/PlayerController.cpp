@@ -100,6 +100,11 @@ namespace scn
 				case PLAYER_CAPTURE:
 				state = new StateCapture(this);
 				break;
+				
+				case PLAYER_DEAD:
+				engineSingleton->stage->pauseForPlayerObject = true;
+				state = new StateDeath(this);
+				break;
 			}
 			return;
 		}

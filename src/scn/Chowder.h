@@ -6,11 +6,13 @@
 #include "common/List.h"
 #include "lyt/lyt.h"
 #include "hid/hid.h"
+
 #include "scn/game/hud/FadeStar.h"
 #include "scn/game/hud/NumberDisplay.h"
 #include "scn/game/misc/PauseScreen.h"
 #include "scn/game/hud/HUDController.h"
 #include "scn/game/misc/CameraController.h"
+#include "scn/game/misc/Skybox.h"
 
 #define MAX_FORGIVENESS 5
 #define MAX_FRAME 3
@@ -103,12 +105,15 @@ struct Chowder
 {
 	int score;
 	int time;
+	char subTimer;
 	char stars;
 	
 	bool held_start;
 	bool paused;
 	bool can_pause;
+	
 	bool stopUpdatingInputs; //oops. my taste in case changed over a year
+	bool enableTime;
 	
 	g3d::Root *modelRoot;
 	g3d::Root *secondRoot;
@@ -119,6 +124,7 @@ struct Chowder
 	scn::roll::HUDController hud;
 	scn::roll::PauseScreen pause;
 	scn::roll::CameraController cam;
+	scn::roll::Skybox sky; // more like a sky plane
 	
 	Chowder();
 	void SetupEasyRender3D();

@@ -1,5 +1,6 @@
 #include "scn/game/PlayerStates.h"
 #include "scn/game/PlayerController.h"
+#include "scn/game/PhysicsConstants.h"
 #include "scn/game/misc/CameraController.h"
 #include "scn/game/rollgame.h"
 #include "scn/Chowder.h"
@@ -59,7 +60,29 @@ namespace scn
 				player->linear_velocity = PlayerController::jumpLinearImpulses[checkFlick - 1];
 				player->angular_velocity = PlayerController::jumpAngularImpulses[checkFlick - 1];
 			}
+			
+			Vector2 horizontalVelo;
+			horizontalVelo.x = player->linear_velocity.x;
+			horizontalVelo.y = player->linear_velocity.z;
+			
+			if (horizontalVelo.length() > 25.0f)
+			{
+				horizontalVelo.normalize();
+				horizontalVelo = horizontalVelo * 25.0f;
+			}
+			player->linear_velocity.x = horizontalVelo.x;
+			player->linear_velocity.z = horizontalVelo.y;
+			
 			player->physicsUpdate();
+			
+			if (!player->isOnGround())
+			{
+				// create air input handling and restrict air movement
+				RotationResult result = obtainWiimoteRotation(0.0f);
+				Vector3 accelVector(-result.vector.z, 0.0f, result.vector.x);
+				
+				player->linear_velocity += accelVector * 10.0f * DELTATIME;
+			}
 			player->model->updateFrame();
 		}
 		

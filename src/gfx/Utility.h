@@ -20,5 +20,6 @@ namespace gfx
 		static unsigned long CurrentGameHeight();
 		static unsigned long CurrentGameWidth();
 		static bool IsWidescreen(); // tee hee where did this come from
+		static void ClearZBuffer(float);
 	};
 }

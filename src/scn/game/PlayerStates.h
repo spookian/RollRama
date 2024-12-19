@@ -47,7 +47,7 @@ namespace scn
 		
 		struct StateIntro : public PlayerState
 		{
-			unsigned long phase; // state.
+			unsigned long phase; // state machine
 			unsigned long timer;
 			
 			StateIntro(PlayerController *player);

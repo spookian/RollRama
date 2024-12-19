@@ -17,13 +17,13 @@ CXX_FILES 	= " src\\seq\\SequenceTiltStart.cpp src\\scn\\SceneStart.cpp src\\scn
 "src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp src\\scn\\game\\PlayerStates.cpp src\\scn\\SceneTitle.cpp src\\scn\\game\\entities\\Enemy.cpp src\\scn\\game\\entities\\Dee.cpp "\
 "src\\scn\\game\\hud\\FadeStar.cpp src\\gfx\\Utility.cpp src\\gfx\\EasyRender3D.cpp src\\gfx\\TexBuffer.cpp src\\scn\\game\\hud\\NumberDisplay.cpp src\\scn\\game\\misc\\PauseScreen.cpp "\
 "src\\gfx\\FullScreenDrawer.cpp src\\scn\\game\\entities\\JumpHole.cpp src\\scn\\game\\hud\\HUDController.cpp src\\scn\\game\\collision\\Path.cpp src\\scn\\game\\misc\\CameraController.cpp "\
-""
+"src\\scn\\game\\misc\\Skybox.cpp"
 
 CXX_FLAGS 	= " -i .\\src -RTTI off -Cpp_exceptions off -enum int -O1 -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -align mac68k4byte -c"
 
 LD_FILES 	= " SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o "\
 "PointStar.o WPADReader.o StageLoader.o SceneTitle.o PlayerStates.o Enemy.o Dee.o FadeStar.o Utility.o EasyRender3D.o TexBuffer.o NumberDisplay.o "\
-"PauseScreen.o FullScreenDrawer.o JumpHole.o HUDController.o Path.o CameraController.o"
+"PauseScreen.o FullScreenDrawer.o JumpHole.o HUDController.o Path.o CameraController.o Skybox.o"
 
 LD_FLAGS 	= " -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld\\main.ld -I .\\"
 

@@ -7,6 +7,7 @@ extern "C"
 {
 	extern double pow(double num, double exp);
 	extern double asin(double x);
+	extern double acos(double x);
 }
 
 namespace hel

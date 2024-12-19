@@ -1,6 +1,7 @@
 #include "scn/game/hud/FadeStar.h"
 #include "math/Math.h"
 #include "common/Color.h"
+#include "scn/Chowder.h"
 #include "gfx/FullScreenDrawer.h"
 
 #define FADE_TIME 120
@@ -125,9 +126,16 @@ namespace scn
 		
 		void FadeStar::updateAndDraw(g3d::Root& root)
 		{
-			if (timer == FADE_TIME) enable = false;
+			// setup state machine
 			if (enable)
 			{
+				if (timer == FADE_TIME) 
+				{
+					enable = false;
+					engineSingleton->stopUpdatingInputs = false;
+					engineSingleton->enableTime = true;
+				}
+				
 				gfx::FullScreenDrawer::Capture();
 				setupDrawMode();
 				gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);

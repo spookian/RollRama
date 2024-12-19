@@ -15,52 +15,77 @@
 #define NULL ((void*)0)
 #define ROTATION_SHRINK 4.0f
 
-const GlobalObject<const hel::math::Vector3, float> star1 = { {150.0f, -15.0f, -20.0f} };
-const GlobalObject<const hel::math::Vector3, float> star2 = { {-50.0f, -15.0f, 30.0f} };
-const GlobalObject<const hel::math::Vector3, float> enemy1 = { {50.0f, -40.0f, 50.0f} };
 const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 150.0f} };
-const GlobalObject<const hel::math::Vector3, float> viewMtxOffset = { {0.0f, 250.0f, 225.0f} };
-
-const scn::roll::PathNode testEnmStart = {
-	{{50.0f, -40.0f, 50.0f}},
-	{{0.0f, 0.0f, 0.0f}},
-	0
-};
-
-const scn::roll::PathNode testEnmStart1 = {
-	{{50.0f, -40.0f, -100.0f}},
-	{{0.0f, 0.0f, 0.0f}},
-	120
-};
-
-const scn::roll::PathNode testEnmStart2 = {
-	{{50.0f, -40.0f, 50.0f}},
-	{{0.0f, 0.0f, 0.0f}},
-	120
-};
 
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
 	{
+		namespace 
+		{
+			struct JumpHoleSpawn
+			{
+				const GlobalObject<const Vector3, float> position;
+				float horizontalDisplacement;
+				float verticalVelocity;
+			};
+			
+			JumpHoleSpawn holeSpawns[] = {
+				{
+					{{0.0f, -32.025f, -2669.5f}},
+					760.0f,
+					7.0f
+				},
+				
+				{
+					{{0.0f, -189.05f, -3575.4f}},
+					760.0f,
+					12.0f
+				},
+				
+				{
+					{{0.0f, 18.604f, -5006.7f}},
+					481.0f,
+					7.0f
+				},
+				
+				{
+					{{235.93f, 18.604f, -5442.6f}},
+					431.0f,
+					7.0f
+				},
+				
+				{
+					{{-101.65f, 18.604f, -5732.4f}},
+					393.0f,
+					7.0f
+				},
+				
+				{
+					{{214.15f, 18.604f, -5975.5f}},
+					400.0f,
+					7.0f
+				}
+			};
+			
+			void spawnHardcodedEntities(hel::common::List<Enemy*>& lst)
+			{
+				Enemy* e;
+				for (int i = 0; i < ( sizeof(holeSpawns) / sizeof(JumpHoleSpawn) ); i++)
+				{
+					e = new JumpHole( holeSpawns[i].horizontalDisplacement, holeSpawns[i].verticalVelocity );
+					e->position = holeSpawns[i].position;
+					
+					lst.append(e);
+				}
+			}
+		}
+		
 		StageController::StageController(Chowder& parent)
 		{	
-			PointStar* p = new PointStar(star1);
-			pickupList.append(p);
-			p = new PointStar(star2);
-			pickupList.append(p);
-			
 			player = new PlayerController();
-			
-			Enemy* e = new Dee();
-			e->pathSystem.append(&testEnmStart);
-			e->pathSystem.append(&testEnmStart1);
-			e->pathSystem.append(&testEnmStart2);
-			e->position = enemy1;
-			
-			enemyList.append(e);
-			enemyList.append(new JumpHole(0.0f, 3.0f)); // <---- i divided by zero.
+			spawnHardcodedEntities(enemyList);
 			
 			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
 			this->parent = &parent;
@@ -76,6 +101,12 @@ namespace scn
 			{
 				delete pickupList[j];
 			};
+			
+			for (int i = 0; i < enemyList.getSize(); i++)
+			{
+				delete enemyList[i];
+			};
+			
 			delete stageModel; // remind me to add dl
 		}
 		

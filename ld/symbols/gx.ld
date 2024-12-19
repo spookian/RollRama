@@ -34,6 +34,8 @@
 
 "CurrentGameWidth__Q23gfx7UtilityFv" 	= 0x8019f4ac;
 "CurrentGameHeight__Q23gfx7UtilityFv" 	= 0x8019f4d8;
+"ClearZBuffer__Q23gfx7UtilityFf"		= 0x8019f514;
+
 "CaptureEFB__Q23sfx7UtilityFRQ23gfx9TexBuffer9_GXTexFmtb" = 0x807017a4;
 "FullScreenPlateDraw__Q23sfx7UtilityFb" = 0x8070191c;
 
