@@ -105,17 +105,18 @@ struct Chowder
 {
 	int score;
 	int time;
+	
+	int stateTimer;
 	char subTimer;
 	char stars;
 	
-	bool held_start;
 	bool paused;
-	bool can_pause;
 	
-	bool stopUpdatingInputs; //oops. my taste in case changed over a year
-	bool enableTime;
+	int state;
+	bool isEnd;
 	
 	g3d::Root *modelRoot;
+	g3d::Root *starRoot;
 	g3d::Root *secondRoot;
 	
 	scn::roll::StageController *stage;
@@ -127,6 +128,7 @@ struct Chowder
 	scn::roll::Skybox sky; // more like a sky plane
 	
 	Chowder();
+	~Chowder();
 	void SetupEasyRender3D();
 	void updateMain();
 	void drawDebug();

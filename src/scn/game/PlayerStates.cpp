@@ -29,27 +29,12 @@ namespace scn
 		
 		StateNormal::StateNormal(PlayerController *player) : PlayerState(player)
 		{
-			// idk setup nodes n gears n shizz
-			g3d::ModelAccessor playerModel = player->model->model();
-			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyBlowM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyDrawM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
-			
-			player->model->interpolationReset();
-			g3d::ResFileAccessor animFile( player->gcnAnim );
-			player->model->setAnim( 0, animFile, "Roll" );
-			g3d::ModelAnimAccessor animation = player->model->anim(0);
-			animation.start(true); // bool is loop
-			animation.setFrameRate(1.0);
+
 		}
 		
 		StateNormal::~StateNormal()
 		{
-			g3d::ModelAnimAccessor animation = player->model->anim(0);
-			animation.stop();
+			return;
 		}
 		
 		void StateNormal::update() 
@@ -118,7 +103,7 @@ namespace scn
 			deathPosition = newPos;
 			player->hideModel = true;
 			
-			engineSingleton->stopUpdatingInputs = true;
+			engineSingleton->state = 5;
 			engineSingleton->cam.state = CAMERA_LOCK;
 			
 			g3d::ModelAccessor playerModel = player->model->model();

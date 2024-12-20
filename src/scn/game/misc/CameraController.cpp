@@ -38,8 +38,10 @@ namespace scn
 					g3d::CameraAccessor fCamera = engineSingleton->modelRoot->currentCamera();
 					
 					hel::math::Matrix34 viewMatrix = hel::math::Matrix34::CreateLookAt( position, hel::math::Vector3::BASIS_Y, player->position );
+					viewMatrix = shakeMatrix * viewMatrix;
 					
-					fCamera.setViewMtx(shakeMatrix * viewMatrix);
+					fCamera.setViewMtx(viewMatrix);
+					engineSingleton->starRoot->currentCamera().setViewMtx(viewMatrix);
 					
 					break;
 				}

@@ -14,12 +14,13 @@ namespace scn
 	{
 		Enemy::Enemy() : SphereCollider::SphereCollider(40.0f)
 		{
+			model = 0;
 			playerOverlap = false;
 		}
 		
 		Enemy::~Enemy()
 		{
-			delete model; // don't ever create a base Enemy object; this is purely an interface kinda class
+			if (model) delete model; // don't ever create a base Enemy object; this is purely an interface kinda class
 		}
 		
 		void Enemy::update()

@@ -40,8 +40,10 @@ Chowder::Chowder()
 	engineSingleton = this;
 	// create root
 	g3d::RootContext rootContext( *g3d::ModelContext::DefaultAllocator(), 32, 64, 8, 1 );
+	g3d::RootContext sndContext( *g3d::ModelContext::DefaultAllocator(), 75, 64, 8, 1);
 	
 	modelRoot = new g3d::Root(rootContext);
+	starRoot = new g3d::Root(sndContext);
 	secondRoot = new g3d::Root(rootContext);
 	
 	this->stage = new scn::roll::StageController(*this);
@@ -67,15 +69,29 @@ Chowder::Chowder()
 	stars = 0;
 	
 	paused = false;
-	can_pause = true;
-	held_start = false;
-	stopUpdatingInputs = true;
-	enableTime = false;
+	state = 0;
+	stateTimer = 0;
+	isEnd = false;
+	fStar.activate(0.0f, 1.0f, 60);
+	
+	g3d::CameraAccessor fCam = modelRoot->currentCamera();
+	g3d::CameraAccessor sCam = secondRoot->currentCamera();
+	g3d::CameraAccessor tCam = starRoot->currentCamera();
+	adjustScreen(fCam);
+	adjustScreen(sCam);
+	adjustScreen(tCam);
+}
+
+Chowder::~Chowder()
+{
+	delete stage;
+	delete modelRoot;
+	delete secondRoot;
 }
 
 void Chowder::checkPause()
 {
-	if ((input.buttons & WPAD_BUTTON_PLUS & ~(input.buttons_held)) && can_pause)
+	if ((input.buttons & WPAD_BUTTON_PLUS & ~(input.buttons_held)) && (state == 2) )
 	{
 		paused = true;
 		pause.activate();
@@ -85,11 +101,55 @@ void Chowder::checkPause()
 
 void Chowder::updateMain() // update physics and setup drawing
 {
-	if (!stopUpdatingInputs) input.Update( obtainWiimoteRotation(0.25f) );
-	if ( (input.buttons & WPAD_BUTTON_PLUS) == 0) held_start = false;
+	switch (state)
+	{
+		case 0: // start
+		if (fStar.finished)
+		{
+			if (stateTimer >= 60)
+			{
+				state = 1;
+				fStar.activate(1.0f, 6.0f, 120);
+			}
+			stateTimer++;
+		}
+		break;
+		
+		case 1:
+		if (fStar.finished) state = 2;
+		break;
+		
+		case 2: // normal play
+		input.Update( obtainWiimoteRotation(0.25f) );
+		break;
+		
+		case 3: // death reset beginning
+		state = 4;
+		fStar.activate(6.0, 0.0, 180);
+		break;
+		
+		case 4: // death reset end
+		if (fStar.finished)
+		{
+			stage->reset();
+			fStar.activate(0.0f, 1.0f, 120);
+			stateTimer = 0;
+			
+			score = 0;
+			time = 300;
+			stars = 0;
+		}
+		break;
+		
+		default:
+		break;
+	}
+	
 	if (!paused)
 	{
 		modelRoot->sceneClear();
+		starRoot->sceneClear();
+		secondRoot->sceneClear();
 		
 		stage->gameRotation = input.physicsRotation;
 		stage->visualRotation = input.visualRotation;
@@ -100,7 +160,7 @@ void Chowder::updateMain() // update physics and setup drawing
 		if (time)
 		{
 			subTimer++;
-			if (subTimer == 60)
+			if (subTimer == 120)
 			{
 				time--;
 				subTimer = 0;
@@ -111,32 +171,6 @@ void Chowder::updateMain() // update physics and setup drawing
 	}
 	else pause.update();
 	
-	return;
-}
-
-void Chowder::SetupEasyRender3D()
-{
-	g3d::CameraAccessor camera = modelRoot->currentCamera();
-	float far = camera.getProjFar();
-	float near = camera.getProjNear();
-	float aspect_ratio = camera.getProjAspect();
-	float fov = camera.getProjFovy();
-	
-	hel::math::Matrix44 perspective_matrix = hel::math::Matrix44::CreatePerspective(fov, aspect_ratio, near, far);
-	hel::math::Matrix34 view_matrix = camera.viewMtx();
-	
-	gfx::EasyRender3D::SetupGX(perspective_matrix, true);
-	gfx::EasyRender3D::SetViewMtx(view_matrix);
-	
-	GXSetZMode(1, 3, 1);
-	
-	/* According to Libogc/Devkitpro (which may or may not be illegally obtained but no one could prove it), their GX_SetZMode() function has three arguments:
-	* u8 enable - a char (possibly boolean?) that enables the zbuffer
-	* u8 func - an unsigned char that tells the gx what function to use for z comparisons
-	* u8 update_enable - enables z-buffer updates when true;
-	*
-	* With that in mind, it would be best to use this function with the default settings found in RtDL's __GXInitGX()
-	*/
 	return;
 }
 
@@ -170,13 +204,13 @@ void Chowder::draw()
 	if (!paused)
 	{
 		sky.draw();
-		g3d::CameraAccessor fCam = modelRoot->currentCamera();
-		g3d::CameraAccessor sCam = secondRoot->currentCamera();
-		adjustScreen(fCam);
-		adjustScreen(sCam);
+		gfx::Utility::ClearZBuffer(1.0f);
 		
 		modelRoot->sceneCalcOnDraw();
 		modelRoot->sceneDrawOpa();
+		
+		starRoot->sceneCalcOnDraw();
+		starRoot->sceneDrawOpa();
 		
 		gfx::Utility::ClearZBuffer(1.0f);
 		secondRoot->sceneCalcOnDraw();

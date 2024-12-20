@@ -50,6 +50,22 @@ namespace scn
 			captured = false;
 			health = 6;
 			hideModel = false;
+			
+			// idk setup nodes n gears n shizz
+			g3d::ModelAccessor playerModel = model->model();
+			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyBlowM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyDrawM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
+			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
+			
+			model->interpolationReset();
+			g3d::ResFileAccessor animFile( gcnAnim );
+			model->setAnim( 0, animFile, "Roll" );
+			g3d::ModelAnimAccessor animation = model->anim(0);
+			animation.start(true); // bool is loop
+			animation.setFrameRate(1.0);
 		}
 		
 		PlayerController::~PlayerController()

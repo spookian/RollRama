@@ -4,20 +4,19 @@
 #include "scn/Chowder.h"
 #include "gfx/FullScreenDrawer.h"
 
-#define FADE_TIME 120
-
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
-	{
-		const float fadeMax = (float)FADE_TIME;
-		const float fadeMultiplier = 10.0f;
-		
+	{	
 		FadeStar::FadeStar()
 		{
 			timer = 0;
-			enable = true;
+			maxTime = 0;
+			startSize = 0.0f;
+			endSize = 0.0f;
+			enable = false;
+			finished = true;
 		}
 		
 		namespace 
@@ -95,56 +94,54 @@ namespace scn
 				return;
 			}
 			
-			void drawFadeMesh(int timer)
+		}
+		void FadeStar::drawFadeMesh()
+		{
+			float t = (timer / (float)maxTime);
+			float multiplier = startSize + ((endSize - startSize) * t);
+			
+			Matrix34 lookAt;
+			
+			gfx::EasyRender3D::SetColor(hel::common::Color::BLACK);
+			gfx::EasyRender3D::DrawQuadFill(lookAt, rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
+			gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
+			for (int i = 0; i < 8; i++)
 			{
-				float multiplier = (timer / fadeMax) * fadeMultiplier;
-				Matrix34 lookAt;
+				const Vector2 *vv0, *vv1, *vv2;
+				vv0 = (const Vector2*)&fadeStarMesh[i][0], vv1 = (const Vector2*)&fadeStarMesh[i][1], vv2 = (const Vector2*)&fadeStarMesh[i][2];
+				Vector3 v0(vv0->x, vv0->y, 0.0f);
+				Vector3 v1(vv1->x, vv1->y, 0.0f);
+				Vector3 v2(vv2->x, vv2->y, 0.0f);
 				
-				gfx::EasyRender3D::SetColor(hel::common::Color::BLACK);
-				gfx::EasyRender3D::DrawQuadFill(lookAt, rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
-				gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
-				for (int i = 0; i < 8; i++)
-				{
-					const Vector2 *vv0, *vv1, *vv2;
-					vv0 = (const Vector2*)&fadeStarMesh[i][0], vv1 = (const Vector2*)&fadeStarMesh[i][1], vv2 = (const Vector2*)&fadeStarMesh[i][2];
-					Vector3 v0(vv0->x, vv0->y, 0.0f);
-					Vector3 v1(vv1->x, vv1->y, 0.0f);
-					Vector3 v2(vv2->x, vv2->y, 0.0f);
-					
-					gfx::EasyRender3D::DrawQuadFill(lookAt, v0 * multiplier, v1 * multiplier, v2 * multiplier, v2 * multiplier);
-				}
-				return;
+				gfx::EasyRender3D::DrawQuadFill(lookAt, v0 * multiplier, v1 * multiplier, v2 * multiplier, v2 * multiplier);
 			}
+			return;
 		}
 		
-		void FadeStar::activate()
+		void FadeStar::activate(float startSize, float endSize, unsigned long maxTime)
 		{
 			enable = true;
+			finished = false;
 			timer = 0;
+			
+			this->maxTime = maxTime;
+			this->startSize = startSize;
+			this->endSize = endSize;
 			return;
 		}
 		
 		void FadeStar::updateAndDraw(g3d::Root& root)
-		{
-			// setup state machine
-			if (enable)
-			{
-				if (timer == FADE_TIME) 
-				{
-					enable = false;
-					engineSingleton->stopUpdatingInputs = false;
-					engineSingleton->enableTime = true;
-				}
-				
-				gfx::FullScreenDrawer::Capture();
-				setupDrawMode();
-				gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
-				drawFadeMesh(timer);
-				
-				GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
-				gfx::FullScreenDrawer::Draw();
-				timer++;
-			}
+		{	
+			gfx::FullScreenDrawer::Capture();
+			setupDrawMode();
+			gfx::EasyRender3D::SetColor(hel::common::Color::WHITE);
+			drawFadeMesh();
+			
+			GXSetBlendMode(GX_BM_LOGIC, GX_BL_SRCCLR, GX_BL_ONE, GX_LO_AND);
+			gfx::FullScreenDrawer::Draw();
+			
+			if (timer < maxTime) timer++;
+			else finished = true;
 		}
 	}
 }

@@ -17,13 +17,13 @@ CXX_FILES 	= " src\\seq\\SequenceTiltStart.cpp src\\scn\\SceneStart.cpp src\\scn
 "src\\hid\\WPADReader.cpp src\\scn\\game\\StageLoader.cpp src\\scn\\game\\PlayerStates.cpp src\\scn\\SceneTitle.cpp src\\scn\\game\\entities\\Enemy.cpp src\\scn\\game\\entities\\Dee.cpp "\
 "src\\scn\\game\\hud\\FadeStar.cpp src\\gfx\\Utility.cpp src\\gfx\\EasyRender3D.cpp src\\gfx\\TexBuffer.cpp src\\scn\\game\\hud\\NumberDisplay.cpp src\\scn\\game\\misc\\PauseScreen.cpp "\
 "src\\gfx\\FullScreenDrawer.cpp src\\scn\\game\\entities\\JumpHole.cpp src\\scn\\game\\hud\\HUDController.cpp src\\scn\\game\\collision\\Path.cpp src\\scn\\game\\misc\\CameraController.cpp "\
-"src\\scn\\game\\misc\\Skybox.cpp"
+"src\\scn\\game\\misc\\Skybox.cpp src\\scn\\game\\entities\\FlickZone.cpp src\\scn\\game\\entities\\Cloud.cpp"
 
 CXX_FLAGS 	= " -i .\\src -RTTI off -Cpp_exceptions off -enum int -O1 -use_lmw_stmw on -fp hard -rostr -sdata 0 -sdata2 0 -align mac68k4byte -c"
 
 LD_FILES 	= " SequenceTiltStart.o SceneStart.o Chowder.o PlayerController.o StageController.o SimpleRigidbody.o ResFileHelper.o SphereCollider.o "\
 "PointStar.o WPADReader.o StageLoader.o SceneTitle.o PlayerStates.o Enemy.o Dee.o FadeStar.o Utility.o EasyRender3D.o TexBuffer.o NumberDisplay.o "\
-"PauseScreen.o FullScreenDrawer.o JumpHole.o HUDController.o Path.o CameraController.o Skybox.o"
+"PauseScreen.o FullScreenDrawer.o JumpHole.o HUDController.o Path.o CameraController.o Skybox.o FlickZone.o Cloud.o"
 
 LD_FLAGS 	= " -g -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -nodefaultlibs -nostartfiles -Wl,--no-check-sections -T ld\\main.ld -I .\\"
 
@@ -52,7 +52,8 @@ test_program( os.system("python .\\tools\\dolphin_patch_parser.py") )
 test_program( os.system(CW_PATH + CW_CC + CXX_FILES + CXX_FLAGS) )
 test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\link.s -o link.o") )
 test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\hook.s -o hook.o") )
-test_program( os.system(DKP_PATH + DKP_CC + LD_FLAGS + " link.o hook.o" + LD_FILES + " -o .\\build\\main.elf") )
+test_program( os.system(DKP_PATH + DKP_AS + " .\\asm\\bin.s -o bin.o") )
+test_program( os.system(DKP_PATH + DKP_CC + LD_FLAGS + " link.o hook.o bin.o" + LD_FILES + " -o .\\build\\main.elf") )
 test_program( os.system("python .\\tools\\adjust_section_offsets.py .\\build\\main.elf") )
 test_program( os.system(DKP_PATH + DKP_OBJCOPY + " -O binary .\\build\\main.elf .\\build\\main.dol") )
 #cleanup

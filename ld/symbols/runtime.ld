@@ -13,3 +13,5 @@
 "_savefpr_27" = 0x800072a4;
 "_savefpr_28" = 0x800072a8;
 "_savefpr_29" = 0x800072ac;
+
+"__cvt_fp2unsigned" = 0x80007214;

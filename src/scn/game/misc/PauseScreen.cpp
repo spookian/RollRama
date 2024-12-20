@@ -19,10 +19,9 @@ namespace scn
 		
 		void PauseScreen::update()
 		{
-			if ( (!engineSingleton->held_start) && (engineSingleton->input.buttons & WPAD_BUTTON_PLUS) )
+			if ( (engineSingleton->input.buttons & WPAD_BUTTON_PLUS) && !(engineSingleton->input.buttons_held & WPAD_BUTTON_PLUS) )
 			{
 				engineSingleton->paused = false;
-				engineSingleton->held_start = true;
 			}
 			// do option selection n stuff
 		}
@@ -91,8 +90,6 @@ namespace scn
 			fadeTimer = 0;
 			fading = true;
 			gfx::FullScreenDrawer::Capture();
-			
-			engineSingleton->held_start = true;
 			return;
 		}
 	}

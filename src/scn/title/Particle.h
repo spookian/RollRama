@@ -10,7 +10,6 @@ namespace scn
 		class Particle
 		{
 			hel::math::Vector2 position;
-			float rotation;
 			 // snowflakes
 		public:
 			void update();

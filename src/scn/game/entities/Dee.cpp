@@ -40,11 +40,6 @@ namespace scn
 			animation.start(true);
 		}
 		
-		Dee::~Dee()
-		{
-			return;
-		}
-		
 		void Dee::update()
 		{
 			switch(state)

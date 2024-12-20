@@ -43,7 +43,6 @@ namespace scn
 			
 		public:
 			Dee();
-			virtual ~Dee();
 			void update();
 			void updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
 		};
@@ -91,13 +90,30 @@ namespace scn
 			static const float arrowDistance;
 		
 			JumpHole(float, float);
+			~JumpHole();
 			void update();
 			void updateModel(g3d::Root&, hel::math::Matrix34);
 		};
 		
 		class Cloud : public Enemy
 		{
+			int timer;
+			bool hasCaptured;
 			
+		public:
+			Cloud();
+			void update();
+			void updateModel(g3d::Root&, hel::math::Matrix34);
+		};
+		
+		class FlickZone : public Enemy
+		{
+			int timer;
+		public:
+			FlickZone();
+			
+			void update();
+			void updateModel(g3d::Root&, hel::math::Matrix34); // use abs sin wave for bounce effect
 		};
 	}
 }

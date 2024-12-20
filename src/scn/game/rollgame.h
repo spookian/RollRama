@@ -78,7 +78,7 @@ namespace scn
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::Pickup*> pickupList;
 			hel::common::List<scn::roll::Enemy*> enemyList;
-			
+						
 			Chowder *parent;
 			
 			bool pauseForPlayerObject;
@@ -91,10 +91,13 @@ namespace scn
 			bool CreateStage(file::FileData& file);
 			void Update();
 			void preDraw(g3d::Root& root);
+			void reset();
 		};
 
 		/*
 			stage_position = -player_position; use for translation matrix since the stage will always be centered at 0,0,0
 		*/
+		extern "C" const GlobalObject<const hel::math::Vector3, float> starSpawns[75];
 	}
+
 }

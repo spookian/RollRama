@@ -15,8 +15,6 @@
 #define NULL ((void*)0)
 #define ROTATION_SHRINK 4.0f
 
-const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 150.0f} };
-
 using namespace hel::math;
 namespace scn
 {
@@ -24,6 +22,10 @@ namespace scn
 	{
 		namespace 
 		{
+			const GlobalObject<const hel::math::Vector3, float> stagePos = { {0.0f, 0.0f, 150.0f} };
+			const GlobalObject<const hel::math::Vector3, float> fZone1 = {{ 0.0f, -34.879f, -1896.6f }};
+			const GlobalObject<const hel::math::Vector3, float> fZone2 = {{ 0.0f, -34.879f, -920.93f }};
+			const GlobalObject<const hel::math::Vector3, float> tempCloud = {{ 0.0f, 95.942f, -7385.0f }};
 			struct JumpHoleSpawn
 			{
 				const GlobalObject<const Vector3, float> position;
@@ -46,32 +48,60 @@ namespace scn
 				
 				{
 					{{0.0f, 18.604f, -5006.7f}},
-					481.0f,
-					7.0f
+					405.0f,
+					12.0f
 				},
 				
 				{
 					{{235.93f, 18.604f, -5442.6f}},
-					431.0f,
-					7.0f
+					371.0f,
+					12.0f
 				},
 				
 				{
 					{{-101.65f, 18.604f, -5732.4f}},
-					393.0f,
-					7.0f
+					343.0f,
+					12.0f
 				},
 				
 				{
 					{{214.15f, 18.604f, -5975.5f}},
-					400.0f,
-					7.0f
+					338.0f,
+					12.0f
+				},
+				
+				{
+					{{-105.55f, 18.604f, -6256.2f}},
+					330.0f,
+					12.0f
+				},
+				
+				{
+					{{0.0f, 18.604f, -6738.7f}},
+					416.0f,
+					12.0f
 				}
+			};
+			
+			PathNode cloud1[] = {
+				// cloud 1
+				{
+					{{ 0.0f, 144.58f, -7385.0f }},
+					{{ 0.0f, 0.0f, 0.0f }},
+					0
+				},
+				{
+					{{ 0.0f, 144.58f, -7967.4f }},
+					{{ 0.0f, 0.0f, 0.0f }},
+					250
+				},
+				
 			};
 			
 			void spawnHardcodedEntities(hel::common::List<Enemy*>& lst)
 			{
 				Enemy* e;
+				
 				for (int i = 0; i < ( sizeof(holeSpawns) / sizeof(JumpHoleSpawn) ); i++)
 				{
 					e = new JumpHole( holeSpawns[i].horizontalDisplacement, holeSpawns[i].verticalVelocity );
@@ -79,13 +109,40 @@ namespace scn
 					
 					lst.append(e);
 				}
+				
+				e = new FlickZone();
+				e->position = fZone1;
+				lst.append(e);
+				e = new FlickZone();
+				e->position = fZone2;
+				lst.append(e);
+				
+				// test
+				e = new Cloud();
+				e->position = tempCloud;
+				e->pathSystem.append(&cloud1[0]);
+				e->pathSystem.append(&cloud1[1]);
+				lst.append(e);
+			}
+			
+			void spawnItems(hel::common::List<Pickup*>& lst) // use linker & blender script to aid in items
+			{
+				Pickup *p;
+				
+				for (int i = 0; i < ( sizeof(starSpawns) / sizeof(Vector3) ); i++)
+				{
+					p = new PointStar(starSpawns[i]);
+					lst.append(p);
+				}
 			}
 		}
 		
 		StageController::StageController(Chowder& parent)
 		{	
 			player = new PlayerController();
+			//player->position = tempCloud;
 			spawnHardcodedEntities(enemyList);
+			spawnItems(pickupList);
 			
 			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
 			this->parent = &parent;
@@ -157,13 +214,32 @@ namespace scn
 			player->updateModel(root, visualRotation);
 			for (int i = 0; i < pickupList.getSize(); i++)
 			{
-				pickupList[i]->updateModel(root, worldRotation);
+				pickupList[i]->updateModel(*engineSingleton->starRoot, worldRotation);
 			}
 			for (int i = 0; i < enemyList.getSize(); i++)
 			{
 				enemyList[i]->updateModel(root, worldRotation);
 			}
 			return;
+		}
+		
+		void StageController::reset()
+		{
+			delete player;
+			// destroy all triangle wrappers
+			for (int j = 0; j < pickupList.getSize(); j++)
+			{
+				delete pickupList[j];
+			};
+			
+			for (int i = 0; i < enemyList.getSize(); i++)
+			{
+				delete enemyList[i];
+			};
+			
+			player = new PlayerController();
+			spawnHardcodedEntities(enemyList);
+			spawnItems(pickupList);
 		}
 		
 		TriangleWrapper::TriangleWrapper(Vector3* vertexList, TriangleData* data)

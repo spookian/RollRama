@@ -50,6 +50,9 @@ namespace seq
 			case GAMEPLAY:
 			scene = new scn::SceneStart();
 			break;
+			
+			case END_CREDITS:
+			break;
 		}
 		std::auto_ptr<scn::IScene> result(scene);
 		return result;

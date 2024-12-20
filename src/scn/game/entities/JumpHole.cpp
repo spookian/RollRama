@@ -25,7 +25,13 @@ namespace scn
 			
 			state = 0;
 			radius = 15.0f;
-			arrowPos = Vector3::BASIS_Z * arrowDistance;
+			arrowPos = -Vector3::BASIS_Z * arrowDistance;
+		}
+		
+		JumpHole::~JumpHole()
+		{
+			delete arrowModel;
+			delete model;
 		}
 		
 		float getAirTime(float yVelo)
@@ -58,6 +64,9 @@ namespace scn
 					
 					arrowPos = arrowPos + (v * 100);
 					arrowPos.normalize();
+					
+					Vector3 correctPosition(position.x, position.y + 20.0f, position.z);
+					engineSingleton->stage->player->position = correctPosition;
 					
 					// poll buttons
 					if ( (engineSingleton->input.buttons & WPAD_BUTTON_2) && !(engineSingleton->input.buttons_held & WPAD_BUTTON_2) )

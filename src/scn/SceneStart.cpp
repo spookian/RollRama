@@ -51,6 +51,6 @@ namespace scn
 	
 	bool SceneStart::isSceneEnd() const
 	{
-		return false;
+		return engineSingleton->isEnd;
 	}
 }

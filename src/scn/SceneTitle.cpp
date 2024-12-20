@@ -9,6 +9,13 @@
 
 #define WPAD_ACCEPT_BUTTONS (WPAD_BUTTON_A + WPAD_BUTTON_PLUS + WPAD_BUTTON_1 + WPAD_BUTTON_2 + WPAD_BUTTON_MINUS)
 
+extern "C"
+{
+	extern unsigned long __OSBusClock; // 0x800000F8
+	extern unsigned long long __OSGetSystemTime(); // 80025d10
+}
+#define OSTicksToSeconds(ticks) ((ticks) / (__OSBusClock / 4))
+
 namespace scn
 {
 	void SceneTitle::rtti()
@@ -16,7 +23,7 @@ namespace scn
 		return;
 	}
 	
-	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitle")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen"))
+	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitleD")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen"))
 	{
 		state = TITLE_BLACK;
 		timer = 0;

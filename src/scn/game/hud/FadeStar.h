@@ -9,11 +9,19 @@ namespace scn
 		class FadeStar
 		{
 			unsigned long timer;
+			unsigned long maxTime;
+			float startSize;
+			float endSize;
+			
 			bool enable;
+			
 		public:
+			bool finished;
+			
 			FadeStar();
-			void activate();
+			void activate(float startSize, float endSize, unsigned long maxTime);
 			void updateAndDraw(g3d::Root&);
+			void drawFadeMesh();
 		};
 	}
 }
