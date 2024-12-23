@@ -9,7 +9,7 @@
 #define PLAYER_CLOUD_OFFSET 12.291f
 
 const float timeMultiplier = PI * DELTATIME * 2;
-const GlobalObject<const hel::math::Vector3, float> cloudFlingVelocity = {{ 0.0f, 5.0f, -10.0f }};
+const GlobalObject<const hel::math::Vector3, float> cloudFlingVelocity = {{ 0.0f, 5.0f, -5.0f }};
 using namespace hel::math;
 namespace scn
 {
@@ -38,7 +38,7 @@ namespace scn
 				if ((engineSingleton->input.buttons & WPAD_BUTTON_2) && !(engineSingleton->input.buttons_held & WPAD_BUTTON_2))
 				{
 					player->linear_velocity = cloudFlingVelocity;
-					player->setState(PLAYER_NORMAL);
+					player->setState(PLAYER_AIRLOCK);
 					hasCaptured = false;
 					//player->linear_velocity.x = 0.0f;
 					//player->linear_velocity.y = 5.0f;

@@ -69,10 +69,11 @@ namespace scn
 				cylinder:
 					
 			*/
+			bool enable;
 		public:
-			void updateUpper();
-			void updateLower();
+			EndZone();
 			
+			void updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation);
 			void update();
 		};
 		

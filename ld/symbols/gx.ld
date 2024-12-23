@@ -56,3 +56,5 @@
 "enableLightObj__Q23g3d16LightSetAccessorCFUlUl" 							= 0x80195f3c;
 "setAmbientLightObj__Q23g3d16LightSetAccessorCFRCQ34nw4r3g3d11AmbLightObj" 	= 0x80195fd4;
 "setLightObj__Q23g3d16LightSetAccessorCFUlRCQ34nw4r3g3d8LightObj" 			= 0x80195fa0;
+
+"__dt__Q23gfx10TextureObjFv" = 0x801a79ac;

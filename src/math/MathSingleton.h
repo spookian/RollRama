@@ -20,6 +20,7 @@ namespace hel
 			static float AbsF32(float signedNumber);
 			static float CosFIdx(float rad);
 			static float SinFIdx(float rad);
+			static float FloorF(float);
 		};
 	}
 }

@@ -4,6 +4,8 @@
 #include "snd/SERequestor.h"
 #include "scn/title/Particle.h"
 
+#define NUM_PARTICLES 64
+
 namespace scn
 {
 	enum TitleStates
@@ -28,9 +30,8 @@ namespace scn
 		lyt::Layout nintendoDisclaimer;
 		WPADStatus wpad_data;
 		
-		//rolltitle::ParticleManager ptclManager;
+		ParticleManager ptclManager;
 		bool isEnd;
-		
 		
 	public:
 		void rtti();

@@ -70,16 +70,36 @@ namespace scn
 			bool bounce;
 		};
 		
+		struct RollHeader
+		{
+			unsigned long MAGIC;
+
+			unsigned long vertices_offset;
+			unsigned long num_triangles;
+			unsigned long triangles_offset;
+			scn::roll::AABB bounding_box;
+			
+			inline Vector3* getVertices()
+			{
+				return (Vector3*)(reinterpret_cast<unsigned long>(this) + vertices_offset);
+			}
+			
+			inline scn::roll::TriangleData* getTriangles()
+			{
+				return (scn::roll::TriangleData*)(reinterpret_cast<unsigned long>(this) + triangles_offset);
+			}
+		};
+		
 		struct StageController
 		{
-			StageController(Chowder& parent);
+			StageController();
 			~StageController(); // clean up triangle list and model
 			
 			hel::common::List<scn::roll::TriangleWrapper> triangleList;
 			hel::common::List<scn::roll::Pickup*> pickupList;
 			hel::common::List<scn::roll::Enemy*> enemyList;
-						
-			Chowder *parent;
+			RollHeader *collisionData;
+			bool safe;
 			
 			bool pauseForPlayerObject;
 			

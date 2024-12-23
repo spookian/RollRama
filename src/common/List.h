@@ -33,15 +33,7 @@ namespace hel
 			
 			~List()
 			{
-				Node* cur_node = start;
-				for (int i = 0; i < size; i++)
-				{
-					Node* temp = cur_node->next;
-					delete cur_node;
-					
-					cur_node = temp;
-				}
-				return;
+				clear();
 			}
 			
 			void append(T object)
@@ -87,6 +79,25 @@ namespace hel
 				
 				delete cur_node;
 				size--;
+			}
+			
+			void clear()
+			{
+				Node* cur_node = start;
+				for (int i = 0; i < size; i++)
+				{
+					Node* temp = cur_node->next;
+					delete cur_node;
+					
+					cur_node = temp;
+				}
+				
+				start = 0;
+				end = 0;
+				cache_node = 0;
+				cache_idx = 0;
+				size = 0;
+				return;
 			}
 			
 			T operator[](unsigned long index)

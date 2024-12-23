@@ -31,7 +31,6 @@ namespace scn
 		JumpHole::~JumpHole()
 		{
 			delete arrowModel;
-			delete model;
 		}
 		
 		float getAirTime(float yVelo)

@@ -11,7 +11,7 @@
 #include "g3d/ResFileHelper.h"
 #include "scn/Chowder.h"
 
-#define nullptr (Vector3*)0
+#define nullptr 0
 #define NULL ((void*)0)
 #define ROTATION_SHRINK 4.0f
 
@@ -26,6 +26,7 @@ namespace scn
 			const GlobalObject<const hel::math::Vector3, float> fZone1 = {{ 0.0f, -34.879f, -1896.6f }};
 			const GlobalObject<const hel::math::Vector3, float> fZone2 = {{ 0.0f, -34.879f, -920.93f }};
 			const GlobalObject<const hel::math::Vector3, float> tempCloud = {{ 0.0f, 95.942f, -7385.0f }};
+			const GlobalObject<const hel::math::Vector3, float> cloud2 = {{ 498.57f, -846.66f, -10121.f }};
 			struct JumpHoleSpawn
 			{
 				const GlobalObject<const Vector3, float> position;
@@ -36,7 +37,7 @@ namespace scn
 			JumpHoleSpawn holeSpawns[] = {
 				{
 					{{0.0f, -32.025f, -2669.5f}},
-					760.0f,
+					680.0f,
 					7.0f
 				},
 				
@@ -95,13 +96,25 @@ namespace scn
 					{{ 0.0f, 0.0f, 0.0f }},
 					250
 				},
+			};
+			
+			PathNode cloudNode2[] = {
+				{
+					{{ 498.57f, -846.66f, -10121.f }},
+					{{ 0.0f, 0.0f, 0.0f }},
+					0
+				},
 				
+				{
+					{{ 498.57f, -846.66f, -10642.f }},
+					{{ 0.0f, 0.0f, 0.0f }},
+					250
+				}
 			};
 			
 			void spawnHardcodedEntities(hel::common::List<Enemy*>& lst)
 			{
 				Enemy* e;
-				
 				for (int i = 0; i < ( sizeof(holeSpawns) / sizeof(JumpHoleSpawn) ); i++)
 				{
 					e = new JumpHole( holeSpawns[i].horizontalDisplacement, holeSpawns[i].verticalVelocity );
@@ -117,11 +130,20 @@ namespace scn
 				e->position = fZone2;
 				lst.append(e);
 				
-				// test
+				e = new EndZone();
+				lst.append(e);
+				
+				// cloud 1
 				e = new Cloud();
 				e->position = tempCloud;
 				e->pathSystem.append(&cloud1[0]);
 				e->pathSystem.append(&cloud1[1]);
+				lst.append(e);
+				
+				e = new Cloud();
+				e->position = cloud2;
+				e->pathSystem.append(&cloudNode2[0]);
+				e->pathSystem.append(&cloudNode2[1]);
 				lst.append(e);
 			}
 			
@@ -137,16 +159,14 @@ namespace scn
 			}
 		}
 		
-		StageController::StageController(Chowder& parent)
+		StageController::StageController()
 		{	
+			safe = false;
 			player = new PlayerController();
-			//player->position = tempCloud;
 			spawnHardcodedEntities(enemyList);
 			spawnItems(pickupList);
 			
-			stageModel = InitResModel(parent.FileRepository, "step/MainStage");
-			this->parent = &parent;
-			
+			stageModel = InitResModel(engineSingleton->FileRepository, "step/MainStage");
 			pauseForPlayerObject = false;
 		}
 		
@@ -181,6 +201,7 @@ namespace scn
 					{
 						delete cur;
 						pickupList.remove(i);
+						i--;
 					}
 				}
 				
@@ -192,6 +213,7 @@ namespace scn
 					{
 						delete enm;
 						enemyList.remove(i);
+						i--;
 					}
 				}
 			}
@@ -223,19 +245,24 @@ namespace scn
 			return;
 		}
 		
+		// this is a REALLY inelegant solution to a bug where the function kept skipping over certain items,
+		//  so i labelled all entities as "trash" and signalled my makeshift garbage collector to do the work for me
 		void StageController::reset()
 		{
 			delete player;
-			// destroy all triangle wrappers
-			for (int j = 0; j < pickupList.getSize(); j++)
-			{
-				delete pickupList[j];
-			};
-			
 			for (int i = 0; i < enemyList.getSize(); i++)
 			{
-				delete enemyList[i];
-			};
+				Enemy* e = enemyList[i];
+				delete e;
+			}
+			enemyList.clear();
+			
+			for (int j = 0; j < pickupList.getSize(); j++)
+			{
+				Pickup* p = pickupList[j];
+				delete p;
+			}
+			pickupList.clear();
 			
 			player = new PlayerController();
 			spawnHardcodedEntities(enemyList);

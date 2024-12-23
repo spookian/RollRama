@@ -14,6 +14,7 @@ namespace file
 		unsigned long unk;
 	public:
 		FileAccessor(const char *path, bool unk);
+		~FileAccessor();
 		bool isLoaded() const;
 		FileData block() const;
 	};

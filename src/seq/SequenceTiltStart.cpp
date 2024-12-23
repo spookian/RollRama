@@ -4,6 +4,7 @@
 #include "scn/IScene.h"
 #include "scn/SceneStart.h"
 #include "scn/SceneTitle.h"
+#include "scn/SceneResult.h"
 
 #include "std/auto_ptr.h"
 #include "allocate.h"
@@ -52,6 +53,7 @@ namespace seq
 			break;
 			
 			case END_CREDITS:
+			scene = new scn::SceneResult();
 			break;
 		}
 		std::auto_ptr<scn::IScene> result(scene);

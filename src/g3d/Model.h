@@ -125,6 +125,8 @@ namespace g3d
 	{
 		SET_OBJECT_SIZE(0x14);
 	public:
+		~NodeAccessor();
+		
 		void setVisibility(bool visible) const;
 		hel::math::Vector3 worldTrans() const;
 		hel::math::Matrix34 worldRotate() const;
@@ -134,6 +136,7 @@ namespace g3d
 	{
 		SET_OBJECT_SIZE(0x14);
 	public:
+		~ModelAccessor();
 		NodeAccessor nodeByName(const char*) const;
 	};
 	
@@ -143,6 +146,7 @@ namespace g3d
 		
 	public:
 		CharaModel(const CharaModelContext& context);
+		~CharaModel();
 		void setModelRTMtx(const hel::math::Matrix34& mtx);
 		void setModelScale(const hel::math::Vector3& scale);
 		void registerToRoot(Root& root);

@@ -11,7 +11,7 @@ namespace nw4r
 		private:
 			SET_OBJECT_SIZE(0x4);
 		public:
-		
+			//~ResFile();
 		};
 	}
 }

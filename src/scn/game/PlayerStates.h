@@ -38,11 +38,18 @@ namespace scn
 		struct StateDeath : public PlayerState
 		{
 			int timer;
+			bool enable;
 			hel::math::Vector3 deathPosition;
 			
 			StateDeath(PlayerController *player);
 			void update();
 			void updateModel();
+		};
+		
+		struct StateAirlock : public PlayerState
+		{
+			StateAirlock(PlayerController *player);
+			void update();
 		};
 		
 		struct StateIntro : public PlayerState

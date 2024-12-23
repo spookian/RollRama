@@ -1,53 +1,67 @@
 #include "scn/game/entities/Enemy.h"
-#include "math/Vector3.h"
 #include "scn/Chowder.h"
+#include "g3d/ResFileHelper.h"
 #include "scn/game/PlayerController.h"
+#include "scn/game/PhysicsConstants.h"
+
+namespace
+{
+	const float endRadius = 134.313f;
+	const GlobalObject<const hel::math::Vector3, float> pos = {{ 498.572f, -958.03f, -10940.0f }};
+}
 
 using namespace hel::math;
 namespace scn
 {
 	namespace roll
-	{
-		const float cylinderHalfHeight = 121.18f;
-		const float cylinderRadius = 170.48f;
-		
-		void applyForceToPlayer(PlayerController *pl, Vector3 force, bool impulse)
+	{	
+		EndZone::EndZone()
 		{
-			Vector3 nForce = force;
-			if (!impulse) nForce = nForce * DELTATIME;
-			
-			pl->linear_velocity += nForce;
-		}
-		
-		void EndZone::updateUpper()
-		{
-			PlayerController *player = engineSingleton->stage->player;
-			// most use cases
-			Vector2 flatPlayerPosition(player->position.x, player->position.z);
-			Vector2 flatCirclePosition(position.x, position.z);
-			float heightDifference = player->position.y - (this->position.y + cylinderHalfHeight);
-			
-			float distance = (flatPlayerPosition - flatCirclePosition).length();
-			if (distance <= cylinderRadius && heightDifference < 50.0f)
-			{
-				// you win the game
-				Vector3 nVelocity = player->linear_velocity;
-				nVelocity.y = 0.0f;
-				player->linear_velocity = nVelocity;
-				player->position += Vector3::BASIS_Y * (50.0f - heightDifference);
-				
-				// tell the stage the player won
-			}
+			model = InitResModel( engineSingleton->FileRepository, "step/EndPlat" );
+			position = pos;
+			enable = true;
 		}
 		
 		void EndZone::update()
 		{
-			// get player
 			PlayerController *player = engineSingleton->stage->player;
-			bool computePlane = player->position.y >= (this->position.y + cylinderHalfHeight); // the cutoff point for collision is halfway 
-			if (computePlane) updateUpper();
+			if (enable)
+			{
+				// get player
+				
+				Vector3 flatPlayerPos = player->position;
+				flatPlayerPos.y = 0.0f;
+				
+				Vector3 flatPos = position;
+				flatPos.y = 0.0f;
+				
+				if ((flatPlayerPos - flatPos).length() <= endRadius)
+				{
+					// check if player at y
+					if (player->position.y < (position.y + PLAYER_RADIUS))
+					{
+						engineSingleton->state = 6;
+						player->linear_velocity = Vector3::ZERO;
+						player->position.y = position.y + PLAYER_RADIUS;
+						engineSingleton->fStar.activate(6.0f, 0.0f, 300);
+						enable = false;
+					}
+				}
+			}
+			else
+			{
+				player->position.y = position.y + PLAYER_RADIUS;
+			}
 			
 			return;
+		}
+		
+		void EndZone::updateModel(g3d::Root& root, hel::math::Matrix34 worldRotation)
+		{
+			Matrix34 translation = Matrix34::CreateTrans(position);
+			model->setModelRTMtx(worldRotation * translation);
+			model->updateWorldMtx();
+			model->registerToRoot(root);
 		}
 	}
 }

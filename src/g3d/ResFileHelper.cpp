@@ -12,6 +12,9 @@ g3d::CharaModel* InitResModel(g3d::ResFileRepository& fileRepo, const char *res_
 	mem::IAllocator* defAllocator = g3d::ModelContext::DefaultAllocator();
 	hel::common::FixedString<32> string("MdlAnm");
 	
-	g3d::CharaModelContext mdlContext(mdlResCtx, mdlOptions, 4, 2, 2, *defAllocator, true, 0x2000, string);
-	return new g3d::CharaModel(mdlContext);
+	g3d::CharaModelContext mdlContext(mdlResCtx, mdlOptions, 4, 2, 2, *defAllocator, true, 0x200, string);
+	// it's my estimate that it now requires around 80-90 deaths to fully crash the game if i never figure out how to clear the heap
+	
+	g3d::CharaModel *c = new g3d::CharaModel(mdlContext);
+	return c;
 }

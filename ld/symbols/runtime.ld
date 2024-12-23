@@ -15,3 +15,7 @@
 "_savefpr_29" = 0x800072ac;
 
 "__cvt_fp2unsigned" = 0x80007214;
+"__div2u"			= 0x800073a0;
+"__mod2u"			= 0x800075c4;
+"__construct_array" = 0x80007024;
+"__destroy_arr"		= 0x8000711c;

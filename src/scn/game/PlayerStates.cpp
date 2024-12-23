@@ -5,9 +5,10 @@
 #include "scn/game/rollgame.h"
 #include "scn/Chowder.h"
 #include "hid/hid.h"
+#include "snd/snd.h"
 
 #define FLOAT_MOVEMENT_MULTIPLIER 3.0f
-
+#define DEATH_WAIT_TIME 60
 using namespace hel::math;
 namespace scn
 {
@@ -42,7 +43,8 @@ namespace scn
 			unsigned short checkFlick = engineSingleton->input.flick;
 			if (checkFlick && player->isOnGround())
 			{
-				player->linear_velocity = PlayerController::jumpLinearImpulses[checkFlick - 1];
+				Vector3 p(0.0f, 0.0f, player->linear_velocity.z / 2);
+				player->linear_velocity = (Vector3::BASIS_Y * 7.0f) + p;
 				player->angular_velocity = PlayerController::jumpAngularImpulses[checkFlick - 1];
 			}
 			
@@ -66,8 +68,14 @@ namespace scn
 				RotationResult result = obtainWiimoteRotation(0.0f);
 				Vector3 accelVector(-result.vector.z, 0.0f, result.vector.x);
 				
-				player->linear_velocity += accelVector * 10.0f * DELTATIME;
+				player->linear_velocity += accelVector * 20.0f * DELTATIME;
 			}
+			
+			if (player->position.y < -1819.81f)
+			{
+				player->setState(PLAYER_DEAD);
+			}
+			
 			player->model->updateFrame();
 		}
 		
@@ -103,43 +111,79 @@ namespace scn
 			deathPosition = newPos;
 			player->hideModel = true;
 			
-			engineSingleton->state = 5;
-			engineSingleton->cam.state = CAMERA_LOCK;
+			engineSingleton->enableTimer = false;
 			
-			g3d::ModelAccessor playerModel = player->model->model();
-			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyBlowM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyDrawM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
-			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
-			
-			player->model->interpolationReset();
+			//player->model->interpolationReset();
 			g3d::ResFileAccessor animFile( player->normalAnim );
 			player->model->setAnim( 0, animFile, "DeadFall" );
 			g3d::ModelAnimAccessor animation = player->model->anim(0);
 			animation.start(true);
 			animation.setFrameRate(1.0);
+			snd::SoundManager::object()->bgm().stop();
 			
+			enable = true;
+			engineSingleton->sndReq.start(0xD8);
 			return;
 		}
 		
 		void StateDeath::update()
 		{
-			deathPosition.y = -5 * (timer * timer * 0.0166f) + 300 * (timer * 0.0166f);
-			player->model->updateFrame();
-			timer++;
+			if (enable)
+			{
+				if (timer > DEATH_WAIT_TIME)
+				{
+					unsigned long adjTime = timer - DEATH_WAIT_TIME;
+					deathPosition.y = -5 * (adjTime * adjTime * 0.0166f) + 300 * (adjTime * 0.0166f);
+					if (deathPosition.y < -300.0f)
+					{
+						enable = false;
+						engineSingleton->state = 3;
+						g3d::ModelAnimAccessor animation = player->model->anim(0);
+						animation.stop();
+					}
+					
+					player->model->updateFrame();
+					
+				} // else apply screen shake to camera
+				timer++;
+				if (timer == DEATH_WAIT_TIME)
+				{
+					snd::SoundManager::object()->bgm().start(0x7);
+				}
+			}
 			return;
 		}
 		
 		void StateDeath::updateModel()
 		{
 			Matrix34 translation = Matrix34::CreateTrans(deathPosition);
-			player->model->setModelRTMtx(translation * player->rotation);
+			if (timer > DEATH_WAIT_TIME)
+			{
+				unsigned long adjTime = timer - DEATH_WAIT_TIME;
+				//float a = Math::FloorF(adjTime / 8.0f) * 8 * PI;
+				float a = adjTime * PI * DELTATIME;
+				player->rotation = Matrix34::CreateRotAxisRad(Vector3::BASIS_Z, a);
+			}
+			Matrix34 rtdlOffset = Matrix34::CreateTrans(rtdlModelTransOffset);
+			player->model->setModelRTMtx(translation * player->rotation * rtdlOffset);
 			player->model->updateWorldMtx();
 			
 			player->model->registerToRoot( *engineSingleton->secondRoot );
 			return;
+		}
+		
+		StateAirlock::StateAirlock(PlayerController *player) : PlayerState(player)
+		{
+		}
+		
+		void StateAirlock::update()
+		{
+			player->physicsUpdate();
+			
+			if (player->isOnGround())
+			{
+				player->setState(PLAYER_NORMAL);
+			}
 		}
 	}
 }

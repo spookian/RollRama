@@ -23,6 +23,11 @@ namespace scn
 				active = true;
 			}
 			
+			~Pickup()
+			{
+				g3d::CharaModel *model;
+			}
+			
 			virtual void update() {}
 			virtual void updateModel(g3d::Root& root, Matrix34& worldRotation) {}
 		};
@@ -46,7 +51,6 @@ namespace scn
 			
 		public:
 			PointStar(const Vector3& position); // kills itself once it detects the player
-			~PointStar();
 			
 			void update();
 			void updateModel(g3d::Root& root, Matrix34& worldRotation);

@@ -46,7 +46,7 @@ Chowder::Chowder()
 	starRoot = new g3d::Root(sndContext);
 	secondRoot = new g3d::Root(rootContext);
 	
-	this->stage = new scn::roll::StageController(*this);
+	this->stage = new scn::roll::StageController();
 	//debugAddTriangles(*stage);
 	file::FileAccessor file("gcn/MAIN.roll", false);
 	if (file.isLoaded()) 
@@ -72,7 +72,8 @@ Chowder::Chowder()
 	state = 0;
 	stateTimer = 0;
 	isEnd = false;
-	fStar.activate(0.0f, 1.0f, 60);
+	enableTimer = false;
+	fStar.activate(0.0f, 1.0f, 30);
 	
 	g3d::CameraAccessor fCam = modelRoot->currentCamera();
 	g3d::CameraAccessor sCam = secondRoot->currentCamera();
@@ -80,6 +81,8 @@ Chowder::Chowder()
 	adjustScreen(fCam);
 	adjustScreen(sCam);
 	adjustScreen(tCam);
+	
+	snd::SoundManager::object()->bgm().start(0x617);
 }
 
 Chowder::~Chowder()
@@ -87,6 +90,8 @@ Chowder::~Chowder()
 	delete stage;
 	delete modelRoot;
 	delete secondRoot;
+	
+	snd::SoundManager::object()->bgm().stop();
 }
 
 void Chowder::checkPause()
@@ -109,14 +114,18 @@ void Chowder::updateMain() // update physics and setup drawing
 			if (stateTimer >= 60)
 			{
 				state = 1;
-				fStar.activate(1.0f, 6.0f, 120);
+				fStar.activate(1.0f, 6.0f, 60);
 			}
 			stateTimer++;
 		}
 		break;
 		
 		case 1:
-		if (fStar.finished) state = 2;
+		if (fStar.finished) 
+		{
+			state = 2;
+			enableTimer = true;
+		}
 		break;
 		
 		case 2: // normal play
@@ -125,19 +134,31 @@ void Chowder::updateMain() // update physics and setup drawing
 		
 		case 3: // death reset beginning
 		state = 4;
-		fStar.activate(6.0, 0.0, 180);
+		fStar.activate(6.0, 0.0, 120);
 		break;
 		
 		case 4: // death reset end
 		if (fStar.finished)
 		{
 			stage->reset();
-			fStar.activate(0.0f, 1.0f, 120);
+			fStar.activate(0.0f, 1.0f, 30);
 			stateTimer = 0;
 			
 			score = 0;
 			time = 300;
 			stars = 0;
+			
+			state = 0;
+			snd::SoundManager::object()->bgm().start(0x617);
+			stage->pauseForPlayerObject = false;
+		}
+		break;
+		
+		case 6: // game ending
+		enableTimer = false;
+		if (fStar.finished)
+		{
+			isEnd = true;
 		}
 		break;
 		
@@ -157,7 +178,7 @@ void Chowder::updateMain() // update physics and setup drawing
 		cam.update();
 		checkPause();
 			
-		if (time)
+		if (time && enableTimer)
 		{
 			subTimer++;
 			if (subTimer == 120)
@@ -220,4 +241,6 @@ void Chowder::draw()
 		hud.draw();
 	}
 	else pause.draw();
+	
+
 }

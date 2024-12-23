@@ -20,11 +20,6 @@ namespace scn
 			model = InitResModel(engineSingleton->FileRepository, "step/CollectStar");
 		}
 		
-		PointStar::~PointStar()
-		{
-			delete model;
-		}
-		
 		void PointStar::update()
 		{
 			if ( isCollide( *(SphereCollider*)engineSingleton->stage->player ) )
@@ -33,6 +28,7 @@ namespace scn
 				engineSingleton->stars++;
 				// function to create particles when i have the time to implement
 				active = false;
+				engineSingleton->sndReq.start(0xF5);
 			}
 		}
 		

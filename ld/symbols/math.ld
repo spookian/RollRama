@@ -51,8 +51,9 @@
 
 "AbsF32__Q33hel4math4MathFf" 	= 0x80387a58;
 "CosDegF__Q33hel4math4MathFf" 	= 0x80274620;
-"CosFIdx__Q33hel4math4MathFf"		= 0x8019cfa8;
-"SinFIdx__Q33hel4math4MathFf"		= 0x8019cfb4;
+"CosFIdx__Q33hel4math4MathFf"	= 0x8019cfa8;
+"SinFIdx__Q33hel4math4MathFf"	= 0x8019cfb4;
+"FloorF__Q33hel4math4MathFf"	= 0x801c7364;
 
 "pow" = 0x800147b0;
 "asin" = 0x800147a0;

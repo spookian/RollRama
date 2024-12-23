@@ -6,6 +6,7 @@ namespace scn
 	class SceneResult : public IScene
 	{
 		lyt::Layout resuScreen;
+		int timer;
 		
 	public:
 		void rtti();

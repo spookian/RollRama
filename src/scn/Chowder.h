@@ -1,11 +1,13 @@
 #pragma once
 
 #include "g3d/Model.h"
+#include "mem/Memory.h"
 #include "math/Math.h"
 #include "scn/game/rollgame.h"
 #include "common/List.h"
 #include "lyt/lyt.h"
 #include "hid/hid.h"
+#include "snd/snd.h"
 
 #include "scn/game/hud/FadeStar.h"
 #include "scn/game/hud/NumberDisplay.h"
@@ -114,6 +116,7 @@ struct Chowder
 	
 	int state;
 	bool isEnd;
+	bool enableTimer;
 	
 	g3d::Root *modelRoot;
 	g3d::Root *starRoot;
@@ -126,6 +129,8 @@ struct Chowder
 	scn::roll::PauseScreen pause;
 	scn::roll::CameraController cam;
 	scn::roll::Skybox sky; // more like a sky plane
+	snd::SERequestor sndReq;
+	//mem::AutoHeapExp heap;
 	
 	Chowder();
 	~Chowder();

@@ -3,7 +3,7 @@
 #include "math/math.h"
 #include "hid/hid.h"
 #include "common/Color.h"
-
+#include "gfx/GXStructs.h"
 #include "snd/snd.h"
 #include "common/ExplicitSingleton.h"
 
@@ -15,12 +15,40 @@ extern "C"
 	extern unsigned long long __OSGetSystemTime(); // 80025d10
 }
 #define OSTicksToSeconds(ticks) ((ticks) / (__OSBusClock / 4))
+#define OSTicksToHours(ticks) (OSTicksToSeconds(ticks) / 3600)
 
 namespace scn
 {
+	const GXColor timeGradients[] = 
+	{
+		//day
+		{0x68, 0xD2, 0xFF, 0xFF},
+		{0xE0, 0xF7, 0xFF, 0xFF},
+		
+		//night 
+		{0x10, 0x1C, 0x30, 0xFF},
+		{0x32, 0x4B, 0x76, 0xFF}
+	};
+	
 	void SceneTitle::rtti()
 	{
 		return;
+	}
+	
+	void SceneTitle::adjustTitleForTime()
+	{
+		unsigned long long sysTime = __OSGetSystemTime();
+		int currentHour = (OSTicksToHours(sysTime) % 24) + 1;
+		bool p = (currentHour > 18 || currentHour < 7);
+		int idx = (int)p << 1;
+		
+		lyt::PaneAccessor back = titleScreen.paneByName("BackGradient");
+		back.setVertexColor( timeGradients[idx], 0 );
+		back.setVertexColor( timeGradients[idx], 1 );
+		back.setVertexColor( timeGradients[idx + 1], 2 );
+		back.setVertexColor( timeGradients[idx + 1], 3 );
+		
+		if (p) titleScreen.paneByName("Logo").setAlpha(187);
 	}
 	
 	SceneTitle::SceneTitle() : warningScreen(lyt::LayoutContext::quickContext("gcntitle/WarningScreen", "WS")), titleScreen(lyt::LayoutContext::quickContext("gcntitle/GCNTitle", "KirbyTitleD")), nintendoDisclaimer(lyt::LayoutContext::quickContext("gcntitle/NintendoLogo", "NintendoScreen"))
@@ -38,11 +66,13 @@ namespace scn
 		
 		//snd::SoundManager::load(); 
 		// apparently the sound thread is loaded right before the main game loop starts, so don't go playing sounds/songs in constructors
-		
+		adjustTitleForTime();
 	}
 	
 	SceneTitle::~SceneTitle()
 	{
+		snd::SoundManager::object()->bgm().setVolume(1.0f);
+		snd::SoundManager::object()->bgm().stop();
 		return;
 	}
 	
@@ -119,7 +149,7 @@ namespace scn
 					warningAlpha = 0;
 					timer = -1;
 					state = TITLE_MENU;
-					snd::SoundManager::object()->bgm().start(0x616);
+					snd::SoundManager::object()->bgm().start(0x4);
 				}
 				warningScreen.rootPane().setAlpha(warningAlpha);
 				break;
@@ -143,6 +173,7 @@ namespace scn
 				}
 				
 				if (timer > 90) isEnd = true;
+				snd::SoundManager::object()->bgm().setVolume( (255 - blackScreen) / 255.0f );
 				
 				nintendoDisclaimer.paneByName("Back").setAlpha(blackScreen);
 				break;
@@ -169,6 +200,7 @@ namespace scn
 	{
 		lyt::Utility::SetupGX();
 		titleScreen.draw();
+		ptclManager.updateAndDraw();
 		warningScreen.draw();
 		nintendoDisclaimer.draw();
 	}

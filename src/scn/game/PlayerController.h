@@ -13,7 +13,7 @@ enum PlayerStates
 {
 	PLAYER_NORMAL,
 	PLAYER_DEAD,
-	PLAYER_BOSSFIGHT,
+	PLAYER_AIRLOCK,
 	PLAYER_FLOAT,
 	PLAYER_CAPTURE,
 	PLAYER_START,
@@ -75,3 +75,5 @@ namespace scn
 		};
 	}
 }
+
+extern GlobalObject<const hel::math::Vector3, float> rtdlModelTransOffset;

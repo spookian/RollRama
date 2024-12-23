@@ -38,14 +38,20 @@
 "updateFrame__Q23g3d10CharaModelFv"							= 0x80194acc;
 
 "__ct__Q23g3d17ResFileRepositoryFv"							= 0x8019b178;
+"__dt__Q23g3d17ResFileRepositoryFv"							= 0x8019b294;
 "get__Q23g3d17ResFileRepositoryFPCcb"						= 0x8019b2f0;
+
+"__dt__Q23g3d7ResFileFv"									= 0x8019adac;
 
 "__ct__Q23g3d15ResFileAccessorFRCQ34nw4r3g3d7ResFile"		= 0x8014ccf4;
 "bind__Q23g3d15ResFileAccessorCFRCQ23g3d15ResFileAccessorb" = 0x8019ae50;
 
 "__ct__Q23g3d15ResModelContextFRCQ23g3d15ResFileAccessorPCc"= 0x8019b6e8;
 
+"__dt__Q23g3d13ModelAccessorFv"	= 0x8018238c;
 "nodeByName__Q23g3d13ModelAccessorCFPCc" = 0x801980d0;
+
+"__dt__Q23g3d12NodeAccessorFv" = 0x80182c14;
 
 "setVisibility__Q23g3d12NodeAccessorCFb" = 0x8019aa94;
 "worldTrans__Q23g3d12NodeAccessorCFv" = 0x8019a83c;
@@ -54,3 +60,7 @@
 "start__Q23g3d17ModelAnimAccessorCFb" = 0x80199640;
 "stop__Q23g3d17ModelAnimAccessorCFv" = 0x80199648;
 "setFrameRate__Q23g3d17ModelAnimAccessorCFf" = 0x801997a8;
+
+"__ct__Q23mem11AutoHeapExpFRQ23mem10IAllocatorUlPCc" 	= 0x801ca3b0;
+"__dt__Q23mem11AutoHeapExpFv"							= 0x80176114;
+"obj__Q23mem11AutoHeapExpFv" 							= 0x8018c994;

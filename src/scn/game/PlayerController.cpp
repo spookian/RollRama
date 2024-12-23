@@ -35,23 +35,20 @@ namespace scn
 			normalAnim = engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true);
 			gcnAnim = engineSingleton->FileRepository.get("step/GCNAnim", true);
 			
-			//g3d::ResFileAccessor playerMotion( engineSingleton->FileRepository.get("step/chara/hero/kirby/normal/Motion", true) );
-			//playerMotion.bind(mFile, false);
+			g3d::ResFileAccessor playerMotion( normalAnim );
+			g3d::ResFileAccessor gcnMot( gcnAnim );
 			
 			g3d::ResModelContext mResContext(mFile, "Model");
 			g3d::ModelBufferOption mOptions = g3d::ModelContext::DefaultModelBufferOption();
-			hel::common::FixedString<32> mString("Model");
-			g3d::CharaModelContext mContext(mResContext, mOptions, 8, 2, 4, *g3d::ModelContext::DefaultAllocator(), true, 0x2000, mString);
+			hel::common::FixedString<32> mString("MdlAnm");
+			g3d::CharaModelContext mContext(mResContext, mOptions, 8, 2, 4, *g3d::ModelContext::DefaultAllocator(), true, 0x1000, mString);
 			this->model = new g3d::CharaModel(mContext);
-			//this->model = InitResModel(engineSingleton->FileRepository, "step/chara/hero/kirby/base/Pink");
-			//position.y = 144.896;
-			//position.z = -9628.0f;
+
 			state = new StateNormal(this);
 			captured = false;
 			health = 6;
 			hideModel = false;
 			
-			// idk setup nodes n gears n shizz
 			g3d::ModelAccessor playerModel = model->model();
 			playerModel.nodeByName("KirbyBodyBig3M").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyBigM").setVisibility(false);
@@ -60,9 +57,7 @@ namespace scn
 			playerModel.nodeByName("KirbyBodyFlightM").setVisibility(false);
 			playerModel.nodeByName("KirbyBodyM").setVisibility(true);
 			
-			model->interpolationReset();
-			g3d::ResFileAccessor animFile( gcnAnim );
-			model->setAnim( 0, animFile, "Roll" );
+			model->setAnim( 0, gcnMot, "Roll" );
 			g3d::ModelAnimAccessor animation = model->anim(0);
 			animation.start(true); // bool is loop
 			animation.setFrameRate(1.0);
@@ -72,6 +67,9 @@ namespace scn
 		{
 			delete model;
 			delete state;
+			
+			delete gcnAnim;
+			delete normalAnim;
 		}
 		
 		void PlayerController::update(StageController* stage)
@@ -121,6 +119,9 @@ namespace scn
 				engineSingleton->stage->pauseForPlayerObject = true;
 				state = new StateDeath(this);
 				break;
+				
+				case PLAYER_AIRLOCK:
+				state = new StateAirlock(this);
 			}
 			return;
 		}

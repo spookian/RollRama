@@ -19,6 +19,17 @@ namespace mem
 		IAllocator& externalHeap();
 	};
 	
+	class AutoHeapExp
+	{
+		SET_OBJECT_SIZE(96);
+		
+	public:
+		AutoHeapExp(IAllocator&, unsigned long, const char*);
+		~AutoHeapExp();
+		
+		IAllocator& obj();
+	};
+	
 	struct MemoryBlock
 	{
 		unsigned long size;

@@ -13,6 +13,7 @@ namespace g3d
 			data = file;
 		}
 		// i actually suspect this constructor to exist except it's an inline
+		// i believe g3d::ResFile is a wrapper for nw4r::g3d::ResFile that contains a pointer to the latter as its first member
 		
 		void bind(const ResFileAccessor&, bool) const;
 	};
@@ -24,6 +25,7 @@ namespace g3d
 		
 	public:
 		ResFileRepository();
+		~ResFileRepository();
 		nw4r::g3d::ResFile* get(const char *path, bool unk);
 	};
 }
