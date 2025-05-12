@@ -146,7 +146,7 @@ namespace g3d
 		
 	public:
 		CharaModel(const CharaModelContext& context);
-		~CharaModel();
+		//~CharaModel();
 		void setModelRTMtx(const hel::math::Matrix34& mtx);
 		void setModelScale(const hel::math::Vector3& scale);
 		void registerToRoot(Root& root);

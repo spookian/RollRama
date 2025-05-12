@@ -61,7 +61,7 @@ Chowder::Chowder()
 	lightSet.enableAmbientLightObj(0);
 	lightSet.enableLightObj(0, 0);
 	
-	nw4r::g3d::AmbLightObj ambColor = {{255, 255, 255, 255}};
+	nw4r::g3d::AmbLightObj ambColor = hel::common::Color::WHITE;
 	lightSet.setAmbientLightObj(ambColor);
 	
 	score = 0;

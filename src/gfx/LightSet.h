@@ -30,6 +30,19 @@ namespace nw4r
 		struct AmbLightObj
 		{
 			_GXColor obj;
+			
+			inline void operator=(const _GXColor& other)
+			{
+				this->obj.r = other.r;
+				this->obj.g = other.g;
+				this->obj.b = other.b;
+				this->obj.a = other.a;
+			}
+			
+			inline AmbLightObj(const _GXColor& other)
+			{
+				*this = other;
+			}
 		};
 	}
 }

@@ -67,9 +67,6 @@ namespace scn
 		{
 			delete model;
 			delete state;
-			
-			delete gcnAnim;
-			delete normalAnim;
 		}
 		
 		void PlayerController::update(StageController* stage)
